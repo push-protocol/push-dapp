@@ -234,6 +234,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       alpha: { feature: ['SCALABILITY_V2'] },
     });
 
+    // sets up stream in read mode
+    await setupStream(userInstance);
     console.debug('src::contexts::AppContext::initializePushSdkReadMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
     return userInstance;
@@ -300,21 +302,19 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const setupStream = async (userInstance: any) => {
     // Connect stream as well
-    const stream = await userInstance.initStream([
-      CONSTANTS.STREAM.CONNECT,
-      CONSTANTS.STREAM.DISCONNECT,
-      CONSTANTS.STREAM.CHAT,
-      CONSTANTS.STREAM.CHAT_OPS,
-      CONSTANTS.STREAM.NOTIF,
-      CONSTANTS.STREAM.VIDEO,
-    ]);
+    if (!userInstance.stream) {
+      const stream = await userInstance.initStream([
+        CONSTANTS.STREAM.CONNECT,
+        CONSTANTS.STREAM.DISCONNECT,
+        CONSTANTS.STREAM.CHAT,
+        CONSTANTS.STREAM.CHAT_OPS,
+        CONSTANTS.STREAM.NOTIF,
+        CONSTANTS.STREAM.VIDEO,
+      ]);
 
-    stream.on(CONSTANTS.STREAM.CONNECT, () => {
-      console.debug('src::contexts::AppContext::setupStream::CONNECT::');
-    });
-
-    await stream.connect();
-    console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
+      if (userInstance.readmode()) await stream.connect();
+      console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
+    }
   };
 
   // To reformat errors

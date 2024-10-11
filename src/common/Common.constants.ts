@@ -23,7 +23,6 @@ export const LOGO_ALIAS_CHAIN: {
   80002: Polygon,
   97: BNB,
   56: BNB,
-  84532: BNB,
   42161: Arbitrum,
   421614: Arbitrum,
   11155420: Optimisim,

@@ -4014,7 +4014,7 @@ __metadata:
     "@livepeer/react": "npm:^2.6.0"
     "@pushprotocol/socket": "npm:^0.5.0"
     "@unstoppabledomains/resolution": "npm:^8.5.0"
-    "@web3-name-sdk/core": "npm:^0.1.15"
+    "@web3-name-sdk/core": "npm:^0.2.0"
     "@web3-onboard/coinbase": "npm:^2.2.5"
     "@web3-onboard/core": "npm:^2.21.1"
     "@web3-onboard/injected-wallets": "npm:^2.10.5"
@@ -7976,23 +7976,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-name-sdk/core@npm:^0.1.15":
-  version: 0.1.18
-  resolution: "@web3-name-sdk/core@npm:0.1.18"
-  dependencies:
-    "@adraffy/ens-normalize": "npm:^1.10.0"
-    "@ensdomains/ens-validation": "npm:^0.1.0"
-    viem: "npm:^1.20"
-  peerDependencies:
-    "@bonfida/spl-name-service": ^1.4.0
-    "@sei-js/core": ^3.1.0
-    "@siddomains/injective-sidjs": 0.0.2-beta
-    "@siddomains/sei-sidjs": ^0.0.4
-    "@solana/web3.js": ^1.75.0
-  checksum: 10/eebbc7f28ae67cf92c558dc61fae28e5242386416a5d225082f8091eab8ad958257e9a534defc42218d00aa5ca9d04700226e16fa992da28e2e8e77af932337c
-  languageName: node
-  linkType: hard
-
 "@web3-name-sdk/core@npm:^0.2.0":
   version: 0.2.0
   resolution: "@web3-name-sdk/core@npm:0.2.0"
@@ -8030,27 +8013,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/core@npm:2.22.2":
-  version: 2.22.2
-  resolution: "@web3-onboard/core@npm:2.22.2"
-  dependencies:
-    "@web3-onboard/common": "npm:^2.4.1"
-    bnc-sdk: "npm:^4.6.7"
-    bowser: "npm:^2.11.0"
-    eventemitter3: "npm:^4.0.7"
-    joi: "npm:17.9.1"
-    lodash.merge: "npm:^4.6.2"
-    lodash.partition: "npm:^4.6.0"
-    nanoid: "npm:^4.0.0"
-    rxjs: "npm:^7.5.5"
-    svelte: "npm:^3.49.0"
-    svelte-i18n: "npm:^3.3.13"
-    viem: "npm:2.12.0"
-  checksum: 10/098750fb1553193181280d40643588a1c0e8107cf4499e3cfef318697099636a0ff48244c41d34f3944e66754ff85da7ed9caf1498634eaa7cdccbae52c807bf
-  languageName: node
-  linkType: hard
-
-"@web3-onboard/core@npm:2.22.3, @web3-onboard/core@npm:^2.21.1":
+"@web3-onboard/core@npm:2.22.3, @web3-onboard/core@npm:^2.21.1, @web3-onboard/core@npm:^2.22.3":
   version: 2.22.3
   resolution: "@web3-onboard/core@npm:2.22.3"
   dependencies:
@@ -10294,10 +10257,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:0.6.0":
-  version: 0.6.0
-  resolution: "cookie@npm:0.6.0"
-  checksum: 10/c1f8f2ea7d443b9331680598b0ae4e6af18a618c37606d1bbdc75bec8361cce09fe93e727059a673f2ba24467131a9fb5a4eec76bb1b149c1b3e1ccb268dc583
+"cookie@npm:0.7.1":
+  version: 0.7.1
+  resolution: "cookie@npm:0.7.1"
+  checksum: 10/aec6a6aa0781761bf55d60447d6be08861d381136a0fe94aa084fddd4f0300faa2b064df490c6798adfa1ebaef9e0af9b08a189c823e0811b8b313b3d9a03380
   languageName: node
   linkType: hard
 
@@ -12521,15 +12484,15 @@ __metadata:
   linkType: hard
 
 "express@npm:^4.14.0":
-  version: 4.21.0
-  resolution: "express@npm:4.21.0"
+  version: 4.21.1
+  resolution: "express@npm:4.21.1"
   dependencies:
     accepts: "npm:~1.3.8"
     array-flatten: "npm:1.1.1"
     body-parser: "npm:1.20.3"
     content-disposition: "npm:0.5.4"
     content-type: "npm:~1.0.4"
-    cookie: "npm:0.6.0"
+    cookie: "npm:0.7.1"
     cookie-signature: "npm:1.0.6"
     debug: "npm:2.6.9"
     depd: "npm:2.0.0"
@@ -12555,7 +12518,7 @@ __metadata:
     type-is: "npm:~1.6.18"
     utils-merge: "npm:1.0.1"
     vary: "npm:~1.1.2"
-  checksum: 10/3b1ee5bc5b1bd996f688702519cebc9b63a24e506965f6e1773268238cfa2c24ffdb38cc3fcb4fde66f77de1c0bebd9ee058dad06bb9c6f084b525f3c09164d3
+  checksum: 10/5d4a36dd03c1d1cce93172e9b185b5cd13a978d29ee03adc51cd278be7b4a514ae2b63e2fdaec0c00fdc95c6cfb396d9dd1da147917ffd337d6cd0778e08c9bc
   languageName: node
   linkType: hard
 
@@ -13652,9 +13615,9 @@ __metadata:
   linkType: hard
 
 "hls.js@npm:^1.4.12":
-  version: 1.5.15
-  resolution: "hls.js@npm:1.5.15"
-  checksum: 10/58dd5c70e233a3d66ebba9f55bfbe6673ac9d941d391afd896d44e7a141cba931fd25c392133c13f65fbd82e85e1575ada68a2722d1da38b6ad7b9b6a93a6a6b
+  version: 1.5.16
+  resolution: "hls.js@npm:1.5.16"
+  checksum: 10/3fa8aa13d249fd1b977cac34782502b663564188f3e7fe986640bd632cb8d2d43f469183d5401be43f85fbe637861716a3c6c395e6136f4022587bbf6a6c3301
   languageName: node
   linkType: hard
 
@@ -17310,13 +17273,13 @@ __metadata:
   linkType: hard
 
 "ofetch@npm:^1.3.4":
-  version: 1.4.0
-  resolution: "ofetch@npm:1.4.0"
+  version: 1.4.1
+  resolution: "ofetch@npm:1.4.1"
   dependencies:
     destr: "npm:^2.0.3"
     node-fetch-native: "npm:^1.6.4"
     ufo: "npm:^1.5.4"
-  checksum: 10/92af33cfb35879314c0ecdd9c15b814fd3a7dc31dbae1032492fa42767bb1afe6f2a7faa179b2c2a4482d4b30c87671ddb043bcccde7ada7499b10e5caf2eb51
+  checksum: 10/329ecd5595eff6da090c728e66f4223ad7ba5c2c309446f3707245c1b213da47dfd1eb1740f26b3da9e31ed7b7a903733bdaae85187b714514da865a0c5a4a9c
   languageName: node
   linkType: hard
 
@@ -18346,7 +18309,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^4.2.1"
     "@web3-name-sdk/core": "npm:^0.2.0"
     "@web3-onboard/coinbase": "npm:^2.4.1"
-    "@web3-onboard/core": "npm:2.22.2"
+    "@web3-onboard/core": "npm:^2.22.3"
     "@web3-onboard/injected-wallets": "npm:2.11.2"
     "@web3-onboard/react": "npm:^2.9.2"
     "@web3-onboard/walletconnect": "npm:2.6.1"
@@ -21521,22 +21484,22 @@ __metadata:
   linkType: hard
 
 "typescript@npm:^5.2.2":
-  version: 5.6.2
-  resolution: "typescript@npm:5.6.2"
+  version: 5.6.3
+  resolution: "typescript@npm:5.6.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/f95365d4898f357823e93d334ecda9fcade54f009b397c7d05b7621cd9e865981033cf89ccde0f3e3a7b73b1fdbae18e92bc77db237b43e912f053fef0f9a53b
+  checksum: 10/c328e418e124b500908781d9f7b9b93cf08b66bf5936d94332b463822eea2f4e62973bfb3b8a745fdc038785cb66cf59d1092bac3ec2ac6a3e5854687f7833f1
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@npm%3A^5.2.2#optional!builtin<compat/typescript>":
-  version: 5.6.2
-  resolution: "typescript@patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=b45daf"
+  version: 5.6.3
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=b45daf"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/060a7349adf698477b411be4ace470aee6c2c1bd99917fdf5d33697c17ec55c64fe724eb10399387530b50e9913b41528dd8bfcca0a5fc8f8bac63fbb4580a2e
+  checksum: 10/dc4bec403cd33a204b655b1152a096a08e7bad2c931cb59ef8ff26b6f2aa541bf98f09fc157958a60c921b1983a8dde9a85b692f9de60fa8f574fd131e3ae4dd
   languageName: node
   linkType: hard
 
@@ -22132,7 +22095,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^1.20, viem@npm:^1.20.3":
+"viem@npm:^1.20.3":
   version: 1.21.4
   resolution: "viem@npm:1.21.4"
   dependencies:

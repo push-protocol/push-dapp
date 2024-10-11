@@ -71,6 +71,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
               chatId={chatId} // 694c523ca30090225b73b7d04941f48a51312bedbe0fa11136e7f3af3687b277
               limit={10}
               isConnected={false}
+              handleReply={true}
               autoConnect={false}
               messageInput={loggedIn ? true : false}
               verificationFailModalPosition={MODAL_POSITION_TYPE.RELATIVE}
@@ -137,7 +138,7 @@ const ChatViewContainer = styled(ItemVV2)`
   overflow: hidden;
 `;
 
-const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
+const IntroContainer = styled(ItemVV2) <IntroContainerProps>`
   flex: 1;
   height: inherit;
   background: ${(props) => props.bg || 'transparent'};

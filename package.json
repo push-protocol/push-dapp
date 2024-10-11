@@ -55,7 +55,7 @@
     "@unstoppabledomains/resolution": "8.5.0",
     "@web3-name-sdk/core": "^0.2.0",
     "@web3-onboard/coinbase": "^2.4.1",
-    "@web3-onboard/core": "2.22.2",
+    "@web3-onboard/core": "^2.22.3",
     "@web3-onboard/injected-wallets": "2.11.2",
     "@web3-onboard/react": "^2.9.2",
     "@web3-onboard/walletconnect": "2.6.1",
