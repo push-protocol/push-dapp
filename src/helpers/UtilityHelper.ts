@@ -113,7 +113,9 @@ export const EnvHelper = {
   },
 };
 
-export const networkName = {
+export const networkName: {
+  [key: number]: string;
+} = {
   42: 'Ethereum Kovan',
   5: 'Ethereum Goerli',
   11155111: 'Ethereum Sepolia',
