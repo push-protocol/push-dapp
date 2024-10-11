@@ -17,12 +17,10 @@ import { appConfig } from '../config/index.js';
 const getDomainName = async (checksumWallet: string, setWeb3NameList: any) => {
   let domainName: string | null = '';
   const web3NameClient = createWeb3Name();
-  console.debug('in get domain name');
   web3NameClient
     .getDomainName({
       address: checksumWallet,
       queryChainIdList: appConfig.allowedNetworks,
-      rpcUrl: appConfig.coreRPC,
     })
     .then(async (domain) => {
       if (domain) {

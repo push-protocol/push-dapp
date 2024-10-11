@@ -1,15 +1,3 @@
-// environmental configurations for the dapp for different environments
-// export const config = {
-//   /**
-//    * API Calls Related
-//    */
-//   // infuraAPIKey: 'e214e9781e104829bc93941508a45b58'
-//   infuraAPIKey: 'dd262cc008764b29bd6a15249db4772e',
-//   // infuraAPIKey: EnvHelper.isLocalHost
-//   //   ? import.meta.env.VITE_APP_IPFS_INFURA_API_KEY
-//   //   : 'dd262cc008764b29bd6a15249db4772e',
-// };
-
 // Internal Components
 import daiAbi from './abis/dai';
 import epnsTokenAbi from './abis/EPNS.json';
