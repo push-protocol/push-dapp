@@ -1,8 +1,7 @@
+import { getInfuraAPIKey } from '../../basePath';
+
 // environmental configurations for the dapp for different environments
-const infuraProjectId =
-  window.location.hostname == 'localhost'
-    ? import.meta.env.VITE_APP_INFURA_PROJECT_ID
-    : 'dd262cc008764b29bd6a15249db4772e';
+const infuraProjectId = getInfuraAPIKey('dd262cc008764b29bd6a15249db4772e');
 export const config = {
   /**
    * Push Nodes Environment - can be dev, staging or prod - important to keep one on one connection
