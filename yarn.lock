@@ -4005,9 +4005,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.6.0":
-  version: 1.6.0
-  resolution: "@pushprotocol/uiweb@npm:1.6.0"
+"@pushprotocol/uiweb@npm:1.6.0-alpha.8":
+  version: 1.6.0-alpha.8
+  resolution: "@pushprotocol/uiweb@npm:1.6.0-alpha.8"
   dependencies:
     "@livekit/components-react": "npm:^1.2.2"
     "@livekit/components-styles": "npm:^1.0.6"
@@ -4049,7 +4049,7 @@ __metadata:
     react-dom: 17.0.2
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 10/8068ca459eadf986b91eabca4115fea35cc939d8799c7043eefbe7d2771dd2547fde79b5d0da1774621544b789cef223efe21f82ed71afe44a80da33707b0b29
+  checksum: 10/691191800c0c12478111ce54b0ec1be864e3a6809d2769d0244fb6ee5adb6739c1d57741b6d0ffef0060c71620a461ad1859b52f5fbacf5aed2b619ed8bb2b0c
   languageName: node
   linkType: hard
 
@@ -6323,14 +6323,14 @@ __metadata:
   linkType: hard
 
 "@tanstack/react-query-devtools@npm:^5.44.0":
-  version: 5.59.3
-  resolution: "@tanstack/react-query-devtools@npm:5.59.3"
+  version: 5.59.0
+  resolution: "@tanstack/react-query-devtools@npm:5.59.0"
   dependencies:
     "@tanstack/query-devtools": "npm:5.58.0"
   peerDependencies:
-    "@tanstack/react-query": ^5.59.3
+    "@tanstack/react-query": ^5.59.0
     react: ^18 || ^19
-  checksum: 10/178d16688a29e4035c2e9b2bc7124fd7e1b23c0189f1c137fb9a4c23f6b00c0c0f0422c66ed077e4bf6ea4bedffe98d13915bdf98f916ac63411e507d9bcce14
+  checksum: 10/a4deb3fe97355fcb98febd3b9cd5e871f3756771eb9eb15a2a226a0a9fb0314502522f70d12f54c25aec7985eae77b82b39bce37f86ee0312da046f4f1822bcf
   languageName: node
   linkType: hard
 
@@ -6365,13 +6365,13 @@ __metadata:
   linkType: hard
 
 "@tanstack/react-query@npm:^5.44.0":
-  version: 5.59.3
-  resolution: "@tanstack/react-query@npm:5.59.3"
+  version: 5.59.0
+  resolution: "@tanstack/react-query@npm:5.59.0"
   dependencies:
     "@tanstack/query-core": "npm:5.59.0"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10/03a001fc910153ffab20c41966aa7188442228f2003e8a04c21ad98f8eda3c8a1fa929a8cd733b5b2108b4bcc540065397cd385eff3a7c003a097125385fa09d
+  checksum: 10/48963e7d0603958390db0087c018b71e87187ad84dea03279716b4869de83509027c37f65f3c6c4a1cd7b6f9f14250afffc2aeee5d481528e2308d937422ae41
   languageName: node
   linkType: hard
 
@@ -18279,7 +18279,7 @@ __metadata:
     "@mui/material": "npm:^5.5.0"
     "@pushprotocol/restapi": "npm:1.7.25"
     "@pushprotocol/socket": "npm:0.5.3"
-    "@pushprotocol/uiweb": "npm:1.6.0"
+    "@pushprotocol/uiweb": "npm:1.6.0-alpha.8"
     "@radix-ui/react-dialog": "npm:^1.1.1"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
     "@radix-ui/react-switch": "npm:^1.1.0"
