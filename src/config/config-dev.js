@@ -1,7 +1,7 @@
 import { getInfuraAPIKey } from '../../basePath';
 
 // environmental configurations for the dapp for different environments
-const infuraProjectId = getInfuraAPIKey('be75cf427a5c41f9badb591994019d22');
+const infuraAPIKey = getInfuraAPIKey('be75cf427a5c41f9badb591994019d22');
 export const config = {
   /**
    * Push Nodes Environment - can be dev, staging or prod - important to keep one on one connection
@@ -42,17 +42,17 @@ export const config = {
   /**
    * Core Network Related Data
    */
-  infuraAPIKey: infuraProjectId,
+  infuraAPIKey: infuraAPIKey,
   coreContractChain: 11155111, //the chain id of the network which the core contract relies on
-  coreRPC: `https://sepolia.infura.io/v3/${infuraProjectId}`,
-  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraProjectId}`,
+  coreRPC: `https://sepolia.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
-    80002: `https://polygon-amoy.infura.io/v3/${infuraProjectId}`,
+    80002: `https://polygon-amoy.infura.io/v3/${infuraAPIKey}`,
     97: `https://data-seed-prebsc-1-s1.binance.org:8545`,
-    11155420: `https://optimism-sepolia.infura.io/v3/${infuraProjectId}`,
+    11155420: `https://optimism-sepolia.infura.io/v3/${infuraAPIKey}`,
     2442: 'https://rpc.cardona.zkevm-rpc.com',
-    421614: `https://arbitrum-sepolia.infura.io/v3/${infuraProjectId}`,
+    421614: `https://arbitrum-sepolia.infura.io/v3/${infuraAPIKey}`,
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 

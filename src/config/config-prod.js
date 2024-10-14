@@ -1,7 +1,7 @@
 import { getInfuraAPIKey } from '../../basePath';
 
 // environmental configurations for the dapp for different environments
-const infuraProjectId = getInfuraAPIKey('dd262cc008764b29bd6a15249db4772e');
+const infuraAPIKey = getInfuraAPIKey('dd262cc008764b29bd6a15249db4772e');
 export const config = {
   /**
    * Push Nodes Environment - can be dev, staging or prod - important to keep one on one connection
@@ -41,13 +41,13 @@ export const config = {
   /**
    * Core Network Related Data
    */
-  infuraAPIKey: infuraProjectId,
+  infuraAPIKey: infuraAPIKey,
   coreContractChain: 1, //the chain id of the network which the core contract relies on
-  coreRPC: `https://mainnet.infura.io/v3/${infuraProjectId}`,
-  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraProjectId}`,
+  coreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
-    137: `https://polygon-mainnet.infura.io/v3/${infuraProjectId}`,
+    137: `https://polygon-mainnet.infura.io/v3/${infuraAPIKey}`,
     56: 'https://bsc-dataseed.binance.org/',
     10: 'https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B',
     42161: 'https://arb1.arbitrum.io/rpc',

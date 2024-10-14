@@ -9,6 +9,11 @@ export function getPreviewBasePath() {
   return '';
 }
 
+/* 
+This checks if the current domain is localhost and uses the localhost Infura key accordingly.
+*/
 export function getInfuraAPIKey(key) {
-  return window.location.hostname === 'localhost' ? import.meta.env.VITE_APP_INFURA_PROJECT_ID : key;
+  return window.location.hostname === 'localhost' && typeof import.meta !== 'undefined' && import.meta.env
+    ? import.meta.env.VITE_APP_INFURA_PROJECT_ID
+    : key;
 }

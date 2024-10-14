@@ -68,7 +68,6 @@ export function useResolveWeb3Name(address?: string) {
             if (web3NameList.hasOwnProperty(checksumWallet)) {
               return;
             } else {
-              console.debug('in web3 name');
               (await getDomainName(checksumWallet, setWeb3NameList)) ||
                 (await getUnstoppableName(checksumWallet, setWeb3NameList));
             }

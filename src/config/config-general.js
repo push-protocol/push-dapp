@@ -19,7 +19,6 @@ import stakingV2Abi from './abis/StakingV2.json'; // for new staking V2 Contract
 import uniV2LpTokenAbi from './abis/UniV2LPToken.json'; // for new staking V2 Contract on staging
 import PushCoreV2 from './abis/PushCoreV2.json';
 import PushRevealAbi from './abis/PushReveal.json';
-import { InfuraAPIKey } from '@pushprotocol/uiweb';
 
 export const abis = {
   erc20: erc20Abi,
