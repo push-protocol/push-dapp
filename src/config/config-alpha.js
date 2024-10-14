@@ -1,4 +1,4 @@
-import { getInfuraAPIKey } from '../../basePath';
+// import { getInfuraAPIKey } from '../../basePath';
 
 // environmental configurations for the dapp for different environments
 const infuraAPIKey =
