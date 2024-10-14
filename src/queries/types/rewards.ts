@@ -35,6 +35,7 @@ export type ActvityType =
   | 'channel_specific_subscriptions:WALLETTRACKER_CHANNEL'
   | 'channel_specific_subscriptions:PRICETRACKER_CHANNEL'
   | 'channel_specific_subscriptions:SHAPESHIFT_CHANNEL'
+  | 'channel_specific_subscriptions:CYBER_CHANNEL'
   | 'stake_1k_push_epoch'
   | 'stake_5k_push_epoch'
   | 'stake_10k_push_epoch'
