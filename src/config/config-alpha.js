@@ -1,7 +1,11 @@
-import { getInfuraAPIKey } from '../../basePath';
+// import { getInfuraAPIKey } from '../../basePath';
 
 // environmental configurations for the dapp for different environments
-const infuraProjectId = getInfuraAPIKey('dd262cc008764b29bd6a15249db4772e');
+const infuraAPIKey =
+  window.location.hostname === 'localhost'
+    ? import.meta.env.VITE_APP_INFURA_PROJECT_ID
+    : 'dd262cc008764b29bd6a15249db4772e';
+// const infuraAPIKey = getInfuraAPIKey('dd262cc008764b29bd6a15249db4772e');
 export const config = {
   /**
    * Push Nodes Environment - can be dev, staging or prod - important to keep one on one connection
@@ -40,13 +44,13 @@ export const config = {
   /**
    * Core Network Related Data
    */
-  infuraAPIKey: infuraProjectId,
+  infuraAPIKey: infuraAPIKey,
   coreContractChain: 1, //the chain id of the network which the core contract relies on
-  coreRPC: `https://mainnet.infura.io/v3/${infuraProjectId}`,
-  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraProjectId}`,
+  coreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
-    137: `https://polygon-mainnet.infura.io/v3/${infuraProjectId}`,
+    137: `https://polygon-mainnet.infura.io/v3/${infuraAPIKey}`,
     56: 'https://bsc-dataseed.binance.org/',
     10: 'https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B',
     42161: 'https://arb1.arbitrum.io/rpc',
@@ -124,7 +128,7 @@ export const CHAIN_DETAILS = {
     label: 'Ethereum Mainnet',
     name: 'ETH_MAINNET',
     chainId: 1,
-    rpcUrl: `https://mainnet.infura.io/v3/${infuraProjectId}`,
+    rpcUrl: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
     network: 'mainnet',
   },
@@ -132,7 +136,7 @@ export const CHAIN_DETAILS = {
     label: 'Polygon Mainnet',
     name: 'POLYGON_MAINNET',
     chainId: 137,
-    rpcUrl: `https://polygon-mainnet.infura.io/v3/${infuraProjectId}`,
+    rpcUrl: `https://polygon-mainnet.infura.io/v3/${infuraAPIKey}`,
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
     network: 'polygon-mainnet',
   },
