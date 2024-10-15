@@ -489,7 +489,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     initialize();
-  }, [account]);
+  }, [account, provider]);
 
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
