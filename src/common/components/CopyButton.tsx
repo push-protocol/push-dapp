@@ -1,4 +1,4 @@
-import { Copy, Tooltip, Text, Box } from 'blocks';
+import { Copy, Tooltip, Box } from 'blocks';
 import { copyToClipboard } from 'helpers/UtilityHelper';
 import { FC, useState } from 'react';
 

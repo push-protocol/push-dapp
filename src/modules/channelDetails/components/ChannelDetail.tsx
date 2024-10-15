@@ -7,7 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
 import { RecentNotifications } from './RecentNotifications';
 import { Box, Text, Back, Tag, Skeleton, Tooltip, TickDecoratedCircleFilled } from 'blocks';
-import { CopyButton, LOGO_ALIAS_CHAIN, VerifiedChannelTooltipContent, formatSubscriberCount } from 'common';
+import {
+  CopyButton,
+  LOGO_ALIAS_CHAIN,
+  VerifiedChannelTooltipContent,
+  channelCategoriesMap,
+  formatSubscriberCount,
+} from 'common';
 
 import { ChannelDetails } from 'queries';
 
@@ -213,6 +219,13 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                         label={channel.tags[0]}
                         variant="info"
                       />
+                    )}
+                    {!channel?.tags?.[0] && channelCategoriesMap?.[channel?.channel] && (
+                      <Tooltip title="Suggested by Push">
+                        <Box cursor="pointer">
+                          <Tag label={channelCategoriesMap[channel.channel]} />
+                        </Box>
+                      </Tooltip>
                     )}
                   </Box>
                 </Skeleton>
