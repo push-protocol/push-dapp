@@ -46,7 +46,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const isWalletConnected = !!wallet?.accounts?.length;
 
   /* Fetching Channel Details based on Channel Address */
-  const { data: channelDetails, isLoading } = useGetChannelDetails(channelAddress);
+  const { data: channelDetails, isLoading } = useGetChannelDetails(channelAddress, 3600000);
   const { refetch: refetchAllSubscriptions } = useGetUserSubscriptions();
   /* Fetching User Subscribed Channel Details along with user settings */
   const {

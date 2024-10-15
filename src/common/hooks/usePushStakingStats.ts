@@ -1,8 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { abis, addresses, appConfig } from 'config';
 import { useAccount } from 'hooks';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
+import { useQuery } from '@tanstack/react-query';
 
 // TODO: Fix this hook in future
 export const usePushStakingStats = () => {
@@ -14,56 +15,59 @@ export const usePushStakingStats = () => {
   const [pushCoreV2, setPushCoreV2] = useState<ethers.Contract>();
   const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState<ethers.Contract>();
 
-  const [poolStats, setPoolStats] = useState<null | any>(null);
-  const [lpPoolStats, setLpPoolStats] = useState<null | any>(null);
-  const [userDataLP, setUserDataLP] = useState<null | any>(null);
-  const [userDataPush, setUserDataPush] = useState<null | any>(null);
-  const [pushPoolStats, setPushPoolStats] = useState<null | any>(null);
-
   const library = provider?.getSigner(account);
 
-  const getPoolStats = useCallback(async () => {
+  const { data: poolStats } = useQuery({
+    queryKey: ['poolStats'],
+    enabled: !!provider && !!yieldFarmingLP,
     // @ts-expect-error
-    const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
+    queryFn: () => YieldFarmingDataStoreV2.getInstance().getPoolStats(provider),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchInterval: 3600000,
+    retry: 2,
+  });
 
-    setPoolStats({ ...poolStats });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
+  /* not needed as of now */
+  // const { data: lpPoolStats } = useQuery({
+  //   queryKey: ['lpPoolStats'],
+  //   enabled: !!provider && !!poolStats,
+  //   // @ts-expect-error
+  //   queryFn: () => YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats),
+  //   staleTime: Infinity,
+  //   refetchOnWindowFocus: false,
+  //   refetchInterval: 3600000,
+  //   retry: 2,
+  // });
 
-  const getLpPoolStats = useCallback(async () => {
+  /* not needed as of now */
+  // const { data: userDataLP } = useQuery({
+  //   queryKey: ['userDataLP'],
+  //   enabled: !!provider,
+  //   // @ts-expect-error
+  //   queryFn: () => YieldFarmingDataStoreV2.getInstance().getUserDataLP(),
+  //   staleTime: Infinity,
+  //   refetchOnWindowFocus: false,
+  //   refetchInterval: 3600000,
+  //   retry: 2,
+  // });
+
+  const { data: pushPoolStats } = useQuery({
+    queryKey: ['pushPoolStats'],
+    enabled: !!provider,
     // @ts-expect-error
-    const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
-
-    // @ts-expect-error
-    const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
-
-    setLpPoolStats({ ...lpPoolStats });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
-
-  const getUserDataLP = useCallback(async () => {
-    // @ts-expect-error
-    const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
-
-    setUserDataLP({ ...userDataLP });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
-
-  const getUserDataPush = useCallback(async () => {
-    // @ts-expect-error
-    const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
-
-    setPushPoolStats({ ...pushPoolStats });
-    setUserDataPush({ ...userDataPush });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
+    queryFn: () => YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchInterval: 3600000,
+    retry: 2,
+  });
 
   //initiate the YieldFarmV2 data store here
   useEffect(() => {
     if (chainId !== appConfig.coreContractChain && chainId !== appConfig.mainnetCoreContractChain) {
       return;
     }
-
-    setLpPoolStats(null);
-    setUserDataLP(null);
-    setPushPoolStats(null);
-    setUserDataPush(null);
 
     let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
     let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
@@ -102,18 +106,13 @@ export const usePushStakingStats = () => {
       yieldFarmingLP,
       uniswapV2Router02Instance
     );
-
-    getPoolStats();
-    getUserDataLP();
-    getLpPoolStats();
-    getUserDataPush();
   }, [account, chainId]);
 
   return {
     poolStats,
-    lpPoolStats,
-    userDataLP,
-    userDataPush,
+    // lpPoolStats,
+    // userDataLP,
+    // userDataPush,
     pushPoolStats,
   };
 };
