@@ -52,9 +52,9 @@ export const usePushStakingStats = () => {
   //   retry: 2,
   // });
 
-  const { data: pushPoolStats } = useQuery({
+  const { data: userDataPush } = useQuery({
     queryKey: ['pushPoolStats'],
-    enabled: !!provider,
+    enabled: !!provider && !!pushCoreV2,
     // @ts-expect-error
     queryFn: () => YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider),
     staleTime: Infinity,
@@ -113,6 +113,6 @@ export const usePushStakingStats = () => {
     // lpPoolStats,
     // userDataLP,
     // userDataPush,
-    pushPoolStats,
+    pushPoolStats: userDataPush?.[0],
   };
 };
