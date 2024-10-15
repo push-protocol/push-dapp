@@ -25,6 +25,8 @@ export { default as CommunicationDark } from './components/CommunicationDark';
 
 export { default as CreateChannelPoints } from './components/CreateChannelPoints';
 
+export { default as CyberLogoRewards } from './components/CyberLogoRewards';
+
 export { default as Discord } from './components/Discord';
 
 export { default as EarnOnPush } from './components/EarnOnPush';

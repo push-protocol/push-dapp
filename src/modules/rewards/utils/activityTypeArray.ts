@@ -15,6 +15,7 @@ export const channelSubscriptionActivities: ActvityType[] = [
   'channel_specific_subscriptions:QUICKSWAP_CHANNEL',
   'channel_specific_subscriptions:WALLETTRACKER_CHANNEL',
   'channel_specific_subscriptions:SHAPESHIFT_CHANNEL',
+  'channel_specific_subscriptions:CYBER_CHANNEL',
 ];
 
 export const bonusRewardActivities: ActvityType[] = [
