@@ -45,6 +45,7 @@ export const config = {
    * Core Network Related Data
    */
   infuraAPIKey: infuraAPIKey,
+  coreContractChain: 11155111, //the chain id of the network which the core contract relies on
   coreRPC: `https://sepolia.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
