@@ -223,7 +223,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     // call initializePushSDK if decryptedPGPKeys is not null
     if (decryptedPGPKeys) {
       console.debug('src::contexts::AppContext::initializePushSdkReadMode::Called initializePushSDK()');
-      return initializePushSDK();
+      return initializePushSDK(wallet);
     }
 
     // else initialize push sdk in read mode
@@ -489,7 +489,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     initialize();
-  }, [account, provider]);
+  }, [account]);
 
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
