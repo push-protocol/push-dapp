@@ -75,7 +75,7 @@ const ChatBox = ({ triggerChatParticipant }): JSX.Element => {
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //resolve web3 names
-  useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  // useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
   // get web3 name
   let ensName = '';

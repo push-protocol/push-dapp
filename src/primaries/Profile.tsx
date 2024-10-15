@@ -127,7 +127,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 onClick={() => setShowDropdown(!showDropdown)}
                 ref={toggleArrowRef}
               >
-                {web3Name === null ? (
+                {web3Name === undefined ? (
                   <LoaderSpinner
                     type={LOADER_TYPE.SEAMLESS}
                     spinnerSize={20}

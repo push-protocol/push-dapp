@@ -15,6 +15,7 @@ const wcV2InitOptions: WalletConnectOptions = {
    * Chains required to be supported by all wallets connecting to your DApp
    */
   requiredChains: [appConfig.coreContractChain],
+
   /**
    * Optional chains
    */

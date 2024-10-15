@@ -19,7 +19,7 @@ function Profile() {
   const { account } = useAccount();
   const { authError } = useContext(ErrorContext);
 
-  useResolveWeb3Name(account);
+  // useResolveWeb3Name(account);
 
   // get ens name from context
   const ensName = web3NameList[account];

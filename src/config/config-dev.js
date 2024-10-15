@@ -1,4 +1,8 @@
 // environmental configurations for the dapp for different environments
+const infuraAPIKey =
+  window.location.hostname === 'localhost'
+    ? import.meta.env.VITE_APP_INFURA_PROJECT_ID
+    : 'be75cf427a5c41f9badb591994019d22';
 export const config = {
   /**
    * Push Nodes Environment - can be dev, staging or prod - important to keep one on one connection
@@ -39,16 +43,17 @@ export const config = {
   /**
    * Core Network Related Data
    */
+  infuraAPIKey: infuraAPIKey,
   coreContractChain: 11155111, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://ethereum-sepolia-rpc.publicnode.com',
-  mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreRPC: `https://sepolia.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
-    80002: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
-    97: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-    11155420: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    80002: `https://polygon-amoy.infura.io/v3/${infuraAPIKey}`,
+    97: `https://data-seed-prebsc-1-s1.binance.org:8545`,
+    11155420: `https://optimism-sepolia.infura.io/v3/${infuraAPIKey}`,
     2442: 'https://rpc.cardona.zkevm-rpc.com',
-    421614: 'https://arbitrum-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    421614: `https://arbitrum-sepolia.infura.io/v3/${infuraAPIKey}`,
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -130,7 +135,7 @@ export const CHAIN_DETAILS = {
     label: 'Ethereum Sepolia',
     name: 'ETH_TEST_SEPOLIA',
     chainId: 11155111,
-    rpcUrl: 'https://sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    rpcUrl: `https://sepolia.infura.io/v3/${config.infuraAPIKey}`,
     commAddress: '0x28709649Dfda9baDEbb61dBF7a8D199cfC8EcF2e',
     network: 'sepolia',
   },
@@ -138,7 +143,7 @@ export const CHAIN_DETAILS = {
     label: 'Polygon Amoy',
     name: 'POLYGON_TEST_AMOY',
     chainId: 80002,
-    rpcUrl: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    rpcUrl: `https://polygon-amoy.infura.io/v3/${config.infuraAPIKey}`,
     commAddress: '0x9cb3bd7550b5c92baa056fc0f08132f49508145f',
     network: 'polygon-amoy',
   },
@@ -153,7 +158,7 @@ export const CHAIN_DETAILS = {
     label: 'Optimism Sepolia',
     name: 'OPTIMISM_TESTNET',
     chainId: 11155420,
-    rpcUrl: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    rpcUrl: `https://optimism-sepolia.infura.io/v3/${config.infuraAPIKey}`,
     commAddress: '0x754787358fac861ef904c92d54f7adb659779317',
   },
   2442: {
@@ -167,7 +172,7 @@ export const CHAIN_DETAILS = {
     label: 'Arbitrum Testnet',
     name: 'ARBITRUM_TESTNET',
     chainId: 421614,
-    rpcUrl: 'https://arbitrum-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    rpcUrl: `https://arbitrum-sepolia.infura.io/v3/${config.infuraAPIKey}`,
     commAddress: '0x754787358fac861ef904c92d54f7adb659779317',
   },
   123: {

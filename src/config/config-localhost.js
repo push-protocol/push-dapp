@@ -1,4 +1,5 @@
 // environmental configurations for the dapp for different environments
+const infuraAPIKey = import.meta.env.VITE_APP_INFURA_PROJECT_ID || '';
 export const config = {
   /**
    * Push Nodes Environment - can be dev, staging or prod - important to keep one on one connection
@@ -31,9 +32,10 @@ export const config = {
   /**
    * Core Network Related Data
    */
+  infuraAPIKey: infuraAPIKey,
   coreContractChain: 5, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
-  mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreRPC: `https://goerli.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
     80002: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
@@ -99,7 +101,7 @@ export const CHAIN_DETAILS = {
     label: 'Ethereum Goerli',
     name: 'ETH_TEST_GOERLI',
     chainId: 5,
-    rpcUrl: 'https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+    rpcUrl: `https://goerli.infura.io/v3/${infuraAPIKey}`,
     commAddress: '0xc064F30bac07e84500c97A04D21a9d1bfFC72Ec0',
     network: 'goerli',
   },
@@ -107,7 +109,7 @@ export const CHAIN_DETAILS = {
     label: 'Polygon Amoy',
     name: 'POLYGON_TEST_AMOY',
     chainId: 80002,
-    rpcUrl: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    rpcUrl: `https://polygon-amoy.infura.io/v3/${infuraAPIKey}`,
     commAddress: '0x9cb3bd7550b5c92baa056fc0f08132f49508145f',
     network: 'polygon-amoy',
   },
@@ -122,7 +124,7 @@ export const CHAIN_DETAILS = {
     label: 'Optimism Sepolia',
     name: 'OPTIMISM_TESTNET',
     chainId: 11155420,
-    rpcUrl: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    rpcUrl: `https://optimism-sepolia.infura.io/v3/${infuraAPIKey}`,
     commAddress: '0x9Dc25996ba72A2FD7E64e7a674232a683f406F1A',
   },
 };
