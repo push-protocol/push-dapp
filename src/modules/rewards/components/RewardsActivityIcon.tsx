@@ -28,8 +28,9 @@ import {
   Twitter,
   YellowBonusActivitySubscribers,
   PushAlpha,
+  CyberLogoRewards,
 } from 'blocks';
-import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo, shapeShiftLogo, cyberLogo } from 'common';
+import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo, shapeShiftLogo } from 'common';
 import { ActvityType } from 'queries';
 
 type RewardsActivityIconProp = {
@@ -209,11 +210,9 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
 
   if (type === 'channel_specific_subscriptions:CYBER_CHANNEL') {
     return (
-      <img
+      <CyberLogoRewards
         width={48}
         height={48}
-        src={cyberLogo}
-        style={{ borderRadius: 'var(--radius-round)' }}
       />
     );
   }

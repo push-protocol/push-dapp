@@ -50,26 +50,30 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
             {linkedText}
           </Link>
 
-          <Text
-            variant={variant || 'bl-semibold'}
-            color={color || 'text-primary'}
-            as="span"
-          >
-            {innerText}
-          </Text>
+          {innerText && (
+            <Text
+              variant={variant || 'bl-semibold'}
+              color={color || 'text-primary'}
+              as="span"
+            >
+              {innerText}
+            </Text>
+          )}
 
-          <Link
-            to={secondUrl}
-            isText
-            target="_blank"
-            textProps={{
-              variant: variant || 'bl-semibold',
-              color: 'text-brand-medium',
-              display: 'inline-block',
-            }}
-          >
-            {secondLinkedText}
-          </Link>
+          {secondLinkedText && secondUrl && (
+            <Link
+              to={secondUrl}
+              isText
+              target="_blank"
+              textProps={{
+                variant: variant || 'bl-semibold',
+                color: 'text-brand-medium',
+                display: 'inline-block',
+              }}
+            >
+              {secondLinkedText}
+            </Link>
+          )}
 
           <Text
             variant={variant || 'bl-semibold'}
