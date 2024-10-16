@@ -36,7 +36,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const activityResetDate = daysToReset + 7;
+  const activityResetDate = (daysToReset as number) + 7;
 
   const isEpochStatusActive = useMemo(() => {
     return daysToReset != null && !multiplier && daysToReset >= 0 && activityResetDate > 7 && isWalletConnected;

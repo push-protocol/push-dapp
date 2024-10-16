@@ -65,15 +65,9 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
     );
   }, [rewardActivitiesResponse]);
 
-  // const allUniV2Array = useMemo(() => {
-  //   return filterAndSortAllActivities(
-  //     'multiplier-uni',
-  //     'point-uni',
-  //     rewardActivitiesResponse?.activities.flatMap((page) => page) || []
-  //   );
-  // }, [rewardActivitiesResponse]);
-
   const daysToReset = useMemo(() => {
+    if (resetDate == null || resetDate == undefined) return;
+
     const currentTime = Date.now() / 1000; // Current time in seconds
     const differenceInSeconds = (resetDate as number) - currentTime;
     return Math.floor(differenceInSeconds / (60 * 60 * 24));
@@ -83,9 +77,9 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
   const hasSevenDaysPassed = (storedEpochTime: number) => {
     const currentTime = Math.floor(Date.now() / 1000); // Current time in epoch seconds
     const sevenDays = 7; // 7 days
-    const differenceInSeconds = Math.floor((currentTime - storedEpochTime) / (60 * 60 * 24));
+    const differenceInDays = Math.floor((currentTime - storedEpochTime) / (60 * 60 * 24));
 
-    return differenceInSeconds > sevenDays; // Return true if 7 days or more have passed since the stored epoch time
+    return differenceInDays >= sevenDays; // Return true if 7 days or more have passed since the stored epoch time
   };
 
   // Function to handle fetch and timestamp/epoch comparison
@@ -95,17 +89,6 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
       return;
     }
 
-    const latestPushTimestamp = pushStakeData?.toTimestamp;
-    // const latestUniV2Timestamp = uniV2StakeData.toTimestamp;
-    const resetStakeEndDate = localStorage.getItem(CommonLocalStorageKeys.resetStakeEndDate);
-
-    // confirm: push timestamp matches yield farming
-    const laterTimestamp = latestPushTimestamp;
-
-    if (!resetStakeEndDate || hasSevenDaysPassed(Number(laterTimestamp))) {
-      localStorage.setItem(CommonLocalStorageKeys.resetStakeEndDate, laterTimestamp.toString());
-    }
-    setResetDate(laterTimestamp);
     // Call the appropriate fetch function based on the later timestamp
     handleFetchData(allPushArray, 'push');
   };
@@ -135,10 +118,31 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
     const { latestActivityKey } = getActivityStatus(dataActivity);
     const mostRecentStakeActivity = dataActivity?.[latestActivityKey];
     const stakeData = stakeType === 'push' ? pushStakeData : uniV2StakeData;
-    const toTimestamp = stakeData?.toTimestamp as number;
+    const toTimestamp = mostRecentStakeActivity?.data?.toTimestamp as number;
+    const latestTimestamp = pushStakeData?.toTimestamp as number;
 
     const isEpochActive = mostRecentStakeActivity?.data?.currentEpoch === stakeData?.currentEpoch;
-    const isPastSevenDays = hasSevenDaysPassed(Number(toTimestamp));
+    const resetStakeEndDate = localStorage.getItem(CommonLocalStorageKeys.resetStakeEndDate);
+
+    // Check if it's been seven days based on the appropriate timestamp
+    const isPastSevenDays =
+      toTimestamp !== undefined
+        ? hasSevenDaysPassed(Number(toTimestamp)) // If toTimestamp exists, check this
+        : hasSevenDaysPassed(Number(resetStakeEndDate)); // If toTimestamp is undefined, check resetStakeEndDat
+
+    const updateResetDate = (timestamp: number) => {
+      localStorage.setItem(CommonLocalStorageKeys.resetStakeEndDate, timestamp.toString());
+      setResetDate(timestamp);
+    };
+
+    // Determine which timestamp to use for resetting
+    if (!resetStakeEndDate || toTimestamp === undefined) {
+      updateResetDate(latestTimestamp);
+    } else if (!isPastSevenDays) {
+      updateResetDate(toTimestamp);
+    } else {
+      updateResetDate(latestTimestamp);
+    }
 
     if (!isEpochActive && isPastSevenDays) {
       setResetEpoch(true);
@@ -148,6 +152,8 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
       console.log(`${stakeType} epoch is not reset`);
     }
   };
+
+  // console.log(daysToReset, 'daysToReset');
 
   // Effect for handling fetch data for both arrays
   useEffect(() => {
