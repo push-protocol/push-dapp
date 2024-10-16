@@ -9,12 +9,12 @@ import { walletToCAIP10 } from 'helpers/w2w';
 import { useAccount } from 'hooks';
 import { generateVerificationProof } from '../utils/generateVerificationProof';
 import { useRewardsTabs } from './useRewardsTabs';
+import { isUserNotFound } from '../utils/resolveError';
 
 // hooks
 import { useGetUserRewardsDetails } from 'queries/hooks/rewards';
 
 // types
-import { AxiosError } from 'axios';
 import { UserStoreType } from 'types';
 import { useRewardsContext } from 'contexts/RewardsContext';
 import { checkUnlockProfileErrors } from 'components/chat/unlockProfile/UnlockProfile.utils';
@@ -37,9 +37,6 @@ const useRewardsAuth = () => {
   } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
   });
-
-  // error responses
-  const errorMessage = 'Failed to retrieve user';
 
   // rewards activity connect function
   const connectWallet = () => {
@@ -98,7 +95,7 @@ const useRewardsAuth = () => {
 
     // dashboard connect wallet flow
     if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
-      if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
+      if (isUserNotFound(error)) {
         const errorExistsInUnlockProfile = checkUnlockProfileErrors(userPushSDKInstance);
         if (errorExistsInUnlockProfile || !isWalletConnected) return;
         unlockProfile();
@@ -112,7 +109,7 @@ const useRewardsAuth = () => {
 
     // rewards activity first user
     if (isVerifyClicked && status === 'error') {
-      if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
+      if (isUserNotFound(error)) {
         unlockProfile();
       }
     }

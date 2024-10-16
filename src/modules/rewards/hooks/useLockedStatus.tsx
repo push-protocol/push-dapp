@@ -7,9 +7,9 @@ import { useGetRewardActivityStatus, useGetUserRewardsDetails } from 'queries';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
+import { isUserNotFound } from '../utils/resolveError';
 
 // types
-import { AxiosError } from 'axios';
 import { useRewardsContext } from 'contexts/RewardsContext';
 
 const useLockedStatus = () => {
@@ -24,9 +24,6 @@ const useLockedStatus = () => {
     userId: userDetails?.userId as string,
   });
 
-  // error responses
-  const errorMessage = 'Failed to retrieve user';
-
   useEffect(() => {
     if (!hasMounted) {
       if (isWalletConnected && userDetails?.userId) {
@@ -37,7 +34,7 @@ const useLockedStatus = () => {
     }
 
     if (status === 'error' && isWalletConnected) {
-      if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
+      if (isUserNotFound(error)) {
         setIsLocked(true);
       }
     }
