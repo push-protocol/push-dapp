@@ -31,11 +31,14 @@ export const useChannelsFilters = ({ initialChain, initialCategory }: UseChannel
 
   useEffect(() => {
     const filters: Partial<Filters> = {};
-    if (!searchFilters.chain) {
-      filters['chain'] = initialChain;
+
+    if (!searchFilters.chain || !searchFilters.category) {
+      filters.chain = searchFilters.chain || initialChain;
+      filters.category = searchFilters.category || initialCategory;
     }
-    if (!searchFilters.category) {
-      filters['category'] = initialCategory;
+
+    if ((searchFilters.chain !== initialChain || searchFilters.search) && searchFilters.category !== initialCategory) {
+      filters.category = initialCategory;
     }
 
     const hasFilters = Object.keys(filters).length;

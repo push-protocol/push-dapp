@@ -5,6 +5,7 @@ import { Box, Search, Select, TextInput } from 'blocks';
 import { getSelectChains } from 'common';
 import { appConfig } from 'config';
 import { Filters } from '../hooks/useChannelsFilters';
+import { AllCategories } from '../Channels.constants';
 
 export type ChannelSearchAndChainSelectionProps = {
   filters: Filters;
@@ -18,10 +19,14 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
 
   const getSearchResults = useCallback(
     debounce((value) => {
-      setFilter({ search: value });
+      if (value !== '') setFilter({ search: value, category: AllCategories });
     }, 800),
     [setFilter]
   );
+
+  useEffect(() => {
+    setSearchQuery(filters.search as string);
+  }, [filters]);
 
   useEffect(() => {
     !initialLoad && getSearchResults(searchQuery);
@@ -50,7 +55,7 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
         <Select
           options={getSelectChains(appConfig.allowedNetworks)}
           value={filters.chain}
-          onSelect={(value) => setFilter({ chain: value })}
+          onSelect={(value) => setFilter({ chain: value, category: AllCategories })}
         />
       </Box>
     </Box>

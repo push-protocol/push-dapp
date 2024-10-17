@@ -9,7 +9,8 @@ import { useChannelsFilters } from './hooks/useChannelsFilters';
 import { ChannelSearchAndChainSelection } from './components/ChannelSearchAndChainSelection';
 import { ChannelCategories } from './components/ChannelCategories';
 import { AllChannelList } from './components/AllChannelsList';
-import { AllCategories } from './Channels.constants';
+import { AllCategories, channelFilterList } from './Channels.constants';
+import { filterFrontendChannels } from './Channels.utils';
 
 export type ChannelsProps = {};
 
@@ -50,10 +51,13 @@ const Channels: FC<ChannelsProps> = () => {
     tag: filters.category === AllCategories ? '' : filters.category,
   });
 
-  const channels =
+  let channels =
     loadingChannels || searchingChannels
       ? Array(9).fill(0)
       : (filters.search ? searchList : channelList)?.pages.flatMap((page) => page.channels) || [];
+  channels = channels.filter((channel) => !channelFilterList.includes(channel.channel));
+
+  const filteredFrontendChannels = filterFrontendChannels(channels, filters);
 
   const hasMoreData = filters.search
     ? !isSearchingNextPageForChannels && hasNextPageForSearch
@@ -92,7 +96,7 @@ const Channels: FC<ChannelsProps> = () => {
             setFilter={setFilter}
           />
         </Box>
-        {!channels.length && !isLoading ? (
+        {!channels.length && !filteredFrontendChannels.length && !isLoading ? (
           <Box
             display="flex"
             gap="spacing-xs"
@@ -111,6 +115,7 @@ const Channels: FC<ChannelsProps> = () => {
           <AllChannelList
             channels={channels}
             hasMoreData={hasMoreData}
+            frontendChannels={filteredFrontendChannels}
             isLoading={isLoading}
             isLoadingNextPage={isFetchingNextPageForChannels || isSearchingNextPageForChannels}
             loadMore={filters.search ? searchChannelsForNextPage : fetchChannelsForNextPage}

@@ -48,3 +48,9 @@ export const isValidURL = (str: string | undefined) => {
   ); // fragment locator
   return !!pattern.test(str);
 };
+
+export const envUtil = {
+  isProd: appConfig.appEnv === 'prod',
+  isDev: appConfig.appEnv === 'dev',
+  isStaging: appConfig.appEnv === 'staging',
+};

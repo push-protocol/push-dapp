@@ -4,6 +4,7 @@ import { css } from 'styled-components';
 import { Box, deviceMediaQ, Spinner } from 'blocks';
 import { ChannelDetails } from 'queries';
 import { AllChannelsListItem } from './AllChannelsListItem';
+import { FrontendChannelListItem } from './FrontendChannelListItem';
 
 export type AllChannelListProps = {
   channels: ChannelDetails[];
@@ -11,9 +12,17 @@ export type AllChannelListProps = {
   isLoading: boolean;
   isLoadingNextPage: boolean;
   loadMore: () => void;
+  frontendChannels: Array<string>;
 };
 
-const AllChannelList: FC<AllChannelListProps> = ({ channels, hasMoreData, isLoading, isLoadingNextPage, loadMore }) => {
+const AllChannelList: FC<AllChannelListProps> = ({
+  channels,
+  hasMoreData,
+  isLoading,
+  isLoadingNextPage,
+  loadMore,
+  frontendChannels,
+}) => {
   return (
     <Box
       height="100%"
@@ -44,6 +53,12 @@ const AllChannelList: FC<AllChannelListProps> = ({ channels, hasMoreData, isLoad
         threshold={150}
         className="channel-scroll"
       >
+        {frontendChannels.map((channel: string) => (
+          <FrontendChannelListItem
+            channelAddress={channel}
+            key={`${channel}`}
+          />
+        ))}
         {channels.map((channel: ChannelDetails, index: number) => (
           <AllChannelsListItem
             key={`${index}`}

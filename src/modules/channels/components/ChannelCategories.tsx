@@ -4,6 +4,7 @@ import { css } from 'styled-components';
 import { useGetChannelCategories } from 'queries';
 import { Filters } from '../hooks/useChannelsFilters';
 import { AllCategories } from '../Channels.constants';
+import { appConfig } from 'config';
 
 export type ChannelCategoriesProps = {
   filters: Filters;
@@ -75,7 +76,7 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
             <Pill
               key={`${index}`}
               isActive={cat === filters.category}
-              onClick={() => setFilter({ category: cat })}
+              onClick={() => setFilter({ category: cat, search: '', chain: appConfig.coreContractChain.toString() })}
             >
               {cat}
             </Pill>
