@@ -215,7 +215,7 @@ const Select: React.FC<SelectProps> = ({
   disabled,
 }) => {
   const [popoverWidth, setPopoverWidth] = useState(0);
-  const [viewPopover, setViewPopover] = useState(true);
+  const [viewPopover, setViewPopover] = useState(false);
   const [popoverLeft, setPopoverLeft] = useState(0);
   const comboboxRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -253,7 +253,6 @@ const Select: React.FC<SelectProps> = ({
   const handleParentFocus = () => {
     childRef?.current?.focus();
   };
-
   return (
     <Container
       css={css}

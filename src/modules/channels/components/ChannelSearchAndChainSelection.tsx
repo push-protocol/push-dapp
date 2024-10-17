@@ -24,9 +24,9 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
     [setFilter]
   );
 
-  // useEffect(() => {
-  //   setSearchQuery(filters.search as string);
-  // }, [filters]);
+  useEffect(() => {
+    if (!filters.search) setSearchQuery('');
+  }, [filters.search]);
 
   useEffect(() => {
     !initialLoad && getSearchResults(searchQuery);
