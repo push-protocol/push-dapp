@@ -40,6 +40,7 @@ const StyledButton = styled.button<ButtonProps>`
   font-family: var(--font-family);
   justify-content: center;
   white-space: nowrap;
+  flex-shrink: 0;
 
   /* Common icon css added through CSS class */
   .icon {
@@ -56,7 +57,7 @@ const StyledButton = styled.button<ButtonProps>`
   ${({ iconOnly, size }) => getButtonSizeStyles({ iconOnly: !!iconOnly, size: size || 'medium' })}
 
   /* Circular CSS for rounded icon only buttons */
-  ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10)`}
+  ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10);`}
 
   /* Prop specific CSS */
   ${({ block }) => block && 'width: 100%;'}

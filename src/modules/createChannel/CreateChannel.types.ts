@@ -1,6 +1,7 @@
 export type ChannelInfoFormValues = {
   channelName: string;
   channelDesc: string;
+  channelCategory: string;
   channelURL: string;
   image: null;
   imageSrc?: string;

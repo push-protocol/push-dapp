@@ -28,6 +28,7 @@ import { tooltipSemantics } from '../semantics/semantics.tooltip';
 import { sliderSemantics } from '../semantics/semantics.slider';
 import { spinnerSemantics } from '../semantics/semantics.spinner';
 import { tableSemantics } from '../semantics/semantics.table';
+import { pillSemantics } from '../semantics/semantics.pill';
 
 // TODO: find a better way to do this in future
 type SemanticKeys = {
@@ -45,6 +46,7 @@ type SemanticKeys = {
   modal: 'components-modal';
   notifications: 'components-in-app-notification';
   pagination: 'components-pagination';
+  pill: 'components-pill';
   progressBar: 'components-progress-bar';
   radio: 'components-radio-button';
   surface: 'surface';
@@ -76,6 +78,7 @@ export const semanticKeys: SemanticKeys = {
   modal: 'components-modal',
   notifications: 'components-in-app-notification',
   pagination: 'components-pagination',
+  pill: 'components-pill',
   progressBar: 'components-progress-bar',
   radio: 'components-radio-button',
   surface: 'surface',
@@ -107,6 +110,7 @@ export const colorSemantics = {
   [semanticKeys.modal]: modalSemantics,
   [semanticKeys.notifications]: notificationsSemantics,
   [semanticKeys.pagination]: paginationSemantics,
+  [semanticKeys.pill]: pillSemantics,
   [semanticKeys.progressBar]: progressBarSemantics,
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,

@@ -295,7 +295,6 @@ export default function App() {
   }, []);
 
   const steps = UserJourneySteps({ darkMode });
-
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { action, lifecycle, index } = data;
     if (lifecycle === 'ready') {

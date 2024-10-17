@@ -20,7 +20,7 @@ const ChannelDashboardPageV2 = () => {
     if (!loadingChannelDetails && !channelDetails) {
       navigate(`${APP_PATHS.CreateChannel}`);
     } else {
-      navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
+      navigate(`${APP_PATHS.ChannelDashboard(account)}`);
     }
   }, [channelDetails, loadingChannelDetails]);
 

@@ -28,7 +28,7 @@ const CreateChannelPage = () => {
 
   useEffect(() => {
     if (channelDetails && !loadingChannelDetails) {
-      navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
+      navigate(`${APP_PATHS.ChannelDashboard(account)}`);
     }
   }, [channelDetails]);
 
