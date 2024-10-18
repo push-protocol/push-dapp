@@ -1,10 +1,13 @@
 import { FC } from 'react';
+
 import InfiniteScroll from 'react-infinite-scroller';
 import { css } from 'styled-components';
-import { Box, deviceMediaQ, Spinner } from 'blocks';
+
 import { ChannelDetails } from 'queries';
+
 import { AllChannelsListItem } from './AllChannelsListItem';
-import { FrontendChannelListItem } from './FrontendChannelListItem';
+import { SuggestedChannelListItem } from './SuggestedChannelListItem';
+import { Box, deviceMediaQ, Spinner } from 'blocks';
 
 export type AllChannelListProps = {
   channels: ChannelDetails[];
@@ -12,7 +15,7 @@ export type AllChannelListProps = {
   isLoading: boolean;
   isLoadingNextPage: boolean;
   loadMore: () => void;
-  frontendChannels: Array<string>;
+  suggestedChannels: Array<string>;
 };
 
 const AllChannelList: FC<AllChannelListProps> = ({
@@ -21,7 +24,7 @@ const AllChannelList: FC<AllChannelListProps> = ({
   isLoading,
   isLoadingNextPage,
   loadMore,
-  frontendChannels,
+  suggestedChannels,
 }) => {
   return (
     <Box
@@ -53,8 +56,8 @@ const AllChannelList: FC<AllChannelListProps> = ({
         threshold={150}
         className="channel-scroll"
       >
-        {frontendChannels.map((channel: string) => (
-          <FrontendChannelListItem
+        {suggestedChannels.map((channel: string) => (
+          <SuggestedChannelListItem
             channelAddress={channel}
             key={`${channel}`}
           />

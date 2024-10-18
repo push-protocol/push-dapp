@@ -5,3 +5,5 @@ export type ModalResponse = {
 };
 
 export type UnlockProfileModalTypes = 'portal' | 'container';
+
+export type EnvType = 'prod' | 'dev' | 'staging';

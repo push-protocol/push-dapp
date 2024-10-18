@@ -1,12 +1,14 @@
-import { useGetChannelDetails } from 'queries';
 import { FC } from 'react';
+
+import { useGetChannelDetails } from 'queries';
+
 import { AllChannelsListItem } from './AllChannelsListItem';
 
-export type FrontendChannelListItemProps = {
+export type SuggestedChannelListItemProps = {
   channelAddress: string;
 };
 
-const FrontendChannelListItem: FC<FrontendChannelListItemProps> = ({ channelAddress }) => {
+const SuggestedChannelListItem: FC<SuggestedChannelListItemProps> = ({ channelAddress }) => {
   const { data: channelDetails, isLoading } = useGetChannelDetails(channelAddress);
 
   return (
@@ -17,4 +19,4 @@ const FrontendChannelListItem: FC<FrontendChannelListItemProps> = ({ channelAddr
   );
 };
 
-export { FrontendChannelListItem };
+export { SuggestedChannelListItem };

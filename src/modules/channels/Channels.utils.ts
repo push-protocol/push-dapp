@@ -1,14 +1,16 @@
-import { channelCategoriesMap, envUtil } from 'common';
-import { ChannelDetails } from 'queries';
+import { channelCategoriesMap, getCurrentEnv } from 'common';
+
 import { Filters } from './hooks/useChannelsFilters';
+import { ChannelDetails } from 'queries';
+
 import { AllCategories, channelFilterList } from './Channels.constants';
 
-export const showFrontendChannels = (filters: Filters) => {
-  return envUtil.isProd && filters?.category && filters?.category != AllCategories;
+export const showSuggestedChannels = (filters: Filters) => {
+  return getCurrentEnv() === 'prod' && filters?.category && filters?.category != AllCategories;
 };
 
-export const filterFrontendChannels = (channels: ChannelDetails[], filter: Filters): Array<string> => {
-  if (showFrontendChannels(filter)) {
+export const getSuggestedChannels = (channels: ChannelDetails[], filter: Filters): Array<string> => {
+  if (showSuggestedChannels(filter)) {
     const channelIds = channels.map((channel) => channel.channel);
     return Object.keys(channelCategoriesMap).filter(
       (channel) =>

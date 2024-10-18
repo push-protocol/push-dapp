@@ -1,6 +1,7 @@
 import { appConfig } from 'config';
 import { LOGO_ALIAS_CHAIN } from './Common.constants';
 import { networkName } from 'helpers/UtilityHelper';
+import { EnvType } from './Common.types';
 
 export const allowedNetworks = appConfig.allowedNetworks.filter(
   (chain: number) => chain != appConfig.coreContractChain
@@ -49,8 +50,6 @@ export const isValidURL = (str: string | undefined) => {
   return !!pattern.test(str);
 };
 
-export const envUtil = {
-  isProd: appConfig.appEnv === 'prod',
-  isDev: appConfig.appEnv === 'dev',
-  isStaging: appConfig.appEnv === 'staging',
+export const getCurrentEnv = (): EnvType => {
+  return appConfig.appEnv;
 };
