@@ -15,7 +15,11 @@ const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isL
     data: userSubscription,
     refetch: refetchChannelSubscription,
     isLoading: isSubscriptionLoading,
-  } = useGetUserSubscriptions();
+  } = useGetUserSubscriptions(undefined, {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    refetchInterval: 900000, // 15 minutes,
+  });
 
   const handleRefetch = () => {
     refetchChannelSubscription();
