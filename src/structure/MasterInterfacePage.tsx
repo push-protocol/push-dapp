@@ -26,7 +26,7 @@ const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
 const FAQPage = lazy(() => import('pages/FAQPage'));
 const GovPage = lazy(() => import('pages/GovPage'));
-const InboxPage = lazy(() => import('pages/InboxPage'));
+//const InboxPage = lazy(() => import('pages/InboxPage'));
 const InternalDevPage = lazy(() => import('pages/InternalDevPage'));
 const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
@@ -79,6 +79,7 @@ import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModeProp } from 'blocks';
+import InboxPage from 'pages/InboxPage';
 
 const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
 
@@ -224,7 +225,12 @@ function MasterInterfacePage() {
 
             <Route
               path={APP_PATHS.YieldV2}
-              element={<Navigate to={APP_PATHS.Yield} replace />}
+              element={
+                <Navigate
+                  to={APP_PATHS.Yield}
+                  replace
+                />
+              }
             />
             <Route
               path={APP_PATHS.Yield}
