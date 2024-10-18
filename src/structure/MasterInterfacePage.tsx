@@ -1,11 +1,10 @@
 // React + Web3 Essentials
-import { lazy, Suspense, useState, useEffect, useContext } from 'react';
+import { lazy, Suspense, useEffect, useContext } from 'react';
 
 // External Packages
 import useToast from 'hooks/useToast';
 import { MdWarning } from 'react-icons/md';
-import { VscClose } from 'react-icons/vsc';
-import { Navigate, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
@@ -22,6 +21,7 @@ const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
 const ChannelDashboardPageV2 = lazy(() => import('pages/ChannelDashboardPageV2'));
 const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
+const ChannelDetailsPage = lazy(() => import('pages/ChannelDetailsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
 const FAQPage = lazy(() => import('pages/FAQPage'));
@@ -32,9 +32,9 @@ const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
 const NotFoundPage = lazy(() => import('pages/NotFoundPage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
-const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
+// const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
 const NotificationSettingsPage = lazy(() => import('pages/NotificationSettingsPage'));
-const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
+// const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
 const SpacePage = lazy(() => import('pages/SpacePage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
@@ -84,15 +84,8 @@ const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, 
 
 // Create Header
 function MasterInterfacePage() {
-  // Get search params
-  const [searchParams] = useSearchParams();
-
   // get location
   const location = useLocation();
-
-  // Master Interface controls settings
-  const [playTeaserVideo, setPlayTeaserVideo] = useState(false);
-  const [loadTeaserVideo, setLoadTeaserVideo] = useState(null);
 
   const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = useContext(AppContext);
 
@@ -105,53 +98,8 @@ function MasterInterfacePage() {
     }
   }, [location]);
 
-  // Check location and change it if search param is present
-  // Get nativage from useNavigate
-  const navigate = useNavigate();
-
-  // if (searchParams.get('channel')) {
-  //   if (channelid !== searchParams.get('channel')) {
-  //     channelid = searchParams.get('channel');
-  //     console.log('channel search', searchParams.get('channel'));
-  //     navigate(`/chek`, { replace: true, relative: true });
-  //   }
-  // }
-
-  // // For redirecting if required
-  //  useEffect(() => {
-  //   const checkAndRedirect = () => {
-  //     if (location.pathname === APP_PATHS.Channels && searchParams.get('channel')) {
-  //       const navigate = useNavigate();
-
-  //       const channelId = searchParams.get('channel');
-  //       console.log('redirecting to channel', `${APP_PATHS.Channels}/${channelId}`);
-  //       navigate({ pathname: `${APP_PATHS.Channels}/${channelId}` });
-  //     }
-  //   }
-
-  //   checkAndRedirect();
-  // }, []);
-
-  const ChannelsProfilePage = () => {
-    const channelid = searchParams.get('channel');
-
-    if (channelid) {
-      navigate(`${APP_PATHS.Channels}/${channelid}`);
-    }
-
-    return (
-      <ChannelsPage
-        loadTeaser={setLoadTeaserVideo}
-        playTeaser={setPlayTeaserVideo}
-        channelID={channelid}
-      />
-    );
-  };
-
-  // For toast
   const blockedLoadingToast = useToast();
 
-  // Render
   return (
     <Container mode={mode}>
       <Interface location={location.pathname}>
@@ -222,21 +170,15 @@ function MasterInterfacePage() {
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
             {/* </Route> */}
 
-            {/* Enable Channel specific routes */}
+            {/* Needs to be removed */}
             <Route
-              path={`${APP_PATHS.Channels}/:channelid`}
-              element={
-                <ChannelsPage
-                  loadTeaser={setLoadTeaserVideo}
-                  playTeaser={setPlayTeaserVideo}
-                  channelID={null}
-                />
-              }
+              path={`${APP_PATHS.Channels}`}
+              element={<ChannelsPage />}
             />
 
             <Route
-              path={APP_PATHS.Channels}
-              element={<ChannelsProfilePage />}
+              path={APP_PATHS.ChannelDetails()}
+              element={<ChannelDetailsPage />}
             />
 
             <Route
@@ -250,7 +192,7 @@ function MasterInterfacePage() {
             />
 
             <Route
-              path={`${APP_PATHS.ChannelDashboard}/:channelId`}
+              path={APP_PATHS.ChannelDashboard()}
               element={<ChannelDashboardPageV2 />}
             />
 
@@ -395,48 +337,6 @@ function MasterInterfacePage() {
           progress={blockedLoading.progress}
           progressNotice={blockedLoading.progressNotice}
         />
-      )}
-
-      {/* To play youtube video from anywhere */}
-      {playTeaserVideo && (
-        <PreviewOuter>
-          <PreviewBG
-            href="#"
-            bg="transparent"
-            onClick={(e) => {
-              e.preventDefault();
-              setPlayTeaserVideo(!playTeaserVideo);
-            }}
-          >
-            <PreviewContent className="contentBox">
-              <PreviewClose
-                href="#"
-                bg="transparent"
-                hover="transparent"
-                hoverBG="transparent"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPlayTeaserVideo(!playTeaserVideo);
-                }}
-              >
-                <VscClose
-                  size={40}
-                  color="#fff"
-                />
-              </PreviewClose>
-              <Preview>
-                <div className="videoWrapper">
-                  <iframe
-                    src={loadTeaserVideo}
-                    frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  ></iframe>
-                </div>
-              </Preview>
-            </PreviewContent>
-          </PreviewBG>
-        </PreviewOuter>
       )}
     </Container>
   );

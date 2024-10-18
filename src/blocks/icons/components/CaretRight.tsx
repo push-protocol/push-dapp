@@ -9,19 +9,32 @@ const CaretRight: FC<IconProps> = (allProps) => {
       componentName="CaretRight"
       icon={
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           width="inherit"
           height="inherit"
-          viewBox="0 0 6 10"
+          viewBox="0 0 24 24"
           fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           {...props}
         >
-          <path
-            d="M1.16748 1.27502L4.89246 5L1.16748 8.72498"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+          <g clip-path="url(#clip0_4239_16009)">
+            <path
+              d="M9.25146 6.41254L14.8389 12L9.25146 17.5875"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_4239_16009">
+              <rect
+                width="15.9553"
+                height="8.72765"
+                fill="white"
+                transform="translate(16.4089 4.02235) rotate(90)"
+              />
+            </clipPath>
+          </defs>
         </svg>
       }
       {...restProps}

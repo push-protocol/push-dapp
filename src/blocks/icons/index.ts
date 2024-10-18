@@ -168,6 +168,7 @@ export { default as Swap } from './components/Swap';
 export { default as Tick } from './components/Tick';
 export { default as TickCircleFilled } from './components/TickCircleFilled';
 export { default as TickDecoratedCircleFilled } from './components/TickDecoratedCircleFilled';
+export { default as Tutorial } from './components/Tutotial';
 
 export { default as UserFilled } from './components/UserFilled';
 

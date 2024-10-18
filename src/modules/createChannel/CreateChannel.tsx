@@ -144,7 +144,7 @@ const CreateChannel = () => {
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
               );
-              navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
+              navigate(`${APP_PATHS.ChannelDashboard(account)}`);
             }, 3000);
           }
         },
@@ -190,6 +190,7 @@ const CreateChannel = () => {
       info: values.channelDesc,
       url: values.channelURL,
       icon: values.image,
+      tags: [values.channelCategory],
     });
 
     handleProgressBar(20, 'Please wait, payload is getting uploaded to IPFS', 'Loading...');

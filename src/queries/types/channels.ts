@@ -1,4 +1,4 @@
-import { PushAPI } from '@pushprotocol/restapi';
+import { ChannelListOrderType, ChannelListSortType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 import { SourceKeys } from 'modules/dashboard/Dashboard.types';
 
@@ -86,6 +86,7 @@ export type ChannelDetails = {
   verified_status: number;
   verify_verification_proof: string | null;
   aliases: Array<Alias>;
+  tags: string[];
 };
 
 export type ChannelDelegatesResponse = Array<string>;
@@ -182,3 +183,41 @@ export type ChannelNotification = {
 };
 
 export type ChannelsNotificationsRepsonse = { notifications: ChannelNotification[]; total: number };
+
+export type ChannelsListModelledResponse = {
+  channels: Array<ChannelDetails>;
+  itemcount: number;
+};
+export type ChannelsSearchListModelledResponse = {
+  channels: Array<ChannelDetails>;
+  itemCount: number;
+};
+
+export type ChannelListParams = {
+  order?: ChannelListOrderType;
+  pageSize: number;
+  page?: number;
+  sort?: ChannelListSortType;
+  chain?: string;
+  tag?: string;
+};
+
+export type ChannelSearchParams = {
+  page: number;
+  pageSize: number;
+  query: string;
+  chain?: string;
+  tag?: string;
+};
+
+export type ChannelCategoriesResponse = {
+  tags: {
+    tags: string[];
+    itemCount: number;
+  };
+};
+
+export type ChannelCategoriesModelledResponse = {
+  tags: string[];
+  selectFieldTags: { label: string; value: string }[];
+};

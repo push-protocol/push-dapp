@@ -12,3 +12,6 @@ export * from './useReactivateChannel';
 export * from './useEditChannel';
 export * from './useGetAliasInfo';
 export * from './useGetChannelNotifications';
+export * from './useGetChannelsList';
+export * from './useChannelSearch';
+export * from './useGetChannelCategories';
