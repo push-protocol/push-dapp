@@ -55,7 +55,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const [errorMessage, setErrorMessage] = useState('');
-  const { handleLockStatus } = useLockedStatus();
+  const { getLockStatus } = useLockedStatus();
 
   const isRewardsLocked = useMemo(() => {
     return (
@@ -71,7 +71,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   // if activityType is twitter or discord, then re-call check lock status fn
   useEffect(() => {
     if (activity.activityType == 'follow_push_on_discord' || activity.activityType == 'follow_push_on_twitter') {
-      handleLockStatus();
+      getLockStatus();
     }
   }, [usersSingleActivity?.status, activity.activityType]);
 

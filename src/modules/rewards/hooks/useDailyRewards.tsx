@@ -2,7 +2,13 @@
 import { useCallback, useEffect, useState } from 'react';
 
 // hooks
-import { useGetRewardActivityStatus, useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+import {
+  RewardActivityStatus,
+  RewardActivityStatusResponse,
+  useGetRewardActivityStatus,
+  useGetRewardsActivities,
+  useGetUserRewardsDetails,
+} from 'queries';
 import { useAccount } from 'hooks';
 
 // helpers
@@ -43,10 +49,18 @@ const useDailyRewards = () => {
         return 0;
       });
 
-  // Mutation for sending recent activities
-  const { mutate: sendRecentActivities } = useGetRewardActivityStatus({
-    userId: userDetails?.userId as string,
-  });
+  const activityTitles = dailyRewardsActivities?.map((activity) => activity.activityType);
+
+  // Check if dailyRewardsActivities is available and all activityTitles are defined
+  const areActivitiesDefined = dailyRewardsActivities && activityTitles?.every((title) => title !== undefined);
+
+  const { data: sendRecentActivities } = useGetRewardActivityStatus(
+    {
+      userId: userDetails?.userId as string,
+      activities: activityTitles as string[],
+    },
+    !!userDetails?.userId && areActivitiesDefined
+  );
 
   // Reset state function
   const resetState = useCallback(() => {
@@ -56,29 +70,12 @@ const useDailyRewards = () => {
     setIsLoadingRewards(false);
   }, []);
 
-  // Handle check-in function
-  const handleCheckIn = () => {
-    if (!userDetails?.userId) return;
-
-    const activityTitles = dailyRewardsActivities?.map((activity) => activity.activityType);
-
-    sendRecentActivities(
-      {
-        userId: userDetails?.userId as string,
-        activities: activityTitles,
-      },
-      {
-        onSuccess: handleSuccess,
-        onError: (err) => {
-          console.error('Error', err);
-        },
-      }
-    );
-  };
-
   // Handle success response from sending recent activities
-  const handleSuccess = (data: any) => {
-    const { activities: dataActivity } = data;
+  const handleCheckIn = () => {
+    if (!sendRecentActivities || Object.keys(sendRecentActivities).length === 0) return;
+    setIsLoadingRewards(true);
+
+    const dataActivity = sendRecentActivities?.activities as RewardActivityStatusResponse;
     const { isEmpty, firstEmptyActivity, latestActivityKey } = getActivityStatus(dataActivity);
 
     const targetActivity = isEmpty
@@ -91,7 +88,9 @@ const useDailyRewards = () => {
     );
 
     if (latestActivityKey && !isEmpty) {
-      const number = checkTimeToCurrent(dataActivity?.[latestActivityKey]?.updatedAt);
+      const latestActivity = dataActivity?.[latestActivityKey] as RewardActivityStatus;
+
+      const number = checkTimeToCurrent(latestActivity.updatedAt);
       if (number) {
         setIsActivityDisabled(true);
       }
@@ -106,14 +105,13 @@ const useDailyRewards = () => {
   useEffect(() => {
     if (isWalletConnected && userDetails?.userId) {
       if (isLoadingActivities || dailyRewardsActivities.length <= 0) return;
-      setIsLoadingRewards(true);
       handleCheckIn();
     }
 
     if (!isWalletConnected) {
       resetState();
     }
-  }, [userDetails?.userId, isWalletConnected, account, isLoadingActivities]);
+  }, [userDetails?.userId, isWalletConnected, account, isLoadingActivities, dailyRewardsActivities]);
 
   return {
     account,

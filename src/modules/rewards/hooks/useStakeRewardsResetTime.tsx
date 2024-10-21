@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useAccount } from 'hooks';
 import {
+  RewardActivityStatus,
+  RewardActivityStatusResponse,
+  RewardsStakeParams,
   useGetPushStakeEpoch,
   useGetRewardActivityStatus,
   useGetRewardsActivities,
@@ -32,11 +35,6 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
   const { data: pushStakeData, isLoading: isLoadingPushStakeData } = useGetPushStakeEpoch();
   const { data: uniV2StakeData, isLoading: isLoadingPushUniData } = useGetUniV2StakeEpoch();
 
-  // Mutation for sending recent activities
-  const { mutate: sendRecentActivities } = useGetRewardActivityStatus({
-    userId: userDetails?.userId as string,
-  });
-
   const isLoading = isLoadingActivities;
 
   // Memoized Push and UniV2 stake arrays to avoid unnecessary recomputation
@@ -65,6 +63,16 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
     );
   }, [rewardActivitiesResponse]);
 
+  const activityTitles = allPushArray?.map((activity) => activity.activityType);
+
+  const { data: sendRecentActivities } = useGetRewardActivityStatus(
+    {
+      userId: userDetails?.userId as string,
+      activities: activityTitles as string[],
+    },
+    !!userDetails?.userId
+  );
+
   const daysToReset = useMemo(() => {
     if (resetDate == null || resetDate == undefined) return;
 
@@ -82,46 +90,20 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
     return differenceInDays >= sevenDays; // Return true if 7 days or more have passed since the stored epoch time
   };
 
-  // Function to handle fetch and timestamp/epoch comparison
-  const fetchAndHandleData = () => {
-    if (!pushStakeData || !uniV2StakeData) {
-      console.error('Missing stake data');
-      return;
-    }
-
-    // Call the appropriate fetch function based on the later timestamp
-    handleFetchData(allPushArray, 'push');
-  };
-
-  // Handle get latest data function for both push and uniV2
-  const handleFetchData = (activities: any[], stakeType: 'push' | 'uniV2') => {
-    if (!userDetails?.userId || activities.length <= 0) return;
-
-    const activityTitles = activities.map((activity) => activity.activityType);
-    sendRecentActivities(
-      {
-        userId: userDetails.userId as string,
-        activities: activityTitles,
-      },
-      {
-        onSuccess: (data) => handleSuccess(data, stakeType),
-        onError: (err) => {
-          console.error('Error', err);
-        },
-      }
-    );
-  };
-
   // Handle success response and reset epoch if criteria met
-  const handleSuccess = (data: any, stakeType: 'push' | 'uniV2') => {
-    const { activities: dataActivity } = data;
+  const handleFetchData = (stakeType: 'push' | 'uniV2') => {
+    if (!sendRecentActivities || Object.keys(sendRecentActivities).length === 0) return;
+
+    const dataActivity = sendRecentActivities?.activities as RewardActivityStatusResponse;
     const { latestActivityKey } = getActivityStatus(dataActivity);
-    const mostRecentStakeActivity = dataActivity?.[latestActivityKey];
+    const mostRecentStakeActivity = dataActivity?.[latestActivityKey] as RewardActivityStatus;
+    const latestStakeActivity = mostRecentStakeActivity?.data as RewardsStakeParams;
+
     const stakeData = stakeType === 'push' ? pushStakeData : uniV2StakeData;
-    const toTimestamp = mostRecentStakeActivity?.data?.toTimestamp as number;
     const latestTimestamp = pushStakeData?.toTimestamp as number;
 
-    const isEpochActive = mostRecentStakeActivity?.data?.currentEpoch === stakeData?.currentEpoch;
+    const toTimestamp = latestStakeActivity?.toTimestamp as number;
+    const isEpochActive = latestStakeActivity?.currentEpoch === stakeData?.currentEpoch;
     const resetStakeEndDate = localStorage.getItem(CommonLocalStorageKeys.resetStakeEndDate);
 
     // Check if it's been seven days based on the appropriate timestamp
@@ -144,6 +126,8 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
       updateResetDate(latestTimestamp);
     }
 
+    // console.log(isEpochActive, 'isEpochActive', isPastSevenDays, 'isPastSevenDays');
+
     if (!isEpochActive && isPastSevenDays) {
       setResetEpoch(true);
       console.log(`${stakeType} epoch is reset`);
@@ -157,14 +141,20 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
 
   // Effect for handling fetch data for both arrays
   useEffect(() => {
-    if (isWalletConnected && userDetails?.userId && !isLoadingPushStakeData && !isLoadingPushUniData) {
-      fetchAndHandleData();
+    if (
+      isWalletConnected &&
+      userDetails?.userId &&
+      !isLoadingPushStakeData &&
+      !isLoadingPushUniData &&
+      sendRecentActivities
+    ) {
+      handleFetchData('push');
     }
 
     if (!isWalletConnected) {
       setResetEpoch(false);
     }
-  }, [userDetails?.userId, isWalletConnected, isLoadingPushStakeData, isLoadingPushUniData]);
+  }, [userDetails?.userId, isWalletConnected, isLoadingPushStakeData, isLoadingPushUniData, sendRecentActivities]);
 
   return { stakePushArray, uniV2PushArray, isLoading, daysToReset };
 };

@@ -1,9 +1,14 @@
 // React and other libraries
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // hooks
 import { useAccount } from 'hooks';
-import { useGetRewardActivityStatus, useGetUserRewardsDetails } from 'queries';
+import {
+  RewardActivityStatus,
+  RewardActivityStatusResponse,
+  useGetRewardActivityStatus,
+  useGetUserRewardsDetails,
+} from 'queries';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -15,35 +20,28 @@ import { useRewardsContext } from 'contexts/RewardsContext';
 const useLockedStatus = () => {
   const { account, isWalletConnected } = useAccount();
   const { setIsLocked } = useRewardsContext();
-  const [hasMounted, setHasMounted] = useState(false);
 
   const caip10WalletAddress = walletToCAIP10({ account });
   const { data: userDetails, status, error } = useGetUserRewardsDetails({ caip10WalletAddress });
 
-  const { mutate: sendRecentActivities } = useGetRewardActivityStatus({
-    userId: userDetails?.userId as string,
-  });
+  const { data: sendRecentActivities } = useGetRewardActivityStatus(
+    {
+      userId: userDetails?.userId as string,
+      activities: ['follow_push_on_discord', 'follow_push_on_twitter'],
+    },
+    !!userDetails?.userId
+  );
 
-  useEffect(() => {
-    if (!hasMounted) {
-      if (isWalletConnected && userDetails?.userId) {
-        // do componentDidMount logic
-        setHasMounted(true);
-        handleLockStatus();
-      }
-    }
+  const getLockStatus = () => {
+    if (!sendRecentActivities || Object.keys(sendRecentActivities).length === 0) return;
 
-    if (status === 'error' && isWalletConnected) {
-      if (isUserNotFound(error)) {
-        setIsLocked(true);
-      }
-    }
-  }, [userDetails?.userId, isWalletConnected, account, status]);
+    const activities = sendRecentActivities?.activities as RewardActivityStatusResponse;
+    const discordStatus = activities?.follow_push_on_discord as RewardActivityStatus;
+    const twitterStatus = activities?.follow_push_on_twitter as RewardActivityStatus;
 
-  const getLockStatus = (data: any) => {
     if (
-      data?.follow_push_on_discord?.status === 'COMPLETED' &&
-      (data?.follow_push_on_twitter?.status === 'COMPLETED' || data?.follow_push_on_twitter?.status === 'PENDING')
+      discordStatus?.status === 'COMPLETED' &&
+      (twitterStatus?.status === 'COMPLETED' || twitterStatus?.status === 'PENDING')
     ) {
       setIsLocked(false);
     } else {
@@ -51,30 +49,18 @@ const useLockedStatus = () => {
     }
   };
 
-  const handleLockStatus = () => {
-    if (!userDetails?.userId) {
-      console.log('No userId, exiting handleLockStatus');
-      return;
+  useEffect(() => {
+    if (isWalletConnected && userDetails?.userId) {
+      getLockStatus();
     }
-
-    sendRecentActivities(
-      {
-        userId: userDetails?.userId,
-        activities: ['follow_push_on_discord', 'follow_push_on_twitter'],
-      },
-      {
-        onSuccess: (data) => {
-          getLockStatus(data?.activities);
-        },
-
-        onError: (err) => {
-          console.error('Error in sendRecentActivities:', err);
-        },
+    if (status === 'error' && isWalletConnected) {
+      if (isUserNotFound(error)) {
+        setIsLocked(true);
       }
-    );
-  };
+    }
+  }, [userDetails?.userId, isWalletConnected, account, status]);
 
-  return { handleLockStatus };
+  return { getLockStatus };
 };
 
 export default useLockedStatus;
