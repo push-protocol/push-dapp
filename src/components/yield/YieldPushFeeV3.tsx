@@ -864,7 +864,7 @@ const OuterContainer = styled.div`
   position: relative;
   @media ${device.tablet} {
     width: 100%;
-    min-width: 100%;
+    /* min-width: 100%; */
     max-width: 100%;
   }
 `;
