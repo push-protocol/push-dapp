@@ -24,7 +24,11 @@ const useLockedStatus = () => {
   const caip10WalletAddress = walletToCAIP10({ account });
   const { data: userDetails, status, error } = useGetUserRewardsDetails({ caip10WalletAddress });
 
-  const { data: sendRecentActivities } = useGetRewardActivityStatus(
+  const {
+    data: sendRecentActivities,
+    refetch: refetchRecentActivities,
+    status: statusRecentActivities,
+  } = useGetRewardActivityStatus(
     {
       userId: userDetails?.userId as string,
       activities: ['follow_push_on_discord', 'follow_push_on_twitter'],
@@ -60,7 +64,7 @@ const useLockedStatus = () => {
     }
   }, [userDetails?.userId, isWalletConnected, account, status]);
 
-  return { getLockStatus };
+  return { getLockStatus, refetchRecentActivities, statusRecentActivities };
 };
 
 export default useLockedStatus;
