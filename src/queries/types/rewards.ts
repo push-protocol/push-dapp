@@ -97,6 +97,15 @@ export type UsersActivity = {
   updatedAt: string; // ISO 8601 date string
 };
 
+export type UsersActivityError = {
+  error: string;
+};
+
+// The key can be any string, and the value can be either StakeActivitySuccess or StakeActivityError
+export type StakeActivityResponse = {
+  [key: string]: UsersActivity | UsersActivityError;
+};
+
 type Prop = {
   [key: string]: string;
 };

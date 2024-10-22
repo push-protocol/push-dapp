@@ -54,7 +54,7 @@ const useDailyRewards = () => {
   // Check if dailyRewardsActivities is available and all activityTitles are defined
   const areActivitiesDefined = dailyRewardsActivities && activityTitles?.every((title) => title !== undefined);
 
-  const { data: sendRecentActivities } = useGetRewardActivityStatus(
+  const { data: sendRecentActivities, refetch: refetchSendActivities } = useGetRewardActivityStatus(
     {
       userId: userDetails?.userId as string,
       activities: activityTitles as string[],
@@ -71,7 +71,7 @@ const useDailyRewards = () => {
   }, []);
 
   // Handle success response from sending recent activities
-  const handleCheckIn = () => {
+  const handleCheckIn = useCallback(() => {
     if (!sendRecentActivities || Object.keys(sendRecentActivities).length === 0) return;
     setIsLoadingRewards(true);
 
@@ -99,7 +99,7 @@ const useDailyRewards = () => {
     setActiveDay(newDay);
     setActiveItem(newDayData);
     setIsLoadingRewards(false);
-  };
+  }, [sendRecentActivities]);
 
   // Effect for handling check-in when user details change or wallet is connected
   useEffect(() => {
@@ -122,6 +122,7 @@ const useDailyRewards = () => {
     userDetails,
     dailyRewardsActivities,
     handleCheckIn,
+    refetchSendActivities,
     resetState,
   };
 };

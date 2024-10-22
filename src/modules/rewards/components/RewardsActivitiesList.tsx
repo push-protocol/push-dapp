@@ -5,7 +5,13 @@ import { css } from 'styled-components';
 import { Box, Lock, Text } from 'blocks';
 import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
-import { Activity, useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+import {
+  Activity,
+  StakeActivityResponse,
+  useGetRewardsActivities,
+  useGetRewardsActivity,
+  useGetUserRewardsDetails,
+} from 'queries';
 import { useRewardsContext } from 'contexts/RewardsContext';
 
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
@@ -43,6 +49,23 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
 
   const { isLocked } = useRewardsContext();
 
+  // Combine all activities into a single array
+  const allActivities = [...socialActivities, ...platformRewardActivities, ...channelSubscriptionActivities];
+
+  // Extract the `activityType` from each activity and filter out any undefined values
+  const activityTypes = allActivities
+    .map((activity) => activity.activityType) // Extract `activityType`
+    .filter(Boolean); // Remove undefined/null values
+
+  const {
+    data: allUsersActivity,
+    isLoading: isAllActivitiesLoading,
+    refetch: refetchActivity,
+  } = useGetRewardsActivity(
+    { userId: userDetails?.userId as string, activityTypes: activityTypes },
+    { enabled: !!userDetails?.userId && activityTypes.length > 0 }
+  );
+
   return (
     <Box
       display="flex"
@@ -57,6 +80,9 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           activity={activity}
           isLoadingItem={isLoading}
           isLocked={isLocked}
+          allUsersActivity={allUsersActivity as StakeActivityResponse}
+          isAllActivitiesLoading={isAllActivitiesLoading}
+          refetchActivity={refetchActivity}
         />
       ))}
       {(isLocked || !isWalletConnected) && (
@@ -103,6 +129,9 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           activity={activity}
           isLoadingItem={isLoading}
           isLocked={isLocked}
+          allUsersActivity={allUsersActivity as StakeActivityResponse}
+          isAllActivitiesLoading={isAllActivitiesLoading}
+          refetchActivity={refetchActivity}
         />
       ))}
 
@@ -114,6 +143,9 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           activity={activity}
           isLoadingItem={isLoading}
           isLocked={isLocked}
+          allUsersActivity={allUsersActivity as StakeActivityResponse}
+          isAllActivitiesLoading={isAllActivitiesLoading}
+          refetchActivity={refetchActivity}
         />
       ))}
     </Box>

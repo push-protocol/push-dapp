@@ -19,14 +19,19 @@ export type DailyRewardsSectionProps = {};
 const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { activeItem, activeDay, isActivityDisabled, isLoading, userDetails, dailyRewardsActivities, handleCheckIn } =
-    useDailyRewards();
+  const {
+    activeItem,
+    activeDay,
+    isActivityDisabled,
+    isLoading,
+    userDetails,
+    dailyRewardsActivities,
+    refetchSendActivities,
+  } = useDailyRewards();
 
   const { isLocked } = useRewardsContext();
 
-  const isDailyRewardClaimed = useMemo(() => {
-    return isActivityDisabled && activeDay > 1 && userDetails;
-  }, [isActivityDisabled, activeDay, userDetails]);
+  const isDailyRewardClaimed = isActivityDisabled && activeDay > 1 && userDetails;
 
   const displayDailyRewards = useMemo(() => {
     return !isActivityDisabled && activeDay > 0 && activeItem && userDetails;
@@ -85,7 +90,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
                 activityType={activeItem?.activityType as ActvityType}
                 userId={userDetails?.userId as string}
                 activityTypeId={activeItem?.id as string}
-                refetchActivity={() => handleCheckIn()}
+                refetchActivity={() => refetchSendActivities()}
                 setErrorMessage={setErrorMessage}
                 isLoadingActivity={false}
                 label="Check In"

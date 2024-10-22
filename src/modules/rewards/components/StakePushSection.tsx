@@ -3,7 +3,7 @@ import { FC, useMemo, useState } from 'react';
 
 // hooks
 import { useAccount } from 'hooks';
-import { useGetUserRewardsDetails } from 'queries';
+import { StakeActivityResponse, useGetRewardsActivity, useGetUserRewardsDetails } from 'queries';
 import { useRewardsContext } from 'contexts/RewardsContext';
 
 // helpers
@@ -45,6 +45,23 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
   const hasEpochEnded = useMemo(() => {
     return daysToReset != null && activityResetDate >= 0 && activityResetDate <= 7 && !multiplier && isWalletConnected;
   }, [daysToReset, activityResetDate, multiplier, isWalletConnected]);
+
+  // Combine all activities into a single array
+  const allActivities = [...uniV2PushArray, ...stakePushArray];
+
+  // Extract the `activityType` from each activity and filter out any undefined values
+  const activityTypes = allActivities
+    .map((activity) => activity.activityType) // Extract `activityType`
+    .filter(Boolean); // Remove undefined/null values
+
+  const {
+    data: allUsersActivity,
+    isLoading: isAllActivitiesLoading,
+    refetch: refetchActivity,
+  } = useGetRewardsActivity(
+    { userId: userDetails?.userId as string, activityTypes: activityTypes },
+    { enabled: !!userDetails?.userId && activityTypes.length > 0 }
+  );
 
   return (
     <Box
@@ -165,6 +182,9 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               setErrorMessage={setErrorMessage}
               isLocked={isLocked}
               hasEpochEnded={hasEpochEnded}
+              allUsersActivity={allUsersActivity as StakeActivityResponse}
+              isAllActivitiesLoading={isAllActivitiesLoading}
+              refetchActivity={refetchActivity}
             />
           ))}
         </Box>
@@ -184,6 +204,9 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               setErrorMessage={setErrorMessage}
               isLocked={isLocked}
               hasEpochEnded={hasEpochEnded}
+              allUsersActivity={allUsersActivity as StakeActivityResponse}
+              isAllActivitiesLoading={isAllActivitiesLoading}
+              refetchActivity={refetchActivity}
             />
           ))}
         </Box>

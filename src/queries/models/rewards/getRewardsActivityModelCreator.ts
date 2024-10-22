@@ -1,3 +1,3 @@
-import { UsersActivity } from 'queries/types';
+import { StakeActivityResponse } from 'queries/types';
 
-export const getRewardsActivityModelCreator = (response: UsersActivity): UsersActivity => response;
+export const getRewardsActivityModelCreator = (response: StakeActivityResponse): StakeActivityResponse => response;

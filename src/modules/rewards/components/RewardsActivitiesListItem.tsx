@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 
-import { Activity, useGetRewardsActivity } from 'queries';
+import { Activity, StakeActivityResponse, UsersActivity } from 'queries';
 import { useAccount } from 'hooks';
 
 import {
@@ -27,6 +27,9 @@ export type RewardActivitiesListItemProps = {
   activity: Activity;
   isLoadingItem: boolean;
   isLocked: boolean;
+  allUsersActivity: StakeActivityResponse;
+  isAllActivitiesLoading: boolean;
+  refetchActivity: () => void;
 };
 
 const getUpdatedExpiryTime = (timestamp: number) => {
@@ -46,13 +49,13 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   activity,
   isLoadingItem,
   isLocked,
+  allUsersActivity,
+  isAllActivitiesLoading,
+  refetchActivity,
 }) => {
   const { isWalletConnected } = useAccount();
-  const {
-    data: usersSingleActivity,
-    isLoading,
-    refetch: refetchActivity,
-  } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
+  const usersSingleActivity = allUsersActivity?.[activity?.activityType] as UsersActivity;
+  const isLoading = isAllActivitiesLoading;
 
   const [errorMessage, setErrorMessage] = useState('');
   const { getLockStatus } = useLockedStatus();
@@ -73,7 +76,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
     if (activity.activityType == 'follow_push_on_discord' || activity.activityType == 'follow_push_on_twitter') {
       getLockStatus();
     }
-  }, [usersSingleActivity?.status, activity.activityType]);
+  }, [usersSingleActivity, activity.activityType]);
 
   return (
     <Skeleton isLoading={isLoadingItem}>
