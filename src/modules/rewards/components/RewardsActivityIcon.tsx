@@ -217,7 +217,7 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
     );
   }
 
-  if (type === 'channel_specific_subscriptions:REVOKE_NOTIFICATIONS') {
+  if (type === 'channel_specific_subscriptions:REVOKE_NOTIFICATIONS_CHANNEL') {
     return (
       <img
         width={48}
