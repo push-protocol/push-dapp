@@ -30,7 +30,7 @@ import {
   PushAlpha,
   CyberLogoRewards,
 } from 'blocks';
-import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo, shapeShiftLogo } from 'common';
+import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo, shapeShiftLogo, revokeLogo } from 'common';
 import { ActvityType } from 'queries';
 
 type RewardsActivityIconProp = {
@@ -213,6 +213,17 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
       <CyberLogoRewards
         width={48}
         height={48}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:REVOKE_NOTIFICATIONS') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={revokeLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
       />
     );
   }

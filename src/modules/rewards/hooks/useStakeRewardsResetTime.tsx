@@ -126,8 +126,6 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
       updateResetDate(latestTimestamp);
     }
 
-    // console.log(isEpochActive, 'isEpochActive', isPastSevenDays, 'isPastSevenDays');
-
     if (!isEpochActive && isPastSevenDays) {
       setResetEpoch(true);
       console.log(`${stakeType} epoch is reset`);
