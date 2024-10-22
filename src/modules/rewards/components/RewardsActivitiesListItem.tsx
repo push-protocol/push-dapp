@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 
-import { Activity, useGetRewardsActivity } from 'queries';
+import { Activity, StakeActivityResponse, UsersActivity } from 'queries';
 import { useAccount } from 'hooks';
 
 import {
@@ -27,6 +27,9 @@ export type RewardActivitiesListItemProps = {
   activity: Activity;
   isLoadingItem: boolean;
   isLocked: boolean;
+  allUsersActivity: StakeActivityResponse;
+  isAllActivitiesLoading: boolean;
+  refetchActivity: () => void;
 };
 
 const getUpdatedExpiryTime = (timestamp: number) => {
@@ -46,16 +49,16 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   activity,
   isLoadingItem,
   isLocked,
+  allUsersActivity,
+  isAllActivitiesLoading,
+  refetchActivity,
 }) => {
   const { isWalletConnected } = useAccount();
-  const {
-    data: usersSingleActivity,
-    isLoading,
-    refetch: refetchActivity,
-  } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
+  const usersSingleActivity = allUsersActivity?.[activity?.activityType] as UsersActivity;
+  const isLoading = isAllActivitiesLoading;
 
   const [errorMessage, setErrorMessage] = useState('');
-  const { handleLockStatus } = useLockedStatus();
+  const { refetchRecentActivities, getLockStatus, statusRecentActivities } = useLockedStatus();
 
   const isRewardsLocked = useMemo(() => {
     return (
@@ -68,12 +71,17 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   const isNotDiscordOrTwitter =
     activity.activityType !== 'follow_push_on_discord' && activity.activityType !== 'follow_push_on_twitter';
 
+  const updateActivities = () => {
+    refetchActivity();
+    refetchRecentActivities();
+  };
+
   // if activityType is twitter or discord, then re-call check lock status fn
   useEffect(() => {
     if (activity.activityType == 'follow_push_on_discord' || activity.activityType == 'follow_push_on_twitter') {
-      handleLockStatus();
+      getLockStatus();
     }
-  }, [usersSingleActivity?.status, activity.activityType]);
+  }, [usersSingleActivity?.status, activity.activityType, statusRecentActivities]);
 
   return (
     <Skeleton isLoading={isLoadingItem}>
@@ -247,7 +255,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                   userId={userId}
                   activityTypeId={activity.id}
                   activityType={activity.activityType}
-                  refetchActivity={refetchActivity}
+                  refetchActivity={() => updateActivities()}
                   setErrorMessage={setErrorMessage}
                   usersSingleActivity={usersSingleActivity}
                   isLoadingActivity={isLoading}
