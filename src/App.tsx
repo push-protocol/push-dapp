@@ -464,7 +464,6 @@ const ParentContainer = styled.div`
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
-  // background: ${(props) => props.bg};
   margin: ${(props) => props.headerHeight}px 0px 0px 0px;
   min-height: calc(100dvh - ${(props) => props.headerHeight}px);
   max-height: calc(100dvh - ${(props) => props.headerHeight}px);
