@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import styled, { useTheme, css } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents
@@ -723,7 +723,9 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                 <Button
                   variant="outline"
                   size="medium"
-                  block
+                  css={css`
+                    flex: 1;
+                  `}
                   onClick={unstakeTokensPaginated}
                 >
                   {txInProgressWithdraw ? (
@@ -768,7 +770,9 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                 <Button
                   variant="outline"
                   size="medium"
-                  block
+                  css={css`
+                    flex: 1;
+                  `}
                   onClick={claimRewards}
                 >
                   {txInProgressClaimRewards ? (
@@ -817,6 +821,9 @@ const ErrorToolTip = (props) => {
       <Button
         size="medium"
         disabled={true}
+        css={css`
+          flex: 1;
+        `}
       >
         {props.ButtonTitle}
       </Button>
