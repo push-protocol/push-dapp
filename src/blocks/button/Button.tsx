@@ -41,6 +41,7 @@ const StyledButton = styled.button<ButtonProps>`
   justify-content: center;
   white-space: nowrap;
   flex-shrink: 0;
+  flex: 1;
 
   /* Common icon css added through CSS class */
   .icon {
