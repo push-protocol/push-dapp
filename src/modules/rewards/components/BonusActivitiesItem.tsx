@@ -2,7 +2,7 @@
 import { FC } from 'react';
 
 // hooks
-import { Activity, useGetRewardsActivity } from 'queries';
+import { Activity, StakeActivityResponse, UsersActivity } from 'queries';
 import { useAccount } from 'hooks';
 
 // components
@@ -17,6 +17,9 @@ export type BonusActivitiesItemProps = {
   isLoadingItem: boolean;
   setErrorMessage: (errorMessage: string) => void;
   isLocked: boolean;
+  allUsersActivity: StakeActivityResponse;
+  isAllActivitiesLoading: boolean;
+  refetchActivity: () => void;
 };
 
 const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
@@ -25,12 +28,12 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
   isLoadingItem,
   setErrorMessage,
   isLocked,
+  allUsersActivity,
+  isAllActivitiesLoading,
+  refetchActivity,
 }) => {
-  const {
-    data: usersSingleActivity,
-    isLoading,
-    refetch: refetchActivity,
-  } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
+  const usersSingleActivity = allUsersActivity?.[activity?.activityType] as UsersActivity;
+  const isLoading = isAllActivitiesLoading;
 
   const { isWalletConnected } = useAccount();
 

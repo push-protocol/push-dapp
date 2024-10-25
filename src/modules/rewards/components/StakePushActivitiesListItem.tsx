@@ -2,7 +2,7 @@
 import { FC } from 'react';
 
 // hooks
-import { Activity, useGetRewardsActivity } from 'queries';
+import { Activity, StakeActivityResponse, UsersActivity } from 'queries';
 import { useAccount } from 'hooks';
 
 // components
@@ -17,6 +17,9 @@ export type StakeActivitiesItemProps = {
   setErrorMessage: (errorMessage: string) => void;
   isLocked: boolean;
   hasEpochEnded?: boolean;
+  allUsersActivity: StakeActivityResponse;
+  isAllActivitiesLoading: boolean;
+  refetchActivity: () => void;
 };
 const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   userId,
@@ -25,14 +28,14 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   setErrorMessage,
   isLocked,
   hasEpochEnded,
+  allUsersActivity,
+  isAllActivitiesLoading,
+  refetchActivity,
 }) => {
-  const {
-    data: usersSingleActivity,
-    isLoading,
-    refetch: refetchActivity,
-  } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
-
   const { isWalletConnected } = useAccount();
+
+  const usersSingleActivity = allUsersActivity?.[activity?.activityType] as UsersActivity;
+  const isLoading = isAllActivitiesLoading;
 
   const hasActivityEndedUnclaimed = usersSingleActivity?.status !== 'COMPLETED' && hasEpochEnded;
 

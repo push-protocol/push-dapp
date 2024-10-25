@@ -36,6 +36,8 @@ export type ActvityType =
   | 'channel_specific_subscriptions:PRICETRACKER_CHANNEL'
   | 'channel_specific_subscriptions:SHAPESHIFT_CHANNEL'
   | 'channel_specific_subscriptions:CYBER_CHANNEL'
+  | 'channel_specific_subscriptions:REVOKE_NOTIFICATIONS_CHANNEL'
+  | 'channel_specific_subscriptions:PWN_NOTIFICATIONS_CHANNEL'
   | 'stake_1k_push_epoch'
   | 'stake_5k_push_epoch'
   | 'stake_10k_push_epoch'
@@ -95,6 +97,15 @@ export type UsersActivity = {
   verificationProof: string;
   createdAt: string; // ISO 8601 date string
   updatedAt: string; // ISO 8601 date string
+};
+
+export type UsersActivityError = {
+  error: string;
+};
+
+// The key can be any string, and the value can be either StakeActivitySuccess or StakeActivityError
+export type StakeActivityResponse = {
+  [key: string]: UsersActivity | UsersActivityError;
 };
 
 type Prop = {

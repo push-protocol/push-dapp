@@ -5,7 +5,12 @@ import { FC, useState } from 'react';
 import { css } from 'styled-components';
 
 // hooks
-import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+import {
+  StakeActivityResponse,
+  useGetRewardsActivities,
+  useGetRewardsActivity,
+  useGetUserRewardsDetails,
+} from 'queries';
 import { useAccount } from 'hooks';
 import { useRewardsContext } from 'contexts/RewardsContext';
 
@@ -40,6 +45,23 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
     : activityList.filter((activity) => activity.index.startsWith(`bonus-activity`) && activity?.status === 'ENABLED');
 
   const { isLocked } = useRewardsContext();
+
+  // Combine all activities into a single array
+  const allActivities = [...bonusActivities];
+
+  // Extract the `activityType` from each activity and filter out any undefined values
+  const activityTypes = allActivities
+    .map((activity) => activity.activityType) // Extract `activityType`
+    .filter(Boolean); // Remove undefined/null values
+
+  const {
+    data: allUsersActivity,
+    isLoading: isAllActivitiesLoading,
+    refetch: refetchActivity,
+  } = useGetRewardsActivity(
+    { userId: userDetails?.userId as string, activityTypes: activityTypes },
+    { enabled: !!userDetails?.userId && activityTypes.length > 0 }
+  );
 
   return (
     <Box
@@ -82,6 +104,9 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
             isLoadingItem={isLoading}
             setErrorMessage={setErrorMessage}
             isLocked={isLocked}
+            allUsersActivity={allUsersActivity as StakeActivityResponse}
+            isAllActivitiesLoading={isAllActivitiesLoading}
+            refetchActivity={refetchActivity}
           />
         ))}
       </Box>
