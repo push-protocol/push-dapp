@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import SnapExample from 'assets/snap/SnapExample.svg?react';
-import InfoLogo from 'assets/snap/spam-icon.svg?react';
+import SnapExample from 'assets/snap/SnapExample.svg';
+import InfoLogo from 'assets/snap/spam-icon.svg';
 import { Image, Section } from 'components/SharedStyling';
 import { H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -11,14 +11,20 @@ import AboutSnapModal from 'modules/snap/AboutSnapModal';
 import styled, { useTheme } from 'styled-components';
 import PushSnapConfigureModal from './PushSnapConfigureModal';
 import { Button } from 'blocks';
+import { SnoozeDurationType } from 'types';
 
 const PushSnapSettings = () => {
-  const { account } = useAccount();
+  const { account, isWalletConnected, connect } = useAccount();
 
   const theme = useTheme();
   const [walletConnected, setWalletConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
+
+  const [snoozeDuration, setSnoozeDuration] = useState<SnoozeDurationType>({
+    enabled: false,
+    hrsLeft: 0,
+  });
 
   const [snapInstalled, setSnapInstalled] = useState(false);
   const defaultSnapOrigin = `npm:@pushprotocol/snap`;
@@ -72,6 +78,7 @@ const PushSnapSettings = () => {
   async function connectToMetaMask() {
     setLoading(true);
     try {
+      if (!isWalletConnected) await connect();
       if (!snapInstalled) {
         await connectSnap();
         setSnapInstalled(true);
@@ -186,7 +193,10 @@ const PushSnapSettings = () => {
           >
             Snap Settings
           </SpanV2>
-          <PushSnapConfigureModal />
+          <PushSnapConfigureModal
+            snoozeDuration={snoozeDuration}
+            setSnoozeDuration={setSnoozeDuration}
+          />
         </>
       )}
     </>
