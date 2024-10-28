@@ -90,7 +90,7 @@ const prodFeaturedChannelsList: FeaturedChannelDetailsProps[] = [
   },
   {
     id: 2,
-    channel: '0xBc28359C93cA00A5724fe398606f27e43007C22D',
+    channel: '0x991552E1C2A96D0Ae72E19552b08A1889aebCF53',
   },
   {
     id: 3,

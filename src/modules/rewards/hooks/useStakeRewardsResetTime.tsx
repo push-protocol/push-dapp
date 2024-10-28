@@ -113,7 +113,7 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
         : hasSevenDaysPassed(Number(resetStakeEndDate)); // If toTimestamp is undefined, check resetStakeEndDat
 
     const updateResetDate = (timestamp: number) => {
-      localStorage.setItem(CommonLocalStorageKeys.resetStakeEndDate, timestamp.toString());
+      localStorage.setItem(CommonLocalStorageKeys.resetStakeEndDate, timestamp?.toString());
       setResetDate(timestamp);
     };
 
