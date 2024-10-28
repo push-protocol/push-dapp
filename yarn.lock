@@ -4096,9 +4096,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.7.0":
-  version: 1.7.0
-  resolution: "@pushprotocol/uiweb@npm:1.7.0"
+"@pushprotocol/uiweb@npm:1.7.1":
+  version: 1.7.1
+  resolution: "@pushprotocol/uiweb@npm:1.7.1"
   dependencies:
     "@livekit/components-react": "npm:^1.2.2"
     "@livekit/components-styles": "npm:^1.0.6"
@@ -4140,7 +4140,7 @@ __metadata:
     react-dom: 17.0.2
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 10/2b0d744503655f3758badc0ccce7f7cb7db3e0121541c450eb30ea2474a886a4217319642a830d4f7a64fca106b8222c3ff678da3e2c83ce7fc178583e76c618
+  checksum: 10/218d56a0f9df43755ae8988cec94e93af7c8c4b5db5c88acee3a9062e0a6c1cbb510e43cd7706cf1b679964bf9cee6148f62e69f4d932560bfd1d6cdea785b8a
   languageName: node
   linkType: hard
 
@@ -18493,7 +18493,7 @@ __metadata:
     "@mui/material": "npm:^5.5.0"
     "@pushprotocol/restapi": "npm:1.7.25"
     "@pushprotocol/socket": "npm:0.5.3"
-    "@pushprotocol/uiweb": "npm:1.7.0"
+    "@pushprotocol/uiweb": "npm:1.7.1"
     "@radix-ui/react-dialog": "npm:^1.1.1"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
     "@radix-ui/react-switch": "npm:^1.1.0"
