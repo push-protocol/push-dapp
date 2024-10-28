@@ -32,3 +32,11 @@ export type UnsubscribeChannelResponse = {
   status: string;
   message: string;
 };
+
+export type UserProfileDetailsResponse = {
+  blockedUsersList: Array<string>;
+  desc: string | null;
+  name: string | null;
+  picture: string;
+  profileVerificationProof: string | null;
+};
