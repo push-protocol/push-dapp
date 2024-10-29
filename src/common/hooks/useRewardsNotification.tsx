@@ -17,7 +17,7 @@ export const useRewardsNotification = () => {
   const showNotification = () =>
     notification.show({
       title: 'Push Points are Live',
-      description: 'Complete Tasks on Push. Check-in, Earn Push Points, Unlock Rewards and Level up!',
+      description: 'Earn Push Points to unlock exclusive rewards on completing exciting activities',
       image: <RewardPoints />,
       position: 'bottom-left',
       onClick: () => {
