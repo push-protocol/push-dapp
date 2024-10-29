@@ -105,6 +105,8 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails, 
                   />
                 ) : (
                   <img
+                    width="100%"
+                    height="100%"
                     src={userProfileDetails?.picture || groupInfo?.groupImage || ''}
                     alt={displayName}
                   />
