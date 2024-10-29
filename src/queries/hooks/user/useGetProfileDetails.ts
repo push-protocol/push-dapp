@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { userProfileDetails } from '../../queryKeys';
 import { getUserProfileDetails } from '../../services';
 
-//Types
 import { UserStoreType } from 'types';
 import { UserProfileDetailsResponse } from '../../types';
 

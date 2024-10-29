@@ -116,12 +116,23 @@ const toastIds: Array<string | number> = [];
 
 // Export the notification object with show and hide methods
 const notification = {
-  show: (config: NotificationProps) => {
-    const toastId = toast.custom(() => <NotificationItem {...config} />, {
-      duration: config.duration || Infinity,
-      position: config.position || 'bottom-right',
-    });
-    toastIds.push(toastId);
+  show: (config: NotificationProps, id?: string) => {
+    if (toastIds.find((toastId) => toastId === id)) {
+      toast.custom(() => <NotificationItem {...config} />, {
+        id: id,
+        duration: config.duration || Infinity,
+        position: config.position || 'bottom-right',
+        onAutoClose: config.onAutoClose,
+      });
+    } else {
+      const toastId = toast.custom(() => <NotificationItem {...config} />, {
+        id: id,
+        duration: config.duration || Infinity,
+        position: config.position || 'bottom-right',
+        onAutoClose: config.onAutoClose,
+      });
+      toastIds.push(toastId);
+    }
   },
   hide: () => {
     if (toastIds.length > 0) {

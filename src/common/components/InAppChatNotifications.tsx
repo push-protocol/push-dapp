@@ -1,48 +1,57 @@
-import { Box, Cross, Link, Pin, Text, notification, Image, Ellipse, FillCircle, ChatFilled, EditProfile } from 'blocks';
-import { convertTimeStamp } from 'common/Common.utils';
-import { AppContext } from 'contexts/AppContext';
-import { shortenText } from 'helpers/UtilityHelper';
-import { caip10ToWallet } from 'helpers/w2w';
-import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
-import { useGetUserProfileDetails } from 'queries';
-
 import { FC, useContext } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { css } from 'styled-components';
+
+import { Box, Cross, Pin, Text, Image, FillCircle, ChatFilled, EditProfile } from 'blocks';
+
 import { AppContextType } from 'types/context';
+import { AppContext } from 'contexts/AppContext';
+
+import { convertTimeStamp } from 'common/Common.utils';
+import { shortenText } from 'helpers/UtilityHelper';
+import { caip10ToWallet } from 'helpers/w2w';
+
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import { useGetGroupInfo, useGetUserProfileDetails } from 'queries';
 
 type InAppChatNotificationsProps = {
-  chatDetails: any;
+  chatDetails: Array<any>;
+  onClose: () => void;
 };
 
-//setSelectedChatId
-//emoji
-const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails }) => {
-  console.debug(chatDetails, 'chatDetails');
+const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails, onClose }) => {
   const { web3NameList }: AppContextType = useContext(AppContext)!;
-  const fromAddress = caip10ToWallet(chatDetails?.from);
+  const fromAddress = caip10ToWallet(chatDetails[0]?.from);
   const { data: userProfileDetails } = useGetUserProfileDetails(fromAddress);
+  const { data: groupInfo } = useGetGroupInfo(chatDetails[0]?.meta?.group ? chatDetails[0].chatId : '');
+
   const navigate = useNavigate();
-  console.debug(chatDetails?.from, userProfileDetails, 'userProfile');
+
   useResolveWeb3Name(fromAddress);
   const web3Name = web3NameList[fromAddress];
-  const displayName = web3Name ? web3Name : shortenText(fromAddress, 6);
+  const sender = web3Name ? web3Name : shortenText(fromAddress, 6);
+  const displayName = chatDetails[0]?.meta?.group
+    ? groupInfo?.groupName || shortenText(chatDetails[0]?.chatId, 6)
+    : web3Name || shortenText(fromAddress, 6);
 
-  const getContentText = () => {
-    if (chatDetails.message.type === 'Text') return chatDetails.message.content;
-    if (chatDetails.message.type === 'Image') return 'Image';
-    if (chatDetails.message.type === 'File') return 'File';
-    if (chatDetails.message.type === 'GIF') return 'GIF';
+  const latestTimestamp = convertTimeStamp(chatDetails[chatDetails.length - 1]?.timestamp);
+
+  const getContentText = (chatDetail: any) => {
+    if (chatDetail.message.type === 'Text') return chatDetail.message.content;
+    if (chatDetail.message.type === 'Image') return 'Image';
+    if (chatDetail.message.type === 'File') return 'File';
+    if (chatDetail.message.type === 'GIF') return 'GIF';
   };
-  const getContentImage = () => {
-    if (chatDetails.message.type === 'Image' || chatDetails.message.type === 'GIF')
+  const getContentImage = (chatDetail: any) => {
+    if (chatDetail.message.type === 'Image' || chatDetail.message.type === 'GIF')
       return (
         <Image
           size={16}
           color="icon-tertiary"
         />
       );
-    if (chatDetails.message.type === 'File')
+    if (chatDetail.message.type === 'File')
       return (
         <Pin
           size={16}
@@ -51,6 +60,7 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails }
       );
   };
 
+  //optimise it and fix the close button z-index
   return (
     <Box
       width="397px"
@@ -67,7 +77,7 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails }
           backgroundColor="surface-primary"
           width="inherit"
           cursor="pointer"
-          onClick={() => navigate(`/chat/chatid:${chatDetails.chatId}`)}
+          onClick={() => navigate(`/chat/chatid:${chatDetails[0].chatId}`)}
         >
           <Box
             display="flex"
@@ -88,15 +98,15 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails }
                   flex-shrink: 0;
                 `}
               >
-                {chatDetails.event === 'chat.request' ? (
+                {chatDetails[0].event === 'chat.request' ? (
                   <ChatFilled
                     size={24}
                     color="icon-brand-medium"
                   />
                 ) : (
                   <img
-                    src={userProfileDetails?.picture || ''}
-                    alt={userProfileDetails?.name || ''}
+                    src={userProfileDetails?.picture || groupInfo?.groupImage || ''}
+                    alt={displayName}
                   />
                 )}
               </Box>
@@ -104,7 +114,7 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails }
                 color="text-primary"
                 variant="bes-semibold"
               >
-                {chatDetails.event === 'chat.request' ? 'Push Chat' : displayName}
+                {chatDetails[0].event === 'chat.request' ? 'Push Chat' : displayName}
               </Text>
               <FillCircle
                 color="icon-tertiary"
@@ -114,11 +124,14 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails }
                 color="text-tertiary"
                 variant="c-semibold"
               >
-                {convertTimeStamp(chatDetails?.timestamp)}
+                {latestTimestamp}
               </Text>
             </Box>
             <Box
-              onClick={() => notification.hide()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
               cursor="pointer"
             >
               <Cross
@@ -127,53 +140,64 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails }
               />
             </Box>
           </Box>
-          {chatDetails.event === 'chat.request' ? (
-            <Box
-              display="flex"
-              gap="spacing-xxxs"
-              alignItems="center"
-            >
-              <EditProfile
-                size={16}
-                color="icon-tertiary"
-              />
-              <Box>
-                <Text
-                  color="text-primary"
-                  variant="bes-bold"
-                  as="span"
-                >
-                  {displayName}{' '}
-                </Text>
-                <Text
-                  color="text-secondary"
-                  variant="bes-regular"
-                  as="span"
-                >
-                  has sent you a chat request
-                </Text>
-              </Box>
-            </Box>
-          ) : (
-            <Box
-              display="flex"
-              flexDirection="column"
-            >
+          {chatDetails.map((chatDetail: any) =>
+            chatDetail.event === 'chat.request' ? (
               <Box
                 display="flex"
                 gap="spacing-xxxs"
                 alignItems="center"
               >
-                {chatDetails.message.type !== 'Text' ? <Box>{getContentImage()}</Box> : null}
-                <Text
-                  color="text-secondary"
-                  variant="bes-regular"
-                  numberOfLines={2}
-                >
-                  {getContentText()}
-                </Text>
+                <EditProfile
+                  size={16}
+                  color="icon-tertiary"
+                />
+                <Box>
+                  <Text
+                    color="text-primary"
+                    variant="bes-bold"
+                    as="span"
+                  >
+                    {displayName}{' '}
+                  </Text>
+                  <Text
+                    color="text-secondary"
+                    variant="bes-regular"
+                    as="span"
+                  >
+                    has sent you a chat request
+                  </Text>
+                </Box>
               </Box>
-            </Box>
+            ) : (
+              <Box
+                display="flex"
+                flexDirection="column"
+              >
+                <Box
+                  display="flex"
+                  gap="spacing-xxxs"
+                  alignItems="center"
+                >
+                  {chatDetails[0]?.meta?.group && (
+                    <Text
+                      color="text-primary"
+                      variant="bes-bold"
+                      as="span"
+                    >
+                      {sender}{' '}
+                    </Text>
+                  )}
+                  {chatDetail.message.type !== 'Text' ? <Box>{getContentImage(chatDetail)}</Box> : null}
+                  <Text
+                    color="text-secondary"
+                    variant="bes-regular"
+                    numberOfLines={2}
+                  >
+                    {getContentText(chatDetail)}
+                  </Text>
+                </Box>
+              </Box>
+            )
           )}
         </Box>
       )}

@@ -16,4 +16,6 @@ export type NotificationProps = {
   position?: 'bottom-right' | 'bottom-left' | 'top-center';
   /* Optional duration of the notification component */
   duration?: number;
+  /* Optional onAutoClose event for the notification called after it's timeout */
+  onAutoClose?: () => void;
 };
