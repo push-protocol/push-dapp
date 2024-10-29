@@ -72,7 +72,8 @@ export const useInAppNotifications = () => {
         if (updatedMessages[data.chatId].length > 5) {
           updatedMessages[data.chatId] = updatedMessages[data.chatId].slice(-5);
         }
-        updatedMessages[data.chatId].push(data);
+        if (!(updatedMessages[data.chatId].length && data.event === 'chat.request'))
+          updatedMessages[data.chatId].push(data);
         setNewMessages(updatedMessages);
         notification.show(
           {
