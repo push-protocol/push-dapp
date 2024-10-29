@@ -20,6 +20,7 @@ export type StakeActivitiesItemProps = {
   allUsersActivity: StakeActivityResponse;
   isAllActivitiesLoading: boolean;
   refetchActivity: () => void;
+  multiplier?: boolean;
 };
 const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   userId,
@@ -31,6 +32,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   allUsersActivity,
   isAllActivitiesLoading,
   refetchActivity,
+  multiplier,
 }) => {
   const { isWalletConnected } = useAccount();
 
@@ -163,7 +165,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
             </Button>
           )}
 
-          {hasActivityEndedUnclaimed && !isLocked && isWalletConnected && (
+          {hasActivityEndedUnclaimed && !isLocked && isWalletConnected && !multiplier && (
             <Button
               variant="tertiary"
               size="small"
@@ -173,7 +175,24 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
             </Button>
           )}
 
-          {!hasActivityEndedUnclaimed && !isLocked && isWalletConnected && (
+          {/* stake reset/one-time button */}
+          {!hasActivityEndedUnclaimed && !isLocked && isWalletConnected && !multiplier && (
+            <ActivityButton
+              userId={userId}
+              activityTypeId={activity.id}
+              activityTypeIndex={activity.index}
+              activityType={activity.activityType}
+              refetchActivity={refetchActivity}
+              setErrorMessage={setErrorMessage}
+              usersSingleActivity={usersSingleActivity}
+              isLoadingActivity={isLoading}
+              label="Claim"
+              isStakeSection
+            />
+          )}
+
+          {/* stake lifetime button */}
+          {multiplier && !isLocked && isWalletConnected && (
             <ActivityButton
               userId={userId}
               activityTypeId={activity.id}

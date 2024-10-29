@@ -185,6 +185,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               allUsersActivity={allUsersActivity as StakeActivityResponse}
               isAllActivitiesLoading={isAllActivitiesLoading}
               refetchActivity={refetchActivity}
+              multiplier={multiplier}
             />
           ))}
         </Box>
@@ -207,6 +208,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               allUsersActivity={allUsersActivity as StakeActivityResponse}
               isAllActivitiesLoading={isAllActivitiesLoading}
               refetchActivity={refetchActivity}
+              multiplier={multiplier}
             />
           ))}
         </Box>
