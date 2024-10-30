@@ -300,10 +300,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
           border={`1px solid ${theme.stakingBorder}`}
           borderRadius="16px"
         >
-          <ItemVV2
-            // margin={isMobile ? '0px 6px 0 0 ' : '0'}
-            padding={isMobile ? ' 1px' : '8px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {lpPoolStats ? (
               <>
                 <SecondaryText>Current Reward</SecondaryText>
@@ -336,10 +333,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
             height="100%"
           ></Line>
 
-          <ItemVV2
-            // margin={isMobile ? '0 0 0 6px' : '0'}
-            padding={isMobile ? ' 1px' : '8px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {lpPoolStats ? (
               <>
                 <SecondaryText>Total Staked</SecondaryText>

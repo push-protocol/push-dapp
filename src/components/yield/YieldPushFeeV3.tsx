@@ -449,10 +449,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
           border={`1px solid ${theme.stakingBorder}`}
           borderRadius="16px"
         >
-          <ItemVV2
-            // margin={isMobile ? '0px 6px 0 0 ' : '0'}
-            padding={isMobile ? ' 1px' : '8px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {PUSHPoolstats ? (
               <>
                 <SecondaryText>Current Reward</SecondaryText>
@@ -485,10 +482,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
             height="100%"
           ></Line>
 
-          <ItemVV2
-            // margin={isMobile ? '0 0 0 6px' : '0px'}
-            padding={isMobile ? ' 1px' : '8px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {PUSHPoolstats ? (
               <>
                 <SecondaryText>Total Staked</SecondaryText>
