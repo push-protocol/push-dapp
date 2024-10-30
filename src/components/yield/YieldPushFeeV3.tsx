@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
-import styled, { useTheme, css } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents
@@ -25,7 +25,7 @@ import {
   SkeletonLine,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
-import { Button } from 'blocks';
+import { Box, Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -720,26 +720,29 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                   ButtonTitle={'Unstake PUSH'}
                 />
               ) : (
-                <Button
-                  variant="outline"
-                  size="medium"
-                  css={css`
-                    flex: 1;
-                  `}
-                  onClick={unstakeTokensPaginated}
+                <Box
+                  display="flex"
+                  width="-webkit-fill-available"
                 >
-                  {txInProgressWithdraw ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Unstaking"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Unstake $PUSH'
-                  )}
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="medium"
+                    block
+                    onClick={unstakeTokensPaginated}
+                  >
+                    {txInProgressWithdraw ? (
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={26}
+                        spinnerColor={theme.activeButtonText}
+                        title="Unstaking"
+                        titleColor={theme.activeButtonText}
+                      />
+                    ) : (
+                      'Unstake $PUSH'
+                    )}
+                  </Button>
+                </Box>
               )}
 
               {userDataPush?.availableRewards === 0.0 ? (
@@ -767,26 +770,29 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                   </Button>
                 </StakingToolTip>
               ) : (
-                <Button
-                  variant="outline"
-                  size="medium"
-                  css={css`
-                    flex: 1;
-                  `}
-                  onClick={claimRewards}
+                <Box
+                  display="flex"
+                  width="-webkit-fill-available"
                 >
-                  {txInProgressClaimRewards ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Claiming"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Claim Rewards'
-                  )}
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="medium"
+                    block
+                    onClick={claimRewards}
+                  >
+                    {txInProgressClaimRewards ? (
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={26}
+                        spinnerColor={theme.activeButtonText}
+                        title="Claiming"
+                        titleColor={theme.activeButtonText}
+                      />
+                    ) : (
+                      'Claim Rewards'
+                    )}
+                  </Button>
+                </Box>
               )}
             </ButtonsContainer>
           </>
@@ -821,9 +827,7 @@ const ErrorToolTip = (props) => {
       <Button
         size="medium"
         disabled={true}
-        css={css`
-          flex: 1;
-        `}
+        block
       >
         {props.ButtonTitle}
       </Button>

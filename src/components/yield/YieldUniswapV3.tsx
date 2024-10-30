@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
-import styled, { useTheme, css } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents
@@ -25,7 +25,7 @@ import {
   SkeletonLine,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
-import { Button } from 'blocks';
+import { Box, Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -595,26 +595,29 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   </Button>
                 </StakingToolTip>
               ) : (
-                <Button
-                  size="medium"
-                  variant="outline"
-                  css={css`
-                    flex: 1;
-                  `}
-                  onClick={withdrawAmountTokenFarmAutomatic}
+                <Box
+                  display="flex"
+                  width="-webkit-fill-available"
                 >
-                  {txInProgressWithdraw ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Unstaking"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Unstake $UNI-V2'
-                  )}
-                </Button>
+                  <Button
+                    size="medium"
+                    variant="outline"
+                    block
+                    onClick={withdrawAmountTokenFarmAutomatic}
+                  >
+                    {txInProgressWithdraw ? (
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={26}
+                        spinnerColor={theme.activeButtonText}
+                        title="Unstaking"
+                        titleColor={theme.activeButtonText}
+                      />
+                    ) : (
+                      'Unstake $UNI-V2'
+                    )}
+                  </Button>
+                </Box>
               )}
 
               {userDataLP?.totalAvailableReward === '0.00' ? (
@@ -642,26 +645,29 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   </Button>
                 </StakingToolTip>
               ) : (
-                <Button
-                  variant="outline"
-                  size="medium"
-                  css={css`
-                    flex: 1;
-                  `}
-                  onClick={() => massClaimRewardsTokensAll()}
+                <Box
+                  display="flex"
+                  width="-webkit-fill-available"
                 >
-                  {txInProgressClaimRewards ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Claiming"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Claim Rewards'
-                  )}
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="medium"
+                    block
+                    onClick={() => massClaimRewardsTokensAll()}
+                  >
+                    {txInProgressClaimRewards ? (
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={26}
+                        spinnerColor={theme.activeButtonText}
+                        title="Claiming"
+                        titleColor={theme.activeButtonText}
+                      />
+                    ) : (
+                      'Claim Rewards'
+                    )}
+                  </Button>
+                </Box>
               )}
             </ButtonsContainer>
           </>
