@@ -301,8 +301,8 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
           borderRadius="16px"
         >
           <ItemVV2
-            margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
-            padding={isMobile ? ' 7px' : '10px'}
+            // margin={isMobile ? '0px 6px 0 0 ' : '0'}
+            padding={isMobile ? ' 1px' : '8px'}
           >
             {lpPoolStats ? (
               <>
@@ -337,8 +337,8 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
           ></Line>
 
           <ItemVV2
-            margin={isMobile ? '0 0 0 6px' : '0 0 0 18px'}
-            padding={isMobile ? ' 7px' : '10px'}
+            // margin={isMobile ? '0 0 0 6px' : '0'}
+            padding={isMobile ? ' 1px' : '8px'}
           >
             {lpPoolStats ? (
               <>
@@ -615,7 +615,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                 </Button>
               )}
 
-              {userDataLP?.totalAvailableReward === '0.00' ? (
+              {userDataLP?.totalAvailableReward !== '0.00' ? (
                 <StakingToolTip
                   bottom={'-30px'}
                   left={'40px'}
@@ -646,7 +646,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   block
                   onClick={() => massClaimRewardsTokensAll()}
                 >
-                  {txInProgressClaimRewards ? (
+                  {!txInProgressClaimRewards ? (
                     <LoaderSpinner
                       type={LOADER_TYPE.SEAMLESS}
                       spinnerSize={26}

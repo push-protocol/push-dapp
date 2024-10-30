@@ -450,8 +450,8 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
           borderRadius="16px"
         >
           <ItemVV2
-            margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
-            padding={isMobile ? ' 7px' : '10px'}
+            // margin={isMobile ? '0px 6px 0 0 ' : '0'}
+            padding={isMobile ? ' 1px' : '8px'}
           >
             {PUSHPoolstats ? (
               <>
@@ -486,8 +486,8 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
           ></Line>
 
           <ItemVV2
-            margin={isMobile ? '0 0 0 6px' : '0 0 0 18px'}
-            padding={isMobile ? ' 7px' : '10px'}
+            // margin={isMobile ? '0 0 0 6px' : '0px'}
+            padding={isMobile ? ' 1px' : '8px'}
           >
             {PUSHPoolstats ? (
               <>
