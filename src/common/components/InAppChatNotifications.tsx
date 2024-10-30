@@ -23,8 +23,16 @@ type InAppChatNotificationsProps = {
 const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails, onClose }) => {
   const { web3NameList }: AppContextType = useContext(AppContext)!;
   const fromAddress = caip10ToWallet(chatDetails[0]?.from);
-  const { data: userProfileDetails } = useGetUserProfileDetails(fromAddress);
-  const { data: groupInfo } = useGetGroupInfo(chatDetails[0]?.meta?.group ? chatDetails[0].chatId : '');
+  const { data: userProfileDetails } = useGetUserProfileDetails(fromAddress, {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    refetchInterval: 3600000, // 1 hour,
+  });
+  const { data: groupInfo } = useGetGroupInfo(chatDetails[0]?.meta?.group ? chatDetails[0].chatId : '', {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    refetchInterval: 3600000, // 1 hour,
+  });
 
   const navigate = useNavigate();
 
