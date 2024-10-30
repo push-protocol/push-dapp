@@ -18,6 +18,7 @@ type ActivityButtonProps = {
   isLoadingActivity: boolean;
   label?: string;
   isStakeSection?: boolean;
+  lifeTime?: boolean;
 };
 
 const ActivityButton: FC<ActivityButtonProps> = ({
@@ -31,10 +32,11 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   isLoadingActivity,
   label,
   isStakeSection,
+  lifeTime,
 }) => {
   const { resetEpoch } = useRewardsContext();
 
-  if (usersSingleActivity?.status === 'COMPLETED' && isStakeSection && resetEpoch) {
+  if (usersSingleActivity?.status === 'COMPLETED' && isStakeSection && resetEpoch && !lifeTime) {
     return (
       // default verify button
       <ActivityVerificationButton
