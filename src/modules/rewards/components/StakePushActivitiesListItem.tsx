@@ -20,7 +20,7 @@ export type StakeActivitiesItemProps = {
   allUsersActivity: StakeActivityResponse;
   isAllActivitiesLoading: boolean;
   refetchActivity: () => void;
-  multiplier?: boolean;
+  lifeTime?: boolean;
 };
 const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   userId,
@@ -32,7 +32,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   allUsersActivity,
   isAllActivitiesLoading,
   refetchActivity,
-  multiplier,
+  lifeTime,
 }) => {
   const { isWalletConnected } = useAccount();
 
@@ -42,6 +42,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   const hasActivityEndedUnclaimed = usersSingleActivity?.status !== 'COMPLETED' && hasEpochEnded;
 
   const isLockedOrNotConnected = isLocked || !isWalletConnected;
+
   return (
     <Skeleton
       isLoading={isLoadingItem}
@@ -165,7 +166,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
             </Button>
           )}
 
-          {hasActivityEndedUnclaimed && !isLocked && isWalletConnected && !multiplier && (
+          {hasActivityEndedUnclaimed && !isLocked && isWalletConnected && !lifeTime && (
             <Button
               variant="tertiary"
               size="small"
@@ -176,7 +177,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
           )}
 
           {/* stake reset/one-time button */}
-          {!hasActivityEndedUnclaimed && !isLocked && isWalletConnected && !multiplier && (
+          {!hasActivityEndedUnclaimed && !isLocked && isWalletConnected && !lifeTime && (
             <ActivityButton
               userId={userId}
               activityTypeId={activity.id}
@@ -188,11 +189,12 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
               isLoadingActivity={isLoading}
               label="Claim"
               isStakeSection
+              lifeTime={lifeTime}
             />
           )}
 
           {/* stake lifetime button */}
-          {multiplier && !isLocked && isWalletConnected && (
+          {lifeTime && !isLocked && isWalletConnected && (
             <ActivityButton
               userId={userId}
               activityTypeId={activity.id}
@@ -204,6 +206,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
               isLoadingActivity={isLoading}
               label="Claim"
               isStakeSection
+              lifeTime={lifeTime}
             />
           )}
         </Box>

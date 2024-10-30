@@ -19,14 +19,14 @@ export type StakePushPoints = {
   title: string;
   subtitle: string;
   timeline?: boolean;
-  multiplier?: boolean;
+  lifeTime?: boolean;
 };
 
-const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, multiplier }) => {
+const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, lifeTime }) => {
   const { account, isWalletConnected } = useAccount();
   const { isLocked } = useRewardsContext();
   const { stakePushArray, uniV2PushArray, isLoading, daysToReset } = useStakeRewardsResetTime({
-    multiplier,
+    lifeTime,
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -39,12 +39,12 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
   const activityResetDate = (daysToReset as number) + 7;
 
   const isEpochStatusActive = useMemo(() => {
-    return daysToReset != null && !multiplier && daysToReset >= 0 && activityResetDate > 7 && isWalletConnected;
-  }, [daysToReset, multiplier, activityResetDate, isWalletConnected]);
+    return daysToReset != null && !lifeTime && daysToReset >= 0 && activityResetDate > 7 && isWalletConnected;
+  }, [daysToReset, lifeTime, activityResetDate, isWalletConnected]);
 
   const hasEpochEnded = useMemo(() => {
-    return daysToReset != null && activityResetDate >= 0 && activityResetDate <= 7 && !multiplier && isWalletConnected;
-  }, [daysToReset, activityResetDate, multiplier, isWalletConnected]);
+    return daysToReset != null && activityResetDate >= 0 && activityResetDate <= 7 && !lifeTime && isWalletConnected;
+  }, [daysToReset, activityResetDate, lifeTime, isWalletConnected]);
 
   // Combine all activities into a single array
   const allActivities = [...uniV2PushArray, ...stakePushArray];
@@ -185,7 +185,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               allUsersActivity={allUsersActivity as StakeActivityResponse}
               isAllActivitiesLoading={isAllActivitiesLoading}
               refetchActivity={refetchActivity}
-              multiplier={multiplier}
+              lifeTime={lifeTime}
             />
           ))}
         </Box>
@@ -208,13 +208,13 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               allUsersActivity={allUsersActivity as StakeActivityResponse}
               isAllActivitiesLoading={isAllActivitiesLoading}
               refetchActivity={refetchActivity}
-              multiplier={multiplier}
+              lifeTime={lifeTime}
             />
           ))}
         </Box>
       </Box>
 
-      {!multiplier && (
+      {!lifeTime && (
         <Text
           textAlign="center"
           variant="bs-semibold"
