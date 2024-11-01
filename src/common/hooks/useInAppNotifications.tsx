@@ -110,13 +110,18 @@ export const useInAppNotifications = () => {
   useEffect(() => {
     (async () => {
       if (userPushSDKInstance && userPushSDKInstance?.stream) {
+        console.debug('attach stream');
         await attachListeners();
       }
     })();
 
     // Cleanup listener on unmount
-    return () => {};
-  }, [userPushSDKInstance?.account]);
+    return () => {
+      (async () => {
+        userPushSDKInstance?.stream.disconnect();
+      })();
+    };
+  }, [userPushSDKInstance.uid]);
 
   return { isStreamConnected };
 };

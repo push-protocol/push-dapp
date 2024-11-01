@@ -49,10 +49,10 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails, 
     if (chatDetail.message.type === 'Text') return chatDetail.message.content;
     if (chatDetail.message.type === 'Image') return 'Image';
     if (chatDetail.message.type === 'File') return 'File';
-    if (chatDetail.message.type === 'GIF') return 'GIF';
+    if (chatDetail.message.type === 'MediaEmbed') return 'MediaEmbed';
   };
   const getContentImage = (chatDetail: any) => {
-    if (chatDetail.message.type === 'Image' || chatDetail.message.type === 'GIF')
+    if (chatDetail.message.type === 'Image' || chatDetail.message.type === 'MediaEmbed')
       return (
         <Image
           size={16}
