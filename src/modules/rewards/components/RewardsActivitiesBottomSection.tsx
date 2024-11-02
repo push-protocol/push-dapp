@@ -39,7 +39,7 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
       >
         <StakePushSection
           title="Stake Push to Earn Points"
-          subtitle="Visit [app.push.org/yieldv2](https://app.push.org/yieldv2) and stake tokens in the Fee Pool or LP Pool to redeem points."
+          subtitle="Visit [app.push.org/yield](https://app.push.org/yield) and stake tokens in the Fee Pool or LP Pool to redeem points."
           timeline={true}
         />
       </Box>
@@ -53,9 +53,9 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
         margin="spacing-none spacing-none spacing-md spacing-none"
       >
         <StakePushSection
-          multiplier={true}
+          lifeTime={true}
           title="Stake Push to Earn Multipliers"
-          subtitle="Visit [app.push.org/yieldv2](https://app.push.org/yieldv2) and stake tokens in the Fee Pool or LP Pool to activate multipliers."
+          subtitle="Visit [app.push.org/yield](https://app.push.org/yield) and stake tokens in the Fee Pool or LP Pool to activate multipliers."
         />
       </Box>
     </Box>

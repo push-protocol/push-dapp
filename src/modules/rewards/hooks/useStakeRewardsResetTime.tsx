@@ -19,10 +19,10 @@ import { filterAndSortActivities, filterAndSortAllActivities } from '../utils/st
 import { CommonLocalStorageKeys } from 'common';
 
 export type StakeRewardsResetTime = {
-  multiplier?: boolean;
+  lifeTime?: boolean;
 };
 
-const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
+const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
   const [resetDate, setResetDate] = useState<number | null>(null); // Local state for latest timestamp
   const { account, isWalletConnected } = useAccount();
   const { setResetEpoch } = useRewardsContext();
@@ -42,17 +42,17 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
     return filterAndSortActivities(
       'push',
       rewardActivitiesResponse?.activities.flatMap((page) => page) || [],
-      multiplier
+      lifeTime
     );
-  }, [rewardActivitiesResponse, multiplier, isLoadingActivities]);
+  }, [rewardActivitiesResponse, lifeTime, isLoadingActivities]);
 
   const uniV2PushArray = useMemo(() => {
     return filterAndSortActivities(
       'uni-v2',
       rewardActivitiesResponse?.activities.flatMap((page) => page) || [],
-      multiplier
+      lifeTime
     );
-  }, [rewardActivitiesResponse, multiplier, isLoadingActivities]);
+  }, [rewardActivitiesResponse, lifeTime, isLoadingActivities]);
 
   // Combined array for both multiplier and point activities for push and uniV2
   const allPushArray = useMemo(() => {
@@ -113,7 +113,7 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
         : hasSevenDaysPassed(Number(resetStakeEndDate)); // If toTimestamp is undefined, check resetStakeEndDat
 
     const updateResetDate = (timestamp: number) => {
-      localStorage.setItem(CommonLocalStorageKeys.resetStakeEndDate, timestamp.toString());
+      localStorage.setItem(CommonLocalStorageKeys.resetStakeEndDate, timestamp?.toString());
       setResetDate(timestamp);
     };
 

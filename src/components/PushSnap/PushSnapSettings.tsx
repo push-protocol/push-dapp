@@ -14,10 +14,9 @@ import { Alert, Box, Button, Text } from 'blocks';
 import { SnoozeDurationType } from 'types';
 
 const PushSnapSettings = () => {
-  const { account, isWalletConnected } = useAccount();
+  const { account, isWalletConnected, connect } = useAccount();
 
   const theme = useTheme();
-  const [walletConnected, setWalletConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -32,7 +31,7 @@ const PushSnapSettings = () => {
 
   async function getInstalledSnaps() {
     if (!isWalletConnected) {
-      setErrorMessage("Wallet not connected in part 2");
+      setErrorMessage("Connect your metamask wallet to install Snap");
       setSnapInstalled(false);
       return
     }
@@ -58,7 +57,6 @@ const PushSnapSettings = () => {
 
 
     console.debug(account);
-    console.debug(walletConnected);
     if (result.includes(account)) {
       setAddedAddress(true);
     } else {
@@ -69,7 +67,7 @@ const PushSnapSettings = () => {
   useEffect(() => {
     getInstalledSnaps();
     getWalletAddresses();
-  }, [account, walletConnected, snapInstalled]);
+  }, [account, isWalletConnected, snapInstalled]);
 
   async function connectSnap() {
     if (!isWalletConnected) return;
@@ -93,6 +91,7 @@ const PushSnapSettings = () => {
     setErrorMessage('')
     setLoading(true);
     try {
+      if (!isWalletConnected) await connect();
       if (!snapInstalled) {
         await connectSnap();
       }
