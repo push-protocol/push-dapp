@@ -10,16 +10,16 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from 'modules/snap/AboutSnapModal';
 import styled, { useTheme } from 'styled-components';
 import PushSnapConfigureModal from './PushSnapConfigureModal';
-import { Button } from 'blocks';
+import { Alert, Box, Button, Text } from 'blocks';
 import { SnoozeDurationType } from 'types';
 
 const PushSnapSettings = () => {
   const { account, isWalletConnected, connect } = useAccount();
 
   const theme = useTheme();
-  const [walletConnected, setWalletConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [snoozeDuration, setSnoozeDuration] = useState<SnoozeDurationType>({
     enabled: false,
@@ -30,6 +30,12 @@ const PushSnapSettings = () => {
   const defaultSnapOrigin = `npm:@pushprotocol/snap`;
 
   async function getInstalledSnaps() {
+    if (!isWalletConnected) {
+      setErrorMessage("Connect your metamask wallet to install Snap");
+      setSnapInstalled(false);
+      return
+    }
+    setErrorMessage('')
     const installedSnaps = await window.ethereum.request({
       method: 'wallet_getSnaps',
     });
@@ -49,8 +55,8 @@ const PushSnapSettings = () => {
       },
     });
 
+
     console.debug(account);
-    console.debug(walletConnected);
     if (result.includes(account)) {
       setAddedAddress(true);
     } else {
@@ -61,9 +67,10 @@ const PushSnapSettings = () => {
   useEffect(() => {
     getInstalledSnaps();
     getWalletAddresses();
-  }, [account, walletConnected]);
+  }, [account, isWalletConnected, snapInstalled]);
 
   async function connectSnap() {
+    if (!isWalletConnected) return;
     let snapId = defaultSnapOrigin,
       params = {};
     await window.ethereum?.request({
@@ -73,15 +80,20 @@ const PushSnapSettings = () => {
       },
     });
     console.info('Snap Installed');
+    setSnapInstalled(true);
   }
 
   async function connectToMetaMask() {
+    if (!isWalletConnected) {
+      setErrorMessage('Connect your metamask wallet to install Snap');
+      return;
+    }
+    setErrorMessage('')
     setLoading(true);
     try {
       if (!isWalletConnected) await connect();
       if (!snapInstalled) {
         await connectSnap();
-        setSnapInstalled(true);
       }
       setLoading(false);
     } catch (error) {
@@ -89,8 +101,6 @@ const PushSnapSettings = () => {
       console.error('Error', error);
     }
   }
-
-  console.info('snapInstalled', snapInstalled);
 
   const InstallSnap = () => {
     const {
@@ -146,6 +156,14 @@ const PushSnapSettings = () => {
             </ItemVV2>
           </ItemVV2>
 
+          {errorMessage && (
+            <Alert
+              variant="error"
+              heading={errorMessage}
+              showIcon
+            />
+          )}
+
           <ItemVV2>
             {loading ? (
               <LoaderSpinner
@@ -184,19 +202,18 @@ const PushSnapSettings = () => {
         <InstallSnap />
       ) : (
         <>
-          <SpanV2
-            fontWeight="500"
-            fontSize="22px"
-            color={theme.modalMessageColor}
-            flex="1"
-            padding="0px 0px 0px 9px"
+          <Box
+            display='flex'
+            flexDirection='column'
+            padding='spacing-none spacing-none spacing-none spacing-xxs'
           >
-            Snap Settings
-          </SpanV2>
-          <PushSnapConfigureModal
-            snoozeDuration={snoozeDuration}
-            setSnoozeDuration={setSnoozeDuration}
-          />
+            <Text variant='h4-semibold'>Push Snap Settings</Text>
+            <PushSnapConfigureModal
+              snoozeDuration={snoozeDuration}
+              setSnoozeDuration={setSnoozeDuration}
+            />
+          </Box>
+
         </>
       )}
     </>

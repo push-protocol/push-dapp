@@ -16,15 +16,18 @@ import Metamask from 'assets/snap/metamasksnap.svg';
 import { Button } from 'blocks';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { A } from 'primaries/SharedStyling';
+import { useAccount } from 'hooks';
 
 const InstallPushSnapModal = ({ setSnapState, configure, setConfigure }) => {
   const theme = useTheme();
+  const { isWalletConnected } = useAccount();
 
   useEffect(() => {
     getInstalledSnaps();
   }, [configure]);
 
   async function getInstalledSnaps() {
+    if (!isWalletConnected) return
     const installedSnaps = await window.ethereum.request({
       method: 'wallet_getSnaps',
     });
