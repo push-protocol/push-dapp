@@ -897,7 +897,7 @@ const Container = styled(SectionV2)`
   font-weight: 500;
   min-height: 587px;
   color: ${(props) => props.theme.stakingPrimaryText};
-
+  width: -webkit-fill-available;
   @media (max-width: 1300px) {
     margin: 10px 0;
   }
