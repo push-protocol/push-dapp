@@ -410,6 +410,7 @@ const PrimaryText = styled(H2V2)`
 
 const TokenInput = styled(Input)`
   background: transparent;
+  width: 100%;
 `;
 
 const MaxText = styled.p`

@@ -25,7 +25,7 @@ import {
   SkeletonLine,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
-import { Button } from 'blocks';
+import { Box, Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -300,10 +300,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
           border={`1px solid ${theme.stakingBorder}`}
           borderRadius="16px"
         >
-          <ItemVV2
-            margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
-            padding={isMobile ? ' 7px' : '10px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {lpPoolStats ? (
               <>
                 <SecondaryText>Current Reward</SecondaryText>
@@ -336,10 +333,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
             height="100%"
           ></Line>
 
-          <ItemVV2
-            margin={isMobile ? '0 0 0 6px' : '0 0 0 18px'}
-            padding={isMobile ? ' 7px' : '10px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {lpPoolStats ? (
               <>
                 <SecondaryText>Total Staked</SecondaryText>
@@ -571,94 +565,98 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
               </Button>
             </ItemHV2>
             <ButtonsContainer>
-              {formatTokens(userDataLP?.epochStakeNext) === '0' ? (
-                <StakingToolTip
-                  error={true}
-                  ToolTipTitle={'Nothing to unstake! Stake First.'}
-                  ToolTipWidth={'16rem'}
-                  bottom={'-30px'}
-                >
+              <Box width="50%">
+                {formatTokens(userDataLP?.epochStakeNext) === '0' ? (
+                  <StakingToolTip
+                    error={true}
+                    ToolTipTitle={'Nothing to unstake! Stake First.'}
+                    ToolTipWidth={'16rem'}
+                    bottom={'-30px'}
+                  >
+                    <Button
+                      disabled={true}
+                      size="medium"
+                      block
+                    >
+                      {txInProgressWithdraw ? (
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={26}
+                          spinnerColor="#D53A94"
+                        />
+                      ) : (
+                        'Unstake $UNI-V2'
+                      )}
+                    </Button>
+                  </StakingToolTip>
+                ) : (
                   <Button
-                    disabled={true}
                     size="medium"
+                    variant="outline"
                     block
+                    onClick={withdrawAmountTokenFarmAutomatic}
                   >
                     {txInProgressWithdraw ? (
                       <LoaderSpinner
                         type={LOADER_TYPE.SEAMLESS}
                         spinnerSize={26}
-                        spinnerColor="#D53A94"
+                        spinnerColor={theme.activeButtonText}
+                        title="Unstaking"
+                        titleColor={theme.activeButtonText}
                       />
                     ) : (
                       'Unstake $UNI-V2'
                     )}
                   </Button>
-                </StakingToolTip>
-              ) : (
-                <Button
-                  size="medium"
-                  variant="outline"
-                  block
-                  onClick={withdrawAmountTokenFarmAutomatic}
-                >
-                  {txInProgressWithdraw ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Unstaking"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Unstake $UNI-V2'
-                  )}
-                </Button>
-              )}
+                )}
+              </Box>
 
-              {userDataLP?.totalAvailableReward === '0.00' ? (
-                <StakingToolTip
-                  bottom={'-30px'}
-                  left={'40px'}
-                  ToolTipTitle={'No Rewards to Claim!'}
-                  error={true}
-                  ToolTipWidth={'10rem'}
-                >
+              <Box width="50%">
+                {userDataLP?.totalAvailableReward === '0.00' ? (
+                  <StakingToolTip
+                    bottom={'-30px'}
+                    left={'40px'}
+                    ToolTipTitle={'No Rewards to Claim!'}
+                    error={true}
+                    ToolTipWidth={'10rem'}
+                  >
+                    <Button
+                      disabled={true}
+                      size="medium"
+                      block
+                    >
+                      {txInProgressClaimRewards ? (
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={26}
+                          spinnerColor="#FFFFF"
+                        />
+                      ) : (
+                        'Claim Rewards'
+                      )}
+                    </Button>
+                  </StakingToolTip>
+                ) : (
                   <Button
-                    disabled={true}
+                    variant="outline"
                     size="medium"
                     block
+                    onClick={() => massClaimRewardsTokensAll()}
                   >
                     {txInProgressClaimRewards ? (
                       <LoaderSpinner
                         type={LOADER_TYPE.SEAMLESS}
                         spinnerSize={26}
-                        spinnerColor="#FFFFF"
+                        spinnerColor={theme.activeButtonText}
+                        title="Claiming"
+                        titleColor={theme.activeButtonText}
                       />
                     ) : (
                       'Claim Rewards'
                     )}
                   </Button>
-                </StakingToolTip>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="medium"
-                  block
-                  onClick={() => massClaimRewardsTokensAll()}
-                >
-                  {txInProgressClaimRewards ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Claiming"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Claim Rewards'
-                  )}
-                </Button>
-              )}
+                )}
+              </Box>
             </ButtonsContainer>
           </>
         ) : (
@@ -694,7 +692,7 @@ const Container = styled(SectionV2)`
   font-weight: 500;
   min-height: 587px;
   color: ${(props) => props.theme.stakingPrimaryText};
-
+  width: -webkit-fill-available;
   @media (max-width: 1300px) {
     margin: 0 0 10px 0;
   }
@@ -789,7 +787,7 @@ const DataValue = styled(H2V2)`
 
 const ButtonsContainer = styled.div`
   display: flex;
-  gap: var(--spacing-xxxs, 4px);
+  gap: 12px;
   margin: 15px 0px 0px 0px;
   width: 100%;
 `;

@@ -25,7 +25,7 @@ import {
   SkeletonLine,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
-import { Button } from 'blocks';
+import { Box, Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -449,10 +449,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
           border={`1px solid ${theme.stakingBorder}`}
           borderRadius="16px"
         >
-          <ItemVV2
-            margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
-            padding={isMobile ? ' 7px' : '10px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {PUSHPoolstats ? (
               <>
                 <SecondaryText>Current Reward</SecondaryText>
@@ -485,10 +482,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
             height="100%"
           ></Line>
 
-          <ItemVV2
-            margin={isMobile ? '0 0 0 6px' : '0 0 0 18px'}
-            padding={isMobile ? ' 7px' : '10px'}
-          >
+          <ItemVV2 padding={isMobile ? ' 1px' : '8px'}>
             {PUSHPoolstats ? (
               <>
                 <SecondaryText>Total Staked</SecondaryText>
@@ -709,81 +703,84 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
               </Button>
             </ItemHV2>
             <ButtonsContainer>
-              {PUSHPoolstats?.currentEpochNumber <= 2 ? (
-                <ErrorToolTip
-                  ToolTipTitle={'You can unstake once epoch 2 ends.'}
-                  ButtonTitle={'Unstake PUSH'}
-                />
-              ) : formatTokens(userDataPush?.userStaked) == 0 || unstakeErrorMessage !== null ? (
-                <ErrorToolTip
-                  ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : 'Nothing to unstake, Stake First'}
-                  ButtonTitle={'Unstake PUSH'}
-                />
-              ) : (
-                <Button
-                  variant="outline"
-                  size="medium"
-                  block
-                  onClick={unstakeTokensPaginated}
-                >
-                  {txInProgressWithdraw ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Unstaking"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Unstake $PUSH'
-                  )}
-                </Button>
-              )}
-
-              {userDataPush?.availableRewards === 0.0 ? (
-                <StakingToolTip
-                  bottom={'-30px'}
-                  ToolTipTitle={'No Rewards to Claim'}
-                  error={true}
-                  left={'40px'}
-                  ToolTipWidth={'10rem'}
-                >
+              <Box width="50%">
+                {PUSHPoolstats?.currentEpochNumber <= 2 ? (
+                  <ErrorToolTip
+                    ToolTipTitle={'You can unstake once epoch 2 ends.'}
+                    ButtonTitle={'Unstake PUSH'}
+                  />
+                ) : formatTokens(userDataPush?.userStaked) == 0 || unstakeErrorMessage !== null ? (
+                  <ErrorToolTip
+                    ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : 'Nothing to unstake, Stake First'}
+                    ButtonTitle={'Unstake PUSH'}
+                  />
+                ) : (
                   <Button
+                    variant="outline"
                     size="medium"
                     block
-                    disabled={true}
+                    onClick={unstakeTokensPaginated}
+                  >
+                    {txInProgressWithdraw ? (
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={26}
+                        spinnerColor={theme.activeButtonText}
+                        title="Unstaking"
+                        titleColor={theme.activeButtonText}
+                      />
+                    ) : (
+                      'Unstake $PUSH'
+                    )}
+                  </Button>
+                )}
+              </Box>
+              <Box width="50%">
+                {userDataPush?.availableRewards === 0.0 ? (
+                  <StakingToolTip
+                    bottom={'-30px'}
+                    ToolTipTitle={'No Rewards to Claim'}
+                    error={true}
+                    left={'40px'}
+                    ToolTipWidth={'10rem'}
+                  >
+                    <Button
+                      size="medium"
+                      block
+                      disabled={true}
+                    >
+                      {txInProgressClaimRewards ? (
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={26}
+                          spinnerColor="#D53A94"
+                        />
+                      ) : (
+                        'Claim Rewards'
+                      )}
+                    </Button>
+                  </StakingToolTip>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="medium"
+                    block
+                    onClick={claimRewards}
                   >
                     {txInProgressClaimRewards ? (
                       <LoaderSpinner
                         type={LOADER_TYPE.SEAMLESS}
                         spinnerSize={26}
-                        spinnerColor="#D53A94"
+                        spinnerColor={theme.activeButtonText}
+                        title="Claiming"
+                        titleColor={theme.activeButtonText}
                       />
                     ) : (
                       'Claim Rewards'
                     )}
                   </Button>
-                </StakingToolTip>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="medium"
-                  block
-                  onClick={claimRewards}
-                >
-                  {txInProgressClaimRewards ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={26}
-                      spinnerColor={theme.activeButtonText}
-                      title="Claiming"
-                      titleColor={theme.activeButtonText}
-                    />
-                  ) : (
-                    'Claim Rewards'
-                  )}
-                </Button>
-              )}
+                )}
+              </Box>
             </ButtonsContainer>
           </>
         ) : (
@@ -816,6 +813,7 @@ const ErrorToolTip = (props) => {
     >
       <Button
         size="medium"
+        block
         disabled={true}
       >
         {props.ButtonTitle}
@@ -864,7 +862,6 @@ const OuterContainer = styled.div`
   position: relative;
   @media ${device.tablet} {
     width: 100%;
-    min-width: 100%;
     max-width: 100%;
   }
 `;
@@ -900,7 +897,7 @@ const Container = styled(SectionV2)`
   font-weight: 500;
   min-height: 587px;
   color: ${(props) => props.theme.stakingPrimaryText};
-
+  width: -webkit-fill-available;
   @media (max-width: 1300px) {
     margin: 10px 0;
   }

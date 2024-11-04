@@ -132,6 +132,7 @@ const Container = styled(ItemVV2)`
 
 const TokenInput = styled(Input)`
   background: transparent;
+  width: 100%;
 `;
 
 const PrimaryText = styled(H2V2)`
