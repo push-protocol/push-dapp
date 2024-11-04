@@ -16,6 +16,7 @@ export const useInAppNotifications = () => {
     return state.user;
   });
   const attachListeners = async () => {
+    console.debug('attach listners');
     userPushSDKInstance?.stream?.on(CONSTANTS.STREAM.CONNECT, (err: Error) => {
       console.debug(
         'src::common::hooks::useStream::attachListeners::CONNECT::',
@@ -42,9 +43,12 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.uid,
         userPushSDKInstance?.stream?.uid,
         userPushSDKInstance?.stream,
-        data
+        data,
+        data.source,
+        typeof data.source,
+        data.source != 'PUSH_CHAT'
       );
-      if (data.source !== 'PUSH_CHAT')
+      if (data.source != 'PUSH_CHAT')
         notification.show({
           overlay: <InAppChannelNotifications notificationDetails={data} />,
           position: isMobile ? 'top-center' : 'bottom-right',
@@ -72,8 +76,11 @@ export const useInAppNotifications = () => {
         if (updatedMessages[data.chatId].length > 5) {
           updatedMessages[data.chatId] = updatedMessages[data.chatId].slice(-5);
         }
-        if (!(updatedMessages[data.chatId].length && data.event === 'chat.request'))
-          updatedMessages[data.chatId].push(data);
+        if (!(updatedMessages[data.chatId].length && data.event === 'chat.request')) {
+          if (!updatedMessages[data.chatId].some((msg) => msg?.reference === data?.reference)) {
+            updatedMessages[data.chatId].push(data);
+          }
+        }
         setNewMessages(updatedMessages);
         notification.show(
           {
@@ -107,21 +114,25 @@ export const useInAppNotifications = () => {
     setNewMessages(updatedMessages);
   };
 
-  useEffect(() => {
-    (async () => {
-      if (userPushSDKInstance && userPushSDKInstance?.stream) {
-        console.debug('attach stream');
-        await attachListeners();
-      }
-    })();
+  const streamAttach = () => {
+    if (userPushSDKInstance && userPushSDKInstance?.stream && !userPushSDKInstance?.stream.disconnected) {
+      console.debug('attach stream first time', userPushSDKInstance);
+      attachListeners();
+    }
+  };
+  const streamCleanup = () => {
+    console.debug('disconnect stream first time', userPushSDKInstance);
+    if (userPushSDKInstance && userPushSDKInstance?.stream) {
+      userPushSDKInstance?.stream?.disconnect();
+    }
+  };
 
-    // Cleanup listener on unmount
+  useEffect(() => {
+    streamAttach();
     return () => {
-      (async () => {
-        userPushSDKInstance?.stream.disconnect();
-      })();
+      streamCleanup();
     };
-  }, [userPushSDKInstance.uid]);
+  }, [userPushSDKInstance?.account, userPushSDKInstance?.readmode()]);
 
   return { isStreamConnected };
 };

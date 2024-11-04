@@ -4055,9 +4055,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.7.25":
-  version: 1.7.25
-  resolution: "@pushprotocol/restapi@npm:1.7.25"
+"@pushprotocol/restapi@npm:1.7.28":
+  version: 1.7.28
+  resolution: "@pushprotocol/restapi@npm:1.7.28"
   dependencies:
     "@metamask/eth-sig-util": "npm:^5.0.2"
     axios: "npm:^0.27.2"
@@ -4080,7 +4080,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: 10/1da9268e81c3038871904336f16b6161fb039e9d0995a060f403f95c553a8ca8c9faada73c1806fb8ba3557cbdcc33b53c0e223c4cb743ddc9ed24da0b91c992
+  checksum: 10/63fe891a9adb7a9bb911d059bbcb633d432eeed2c71ec1c1ab54a91895ca59f205fd46b450f9f50890d9b1e74120180b0ac45b869a3bdf0c7077445235c45d65
   languageName: node
   linkType: hard
 
@@ -18491,7 +18491,7 @@ __metadata:
     "@metamask/eth-sig-util": "npm:^4.0.0"
     "@mui/icons-material": "npm:^5.8.4"
     "@mui/material": "npm:^5.5.0"
-    "@pushprotocol/restapi": "npm:1.7.25"
+    "@pushprotocol/restapi": "npm:1.7.28"
     "@pushprotocol/socket": "npm:0.5.3"
     "@pushprotocol/uiweb": "npm:1.7.0"
     "@radix-ui/react-dialog": "npm:^1.1.1"
