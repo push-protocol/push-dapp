@@ -33,6 +33,8 @@ export { default as EarnOnPush } from './components/EarnOnPush';
 
 export { default as Ethereum } from './components/Ethereum';
 
+export { default as FiveSubscribedDefiChannel } from './components/FiveSubscribedDefiChannel';
+
 export { default as GatedGroupPoints } from './components/GatedGroupPoints';
 
 export { default as GradientBonusActivitySubscribers } from './components/GradientBonusActivitySubscribers';

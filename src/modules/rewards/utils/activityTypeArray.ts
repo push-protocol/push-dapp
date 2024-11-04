@@ -1,6 +1,7 @@
 import { ActvityType } from 'queries';
 
 export const otherRewardActivities: ActvityType[] = [
+  'atleast_5_defi_channel_specific_subscriptions',
   'create_gated_group_push_chat',
   'subscribe_5_channels_push',
   'subscribe_20_channels_push',
