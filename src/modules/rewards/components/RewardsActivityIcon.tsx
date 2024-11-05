@@ -29,6 +29,7 @@ import {
   YellowBonusActivitySubscribers,
   PushAlpha,
   CyberLogoRewards,
+  FiveSubscribedDefiChannel,
 } from 'blocks';
 import {
   quickSwapLogo,
@@ -254,6 +255,15 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
         height={48}
         src={udLogo}
         style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'atleast_5_defi_channel_specific_subscriptions') {
+    return (
+      <FiveSubscribedDefiChannel
+        width={48}
+        height={48}
       />
     );
   }
