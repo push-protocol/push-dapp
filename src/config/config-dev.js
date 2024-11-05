@@ -113,7 +113,7 @@ export const addresses = {
   // For Sepolia
   pushToken: '0x37c779a1564DCc0e3914aB130e0e787d93e21804',
   // pushCoreV2: "0x8a965286c0752DFE821868312025091f60BD902A", // 15 min epoch
-  pushCoreV2: '0xadc928517f9bf7ee3ecd5bec390fc01036b1604e', //21 days epoch
+  pushCoreV2: '0x5F304C695B6035DfCC17bF571A9437Da9ebf7a86', //21 days epoch
   uniV2LPToken: '0x2333609Cc527a9309Cdad16E0742a3C6DC1C551b',
   uniswapV2Router02: '0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008',
   WETHAddress: '0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9',

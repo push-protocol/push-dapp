@@ -481,7 +481,6 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     const initialize = async () => {
       // const librarySigner = await provider?.getSigner(account); // If you need to use librarySigner in async operations
       // if (!account || !appConfig?.appEnv) return;
-      console.debug('initializePushSdkReadMode called', userPushSDKInstance?.account);
       if (wallet?.accounts?.length > 0) {
         await initializePushSdkReadMode();
       } else {

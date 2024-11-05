@@ -41,11 +41,7 @@ export const useInAppNotifications = () => {
         userPushSDKInstance,
         userPushSDKInstance?.uid,
         userPushSDKInstance?.stream?.uid,
-        userPushSDKInstance?.stream,
-        data,
-        data.source,
-        typeof data.source,
-        data.source != 'PUSH_CHAT'
+        userPushSDKInstance?.stream
       );
       if (data.source != 'PUSH_CHAT')
         notification.show({
@@ -63,8 +59,7 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.uid,
         userPushSDKInstance?.stream.connected(),
         userPushSDKInstance?.stream?.uid,
-        userPushSDKInstance?.stream,
-        data
+        userPushSDKInstance?.stream
       );
 
       if ((data.event === 'chat.message' || data.event === 'chat.request') && data.origin === 'other') {
