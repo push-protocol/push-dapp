@@ -16,7 +16,6 @@ export const useInAppNotifications = () => {
     return state.user;
   });
   const attachListeners = async () => {
-    console.debug('attach listners');
     userPushSDKInstance?.stream?.on(CONSTANTS.STREAM.CONNECT, (err: Error) => {
       console.debug(
         'src::common::hooks::useStream::attachListeners::CONNECT::',
@@ -62,6 +61,7 @@ export const useInAppNotifications = () => {
       console.debug(
         'src::common::hooks::useStream::attachListeners::CHAT::',
         userPushSDKInstance?.uid,
+        userPushSDKInstance?.stream.connected(),
         userPushSDKInstance?.stream?.uid,
         userPushSDKInstance?.stream,
         data
@@ -115,13 +115,11 @@ export const useInAppNotifications = () => {
   };
 
   const streamAttach = () => {
-    if (userPushSDKInstance && userPushSDKInstance?.stream && !userPushSDKInstance?.stream.disconnected) {
-      console.debug('attach stream first time', userPushSDKInstance);
+    if (userPushSDKInstance && userPushSDKInstance?.stream) {
       attachListeners();
     }
   };
   const streamCleanup = () => {
-    console.debug('disconnect stream first time', userPushSDKInstance);
     if (userPushSDKInstance && userPushSDKInstance?.stream) {
       userPushSDKInstance?.stream?.disconnect();
     }

@@ -288,10 +288,10 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
           progress: 100,
         });
       }
-      dispatch(setUserPushSDKInstance(userInstance));
 
       // connect stream as well
       await setupStream(userInstance);
+      dispatch(setUserPushSDKInstance(userInstance));
       return userInstance;
     } catch (error) {
       // Handle initialization error
@@ -311,7 +311,6 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         CONSTANTS.STREAM.VIDEO,
       ]);
 
-      // if (userInstance.readmode())
       await stream.connect();
       console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
     }
