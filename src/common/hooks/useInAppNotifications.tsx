@@ -72,9 +72,7 @@ export const useInAppNotifications = () => {
           updatedMessages[data.chatId] = updatedMessages[data.chatId].slice(-5);
         }
         if (!(updatedMessages[data.chatId].length && data.event === 'chat.request')) {
-          if (!updatedMessages[data.chatId].some((msg) => msg?.reference === data?.reference)) {
-            updatedMessages[data.chatId].push(data);
-          }
+          updatedMessages[data.chatId].push(data);
         }
         setNewMessages(updatedMessages);
         notification.show(
