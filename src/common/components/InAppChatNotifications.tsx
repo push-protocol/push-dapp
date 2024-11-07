@@ -20,6 +20,33 @@ type InAppChatNotificationsProps = {
   onClose: () => void;
 };
 
+const getContentText = (chatDetail: any) => {
+  if (chatDetail.message.type === 'Text') return chatDetail.message.content;
+  if (chatDetail.message.type === 'Image') return 'Image';
+  if (chatDetail.message.type === 'File') return 'File';
+  if (chatDetail.message.type === 'MediaEmbed' || chatDetail.message.type === 'GIF') return 'GIF';
+};
+const getContentImage = (chatDetail: any) => {
+  if (
+    chatDetail.message.type === 'Image' ||
+    chatDetail.message.type === 'MediaEmbed' ||
+    chatDetail.message.type === 'GIF'
+  )
+    return (
+      <Image
+        size={16}
+        color="icon-tertiary"
+      />
+    );
+  if (chatDetail.message.type === 'File')
+    return (
+      <Pin
+        size={16}
+        color="icon-tertiary"
+      />
+    );
+};
+
 const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails, onClose }) => {
   const { web3NameList }: AppContextType = useContext(AppContext)!;
   const fromAddress = caip10ToWallet(chatDetails[0]?.from);
@@ -44,33 +71,6 @@ const InAppChatNotifications: FC<InAppChatNotificationsProps> = ({ chatDetails, 
     : web3Name || shortenText(fromAddress, 6);
 
   const latestTimestamp = convertTimeStamp(chatDetails[chatDetails.length - 1]?.timestamp);
-
-  const getContentText = (chatDetail: any) => {
-    if (chatDetail.message.type === 'Text') return chatDetail.message.content;
-    if (chatDetail.message.type === 'Image') return 'Image';
-    if (chatDetail.message.type === 'File') return 'File';
-    if (chatDetail.message.type === 'MediaEmbed' || chatDetail.message.type === 'GIF') return 'GIF';
-  };
-  const getContentImage = (chatDetail: any) => {
-    if (
-      chatDetail.message.type === 'Image' ||
-      chatDetail.message.type === 'MediaEmbed' ||
-      chatDetail.message.type === 'GIF'
-    )
-      return (
-        <Image
-          size={16}
-          color="icon-tertiary"
-        />
-      );
-    if (chatDetail.message.type === 'File')
-      return (
-        <Pin
-          size={16}
-          color="icon-tertiary"
-        />
-      );
-  };
 
   //optimise it and fix the close button z-index
   return (

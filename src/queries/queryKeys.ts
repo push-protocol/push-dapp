@@ -18,6 +18,7 @@ export const creatingNewChannel = 'creatingNewChannel';
 export const deactivatingChannel = 'deactivatingChannel';
 export const discordDetails = 'discordDetails';
 export const generateUserIdByWallet = 'generateUserIdByWallet';
+export const groupInfo = 'groupInfo';
 export const initiateNewChain = 'initiateNewChain';
 export const pointsVaultApprovedUsers = 'pointsVaultApprovedUsers';
 export const pointsVaultPendingUsers = 'pointsVaultPendingUsers';

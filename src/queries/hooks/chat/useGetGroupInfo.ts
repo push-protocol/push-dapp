@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 
-import { userProfileDetails } from '../../queryKeys';
+import { groupInfo } from '../../queryKeys';
 import { getGroupInfo } from '../../services';
 
 import { UserStoreType } from 'types';
@@ -17,9 +17,9 @@ export const useGetGroupInfo = (chatId?: string, config?: Partial<UseQueryOption
   });
 
   const query = useQuery<GroupInfoResponse>({
-    queryKey: [userProfileDetails, userPushSDKInstance?.account, chatId || ''],
+    queryKey: [groupInfo, userPushSDKInstance?.account, chatId],
     enabled: !!chatId,
-    queryFn: () => getGroupInfo(userPushSDKInstance, chatId || ''),
+    queryFn: () => getGroupInfo(userPushSDKInstance, chatId!),
     ...config,
   });
   return query;

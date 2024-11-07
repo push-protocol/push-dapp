@@ -20,8 +20,9 @@ export const useGetUserProfileDetails = (
   });
 
   const query = useQuery<UserProfileDetailsResponse>({
-    queryKey: [userProfileDetails, userPushSDKInstance?.account, userAddress || null],
-    queryFn: () => getUserProfileDetails(userPushSDKInstance, userAddress),
+    queryKey: [userProfileDetails, userPushSDKInstance?.account, userAddress],
+    enabled: !!userAddress,
+    queryFn: () => getUserProfileDetails(userPushSDKInstance, userAddress!),
     ...config,
   });
   return query;
