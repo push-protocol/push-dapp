@@ -29,8 +29,17 @@ import {
   YellowBonusActivitySubscribers,
   PushAlpha,
   CyberLogoRewards,
+  FiveSubscribedDefiChannel,
 } from 'blocks';
-import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo, shapeShiftLogo, revokeLogo } from 'common';
+import {
+  quickSwapLogo,
+  priceTrackerLogo,
+  walletTrackerLogo,
+  shapeShiftLogo,
+  revokeLogo,
+  pwnLogo,
+  udLogo,
+} from 'common';
 import { ActvityType } from 'queries';
 
 type RewardsActivityIconProp = {
@@ -224,6 +233,37 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
         height={48}
         src={revokeLogo}
         style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:PWN_NOTIFICATIONS_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={pwnLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:UNSTOPPABLE_DOMAINS_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={udLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'atleast_5_defi_channel_specific_subscriptions') {
+    return (
+      <FiveSubscribedDefiChannel
+        width={48}
+        height={48}
       />
     );
   }

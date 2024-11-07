@@ -13,6 +13,7 @@ import { defaultSnapOrigin } from 'config/index.js';
 import { device } from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
 import { updateSnoozeDuration } from 'helpers';
+import { useAccount } from 'hooks';
 import { SnoozeDurationType } from 'types';
 
 const EnableSnoozeModal = ({
@@ -21,10 +22,13 @@ const EnableSnoozeModal = ({
   setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void;
 }) => {
   const { setSnapState } = useContext(AppContext);
+  const { isWalletConnected } = useAccount();
 
   const [snoozeDurationInput, setSnoozeDurationInput] = useState<number>(1);
 
   const handleChange = async () => {
+    if (!isWalletConnected) return;
+
     const duration = snoozeDurationInput;
 
     if (duration >= 1 && duration <= 72) {

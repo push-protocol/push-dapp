@@ -14,7 +14,7 @@ import { AppContext } from 'contexts/AppContext';
 import { useAccount } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { Image, Section } from '../../primaries/SharedStyling';
-import { Button } from 'blocks';
+import { Alert, Box, Button } from 'blocks';
 
 // Internal Configs
 import ActiveIcon from 'assets/snap/ActiveIcon.svg';
@@ -33,10 +33,11 @@ const SnapModule = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { showMetamaskPushSnap, setSnapState, setSnapInstalled, snapInstalled } = useContext(AppContext);
+  const { showMetamaskPushSnap, setSnapState, setSnapInstalled, snapInstalled, connectWallet } = useContext(AppContext);
 
-  const { account, provider } = useAccount();
+  const { account, provider, isWalletConnected } = useAccount();
 
   const theme = useTheme();
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ const SnapModule = ({ route }) => {
   }, [account, walletConnected, snapInstalled]);
 
   async function getInstalledSnaps() {
+    if (!isWalletConnected) return
     const installedSnaps = await window.ethereum.request({
       method: 'wallet_getSnaps',
     });
@@ -79,6 +81,7 @@ const SnapModule = ({ route }) => {
   }
 
   async function connectSnap() {
+    if (!window.ethereum) return;
     let snapId = defaultSnapOrigin,
       params = {};
     await window.ethereum?.request({
@@ -91,14 +94,18 @@ const SnapModule = ({ route }) => {
   }
 
   async function connectToMetaMask() {
+    if (!isWalletConnected) {
+      setErrorMessage('Connect your metamask wallet to install Snap');
+      return;
+    }
+    setErrorMessage('')
     setLoading(true);
     try {
       if (!snapInstalled) {
         await connectSnap();
-        setSnapInstalled(true);
+        getInstalledSnaps();
       } else {
         await addwalletAddress();
-        setWalletConnected(true);
       }
 
       setLoading(false);
@@ -115,23 +122,28 @@ const SnapModule = ({ route }) => {
   }
 
   async function addwalletAddress() {
-    const signatureResult = await getSignature(account);
-    if (signatureResult) {
-      if (account) {
-        await window.ethereum?.request({
-          method: 'wallet_invokeSnap',
-          params: {
-            snapId: defaultSnapOrigin,
-            request: {
-              method: 'pushproto_addaddress',
-              params: { address: account },
+    try {
+      const signatureResult = await getSignature(account);
+      if (signatureResult) {
+        if (account) {
+          await window.ethereum?.request({
+            method: 'wallet_invokeSnap',
+            params: {
+              snapId: defaultSnapOrigin,
+              request: {
+                method: 'pushproto_addaddress',
+                params: { address: account },
+              },
             },
-          },
-        });
-        console.debug('Added', account);
+          });
+          console.debug('Added', account);
+          setWalletConnected(true);
+        }
+      } else {
+        console.error('Signature Validation Failed');
       }
-    } else {
-      console.error('Signature Validation Failed');
+    } catch (error: any) {
+      setErrorMessage(error.message);
     }
   }
 
@@ -294,6 +306,14 @@ const SnapModule = ({ route }) => {
               </ItemVV2>
             </ItemVV2>
 
+            {errorMessage && (
+              <Alert
+                variant="error"
+                heading={errorMessage}
+                showIcon
+              />
+            )}
+
             {walletConnected || addedAddress ? (
               <ItemHV2 gap="8px">
                 <Image
@@ -310,7 +330,12 @@ const SnapModule = ({ route }) => {
                 </SpanV2>
               </ItemHV2>
             ) : (
-              <ItemVV2 gap="16px">
+              <Box
+                gap="spacing-sm"
+                display="flex"
+                flexDirection="column"
+                width='-webkit-fill-available'
+              >
                 {loading && !snapInstalled ? (
                   <LoaderSpinner
                     type={LOADER_TYPE.SEAMLESS}
@@ -321,7 +346,6 @@ const SnapModule = ({ route }) => {
                     disabled={!snapInstalled ? false : true}
                     onClick={() => connectToMetaMask()}
                     variant="primary"
-                    size="medium"
                   >
                     {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
                   </Button>
@@ -340,7 +364,7 @@ const SnapModule = ({ route }) => {
                     Step 2: Sign In with Metamask
                   </Button>
                 )}
-              </ItemVV2>
+              </Box>
             )}
 
             {walletConnected || addedAddress ? (

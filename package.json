@@ -36,7 +36,7 @@
     "@mui/material": "^5.5.0",
     "@pushprotocol/restapi": "1.7.29",
     "@pushprotocol/socket": "0.5.3",
-    "@pushprotocol/uiweb": "2.0.0-exp.10",
+    "@pushprotocol/uiweb": "1.7.2",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-switch": "^1.1.0",

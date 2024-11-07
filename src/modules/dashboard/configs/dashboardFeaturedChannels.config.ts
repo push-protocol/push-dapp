@@ -86,11 +86,11 @@ const stagingFeaturedChannelsList: FeaturedChannelDetailsProps[] = [
 const prodFeaturedChannelsList: FeaturedChannelDetailsProps[] = [
   {
     id: 1,
-    channel: '0x65bB67c2416186aE3107F7c2C6728b272a579e3d',
+    channel: '0xdbBc2Ac8cb8D02B26F165b4BC120fd4b14DA6cDA',
   },
   {
     id: 2,
-    channel: '0xBc28359C93cA00A5724fe398606f27e43007C22D',
+    channel: '0x991552E1C2A96D0Ae72E19552b08A1889aebCF53',
   },
   {
     id: 3,
