@@ -1,7 +1,10 @@
+// React and other libraries
+import { FC } from 'react';
+
 //Components
 import { Avatar, Box, Button, TextInput } from 'blocks';
 
-const UserProfileSettings = () => {
+const UserProfileSettings: FC = () => {
   return (
     <Box>
       <Box

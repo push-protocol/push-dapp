@@ -1,12 +1,34 @@
-//Components
-import { Avatar, Box, Button, Discord, DiscordProfile, EmailProfile, TelegramProfile, Text, TextInput } from 'blocks';
+// React and other libraries
+import { FC } from 'react';
 
-const UserProfileSocialSettings = () => {
+// Helpers
+import { useDisclosure } from 'common';
+
+//Components
+import {
+  Box,
+  Button,
+  CaretDown,
+  DiscordProfile,
+  Dropdown,
+  EmailProfile,
+  Menu,
+  MenuItem,
+  OptOut,
+  TelegramProfile,
+  Text,
+} from 'blocks';
+import { AddEmail } from './addEmail';
+
+const UserProfileSocialSettings: FC = () => {
+  const modalControl = useDisclosure();
+
   const itemList = [
     {
       icon: () => <EmailProfile height={23} />,
       itemTitle: 'Email',
       itemDescription: 'Receive notifications in your email inbox',
+      onClick: () => modalControl.open(),
     },
     {
       icon: () => <TelegramProfile height={23} />,
@@ -74,15 +96,40 @@ const UserProfileSocialSettings = () => {
               </Box>
             </Box>
 
-            <Button
-              variant="tertiary"
-              size="extraSmall"
-            >
-              Connect
-            </Button>
+            {item.itemTitle != 'Email' ? (
+              <Button
+                variant="tertiary"
+                size="extraSmall"
+                onClick={item?.onClick}
+              >
+                Connect
+              </Button>
+            ) : (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <MenuItem
+                      label="Disconnect"
+                      icon={<OptOut />}
+                      onClick={() => console.log('disconnect')}
+                    />
+                  </Menu>
+                }
+              >
+                <Button
+                  variant="secondary"
+                  size="extraSmall"
+                  trailingIcon={<CaretDown size={20} />}
+                >
+                  zeeshan.mac@gmail.com
+                </Button>
+              </Dropdown>
+            )}
           </Box>
         ))}
       </Box>
+
+      {modalControl.isOpen && <AddEmail modalControl={modalControl} />}
     </Box>
   );
 };
