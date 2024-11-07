@@ -12,11 +12,14 @@ import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
+import UserProfileSettings from 'components/UserProfileSettings/UserProfileSettings';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
+import { Box } from 'blocks';
+import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
 
 interface ChannelListItem {
   channel: string;
@@ -95,11 +98,16 @@ function UserSettings() {
   const selectOptions = [
     {
       value: 0,
+      label: 'My Profile',
+      title: 'Your Profile',
+    },
+    {
+      value: 1,
       label: 'Notification Settings',
       title: 'Notification Settings',
     },
     {
-      value: 1,
+      value: 2,
       label: 'Push Snap',
       title: '',
     },
@@ -107,8 +115,11 @@ function UserSettings() {
 
   return (
     <Container>
-      <PageTitle>Settings</PageTitle>
-      <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
+      <Box>
+        <PageTitle>Settings</PageTitle>
+        <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
+      </Box>
+
       <Wrapper>
         <SelectSection>
           {selectOptions.map((selectOptions) => (
@@ -121,16 +132,32 @@ function UserSettings() {
             </SelectListOption>
           ))}
         </SelectSection>
-        <ChannelWrapper>
-          <ChannelContainer>
-            {selectOptions[selectedOption]?.title && (
-              <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
-            )}
 
-            {selectedOption === 0 && <ChannelListSettings />}
-            {selectedOption === 1 && <PushSnapSettings />}
-          </ChannelContainer>
-        </ChannelWrapper>
+        <ChannelBlock>
+          <ChannelWrapper>
+            <ChannelContainer selectedOption={selectedOption}>
+              {selectOptions[selectedOption]?.title && (
+                <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
+              )}
+
+              {selectedOption === 0 && <UserProfileSettings />}
+              {selectedOption === 1 && <ChannelListSettings />}
+              {selectedOption === 2 && <PushSnapSettings />}
+            </ChannelContainer>
+          </ChannelWrapper>
+
+          {selectedOption == 0 && (
+            <ChannelWrapper>
+              <ChannelContainer selectedOption={selectedOption}>
+                {/* {selectOptions[selectedOption]?.title && (
+                  <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
+                )} */}
+
+                <UserProfileSocialSettings />
+              </ChannelContainer>
+            </ChannelWrapper>
+          )}
+        </ChannelBlock>
       </Wrapper>
     </Container>
   );
@@ -220,10 +247,10 @@ const SelectListOption = styled(Button)<{ isSelected: boolean }>`
 `;
 
 const ChannelWrapper = styled.div`
-  border: 1px solid ${(props) => props.theme.default.borderColor};
+  border: 1px solid ${(props) => props.theme.userSettingsBorder};
   padding: 12px;
-  border-radius: 16px;
-  flex-grow: 1;
+  border-radius: 24px;
+  // flex-grow: 1;
 
   @media ${device.tablet} {
     margin: 8px 0px;
@@ -231,10 +258,19 @@ const ChannelWrapper = styled.div`
   }
 `;
 
-const ChannelContainer = styled.div`
+const ChannelBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 16px;
+  overflow-y: auto;
+  height: 700px;
+`;
+
+const ChannelContainer = styled.div<{ selectedOption: number }>`
   overflow: hidden;
   overflow-y: scroll;
-  height: 55vh;
+  height: ${(props) => (props.selectedOption === 0 ? 'auto' : '55vh')};
   padding: 12px;
 
   &::-webkit-scrollbar-track {
