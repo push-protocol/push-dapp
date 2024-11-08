@@ -149,10 +149,6 @@ function UserSettings() {
           {selectedOption == 0 && (
             <ChannelWrapper>
               <ChannelContainer selectedOption={selectedOption}>
-                {/* {selectOptions[selectedOption]?.title && (
-                  <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
-                )} */}
-
                 <UserProfileSocialSettings />
               </ChannelContainer>
             </ChannelWrapper>
