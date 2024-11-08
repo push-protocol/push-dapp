@@ -9,6 +9,7 @@ import { DashboardHeader } from './components/DashboardHeader';
 import { DashboardSubHeader } from './components/DashboardSubHeader';
 import { FeaturedChannels } from './components/FeaturedChannels';
 import { StakingPools } from './components/StakingPools';
+import { SocialHandles } from './components/Socialhandles';
 
 export type DashboardProps = {};
 
@@ -35,6 +36,7 @@ const Dashboard: FC<DashboardProps> = () => {
         flexDirection="column"
         gap="spacing-md"
       >
+        <SocialHandles />
         <FeaturedChannels />
         <ChannelVariantsSection />
         <Box
