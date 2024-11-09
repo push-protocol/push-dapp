@@ -76,7 +76,7 @@ const ClaimSocialHandles: FC<ClaimSocialHandlesProps> = () => {
         </Box>
         <Button
           aria-label="Claim"
-          size="medium"
+          size="small"
           variant="tertiary"
         >
           Claim

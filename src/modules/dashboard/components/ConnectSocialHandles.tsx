@@ -80,6 +80,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
                 >
                   <Button
                     variant="outline"
+                    size="small"
                     trailingIcon={<CaretDown />}
                   >
                     zeeshan.mac@gmail.com
@@ -88,7 +89,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
               ) : (
                 <Button
                   aria-label="Connect"
-                  size="medium"
+                  size="small"
                   variant="tertiary"
                 >
                   Connect
