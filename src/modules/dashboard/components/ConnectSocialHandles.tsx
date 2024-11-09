@@ -1,7 +1,19 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
 
-import { Box, Button, Dropdown, Menu, MenuItem, Text, CaretDown, OptOut } from 'blocks';
+import {
+  Box,
+  Button,
+  Dropdown,
+  Menu,
+  MenuItem,
+  Text,
+  CaretDown,
+  OptOut,
+  EmailProfile,
+  TelegramProfile,
+  DiscordProfile,
+} from 'blocks';
 import { socialHandlesList } from '../Dashboard.constants';
 import { SocialHandlesItemType } from '../Dashboard.types';
 
@@ -45,7 +57,10 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
                 flexDirection="row"
               >
                 {/* Social icons will be displayed here */}
-                {/* Add icons according to the specified type */}
+                {item?.type === 'email' && <EmailProfile width={18} />}
+                {item?.type === 'telegram' && <TelegramProfile width={18} />}
+                {item?.type === 'discord' && <DiscordProfile width={18} />}
+
                 <Text
                   variant="h5-semibold"
                   color="text-primary"
