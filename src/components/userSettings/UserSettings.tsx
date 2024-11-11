@@ -115,10 +115,10 @@ function UserSettings() {
 
   return (
     <Container>
-      <Box>
-        <PageTitle>Settings</PageTitle>
-        <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
-      </Box>
+      {/* <Box> */}
+      <PageTitle>Settings</PageTitle>
+      <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
+      {/* </Box> */}
 
       <Wrapper>
         <SelectSection>
@@ -165,6 +165,8 @@ export default UserSettings;
 const Container = styled.div`
   padding: 32px 24px;
   flex: 1;
+  height: 100%;
+  overflow: hidden;
 
   @media ${device.tablet} {
     padding: 24px 12px;
@@ -204,6 +206,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  height: 100%;
+  flex: 1;
+  min-height: 0;
 
   @media ${device.tablet} {
     flex-direction: column;
@@ -246,7 +252,6 @@ const ChannelWrapper = styled.div`
   border: 1px solid ${(props) => props.theme.userSettingsBorder};
   padding: 12px;
   border-radius: 24px;
-  // flex-grow: 1;
 
   @media ${device.tablet} {
     margin: 8px 0px;
@@ -257,15 +262,41 @@ const ChannelWrapper = styled.div`
 const ChannelBlock = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex-grow: 1;
+  min-height: 0;
   gap: 16px;
+  padding-right: 12px;
   overflow-y: auto;
-  height: 700px;
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    position: absolute;
+    right: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #d53a94;
+    border-radius: 99px;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+  }
+
+  // Adding margin-bottom to the last child
+  & > *:last-child {
+    margin-bottom: 100px;
+  }
 `;
 
 const ChannelContainer = styled.div<{ selectedOption: number }>`
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: ${(props) => (props.selectedOption === 0 ? 'auto' : '55vh')};
   padding: 12px;
 

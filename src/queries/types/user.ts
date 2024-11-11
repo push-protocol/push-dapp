@@ -32,3 +32,10 @@ export type UnsubscribeChannelResponse = {
   status: string;
   message: string;
 };
+
+export type UserProfileInfoResponse = {
+  name: string | null;
+  desc: string | null;
+  picture: string | null;
+  profileVerificationProof: string | null;
+};

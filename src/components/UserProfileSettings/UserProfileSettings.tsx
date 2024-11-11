@@ -1,16 +1,25 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 //Components
-import { Avatar, Box, Button, TextInput } from 'blocks';
+import { Box, Button, CameraFilled, TextInput } from 'blocks';
 import { useDisclosure } from 'common';
 import UploadAvatarModal from './UploadAvatarModal';
 import { css } from 'styled-components';
+import { useGetUserProfileInfo } from 'queries';
+
+// Define Formik initial values type
+type FormValues = {
+  displayName: string | null;
+  picture: string | null;
+  description: string | null;
+};
 
 const UserProfileSettings: FC = () => {
   const modalControl = useDisclosure();
+  const { data: userProfileInfo } = useGetUserProfileInfo();
 
   // Validation schema using Yup
   const validationSchema = Yup.object({
@@ -18,14 +27,26 @@ const UserProfileSettings: FC = () => {
   });
 
   // Formik setup
-  const formik = useFormik({
-    initialValues: { displayName: '', avatar: null, imageType: '', imageSrc: '' },
+  const formik = useFormik<FormValues>({
+    initialValues: { displayName: '', picture: null, description: '' },
     validationSchema,
     onSubmit: (values) => {
       console.log('Form submitted:', values);
       // Add your save logic here
     },
   });
+
+  // Populate initial form values when userProfileInfo is fetched
+  useEffect(() => {
+    if (userProfileInfo) {
+      formik.setValues({
+        displayName: userProfileInfo.name || '',
+        picture: userProfileInfo.picture || null,
+        description: userProfileInfo.desc || null,
+      });
+    }
+  }, [userProfileInfo]);
+
   return (
     <Box>
       <form onSubmit={formik.handleSubmit}>
@@ -36,7 +57,7 @@ const UserProfileSettings: FC = () => {
           alignItems="center"
           margin="spacing-xs spacing-none spacing-md spacing-none"
         >
-          {formik.values.avatar ? (
+          {formik.values.picture ? (
             <Box
               width="90px"
               height="90px"
@@ -51,11 +72,24 @@ const UserProfileSettings: FC = () => {
               <img
                 width="100%"
                 height="100%"
-                src={formik.values.avatar}
+                src={formik.values.picture}
               />
             </Box>
           ) : (
-            <Avatar />
+            <Box
+              width="75px"
+              height="75px"
+              backgroundColor="surface-tertiary"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              borderRadius="radius-sm"
+            >
+              <CameraFilled
+                color="icon-primary"
+                size={25}
+              />
+            </Box>
           )}
 
           <Button
@@ -82,11 +116,26 @@ const UserProfileSettings: FC = () => {
         >
           <TextInput
             label="Display Name"
-            value={formik.values.displayName}
+            value={formik.values.displayName as string}
             onChange={formik.handleChange('displayName')}
             error={formik.touched.displayName && Boolean(formik.errors.displayName)}
             errorMessage={formik.touched.displayName ? formik.errors.displayName : ''}
             totalCount={50}
+          />
+        </Box>
+
+        <Box
+          display="flex"
+          flexDirection="column"
+          margin="spacing-none spacing-none spacing-xl spacing-none"
+        >
+          <TextInput
+            label="Bio"
+            value={formik.values.description as string}
+            onChange={formik.handleChange('description')}
+            error={formik.touched.displayName && Boolean(formik.errors.description)}
+            errorMessage={formik.touched.description ? formik.errors.description : ''}
+            totalCount={150}
           />
         </Box>
 

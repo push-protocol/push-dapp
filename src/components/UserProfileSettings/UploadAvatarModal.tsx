@@ -1,19 +1,19 @@
 import { FC, useRef, useState } from 'react';
 import { css } from 'styled-components';
-import { Box, Button, Cross, FileUpload, Modal, Text } from 'blocks';
+import { Box, Button, FileUpload, Modal, Text } from 'blocks';
 import ImageClipper from 'primaries/ImageClipper';
 import { ModalResponse } from 'common';
 
 type UploadAvatarModalProps = {
-  formValues: { avatar: File | null; imageSrc: string; imageType: string };
+  formValues: { picture: string | null };
   setFieldValue: (field: string, value: any) => void;
   modalControl: ModalResponse;
 };
 
 const UploadAvatarModal: FC<UploadAvatarModalProps> = ({ formValues, setFieldValue, modalControl }) => {
   const { isOpen, onClose } = modalControl;
-  const childRef = useRef();
-  const [croppedImage, setCroppedImage] = useState<string | undefined>(formValues.imageSrc);
+  const childRef = useRef<any>(null);
+  const [croppedImage, setCroppedImage] = useState<string | undefined>(formValues.picture as string);
 
   // Handle file selection from input
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,12 +37,10 @@ const UploadAvatarModal: FC<UploadAvatarModalProps> = ({ formValues, setFieldVal
 
   // Process selected file
   const processFile = async (file: File) => {
-    setFieldValue('avatar', file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setFieldValue('imageSrc', reader.result as string);
-      setFieldValue('imageType', file.type);
+      setFieldValue('picture', reader.result as string); // Set as picture
     };
   };
 
@@ -95,7 +93,7 @@ const UploadAvatarModal: FC<UploadAvatarModalProps> = ({ formValues, setFieldVal
                   width="100%"
                   height="100%"
                   src={croppedImage}
-                  alt="Cropped Img"
+                  alt="Cropped Image"
                 />
               </Box>
             ) : (
@@ -103,11 +101,10 @@ const UploadAvatarModal: FC<UploadAvatarModalProps> = ({ formValues, setFieldVal
                 //@ts-ignore
                 width="200px"
                 height="200px"
-                imageSrc={formValues.imageSrc}
-                imageType={formValues.imageType}
+                imageSrc={formValues.picture}
                 onImageCropped={(croppedImg: string) => {
                   setCroppedImage(croppedImg);
-                  setFieldValue('avatar', croppedImg);
+                  setFieldValue('picture', croppedImg); // Set picture value
                 }}
                 ref={childRef}
               />
@@ -149,7 +146,7 @@ const UploadAvatarModal: FC<UploadAvatarModalProps> = ({ formValues, setFieldVal
         {croppedImage ? (
           <Button
             onClick={() => {
-              setFieldValue('avatar', croppedImage);
+              setFieldValue('picture', croppedImage); // Set picture value
               onClose();
             }}
           >
@@ -157,6 +154,7 @@ const UploadAvatarModal: FC<UploadAvatarModalProps> = ({ formValues, setFieldVal
           </Button>
         ) : (
           <Button
+            disabled={formValues.picture == null}
             onClick={() => {
               //@ts-ignore
               childRef.current.showCroppedImage();
