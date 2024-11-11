@@ -42,6 +42,7 @@ export const unsubscribe = 'unsubscribe';
 export const updateChannelDetails = 'updateChannelDetails';
 export const updatingNotificationSetting = 'updatingNotificationSetting';
 export const userProfileInfo = 'userProfileInfo';
+export const updateUserProfileDetails = 'updateUserProfileDetails';
 export const userRewardsDetails = 'userRewardsDetails';
 export const UserRewardsDetails = 'userRewardsDetails';
 export const userSubscription = 'userSubscription';

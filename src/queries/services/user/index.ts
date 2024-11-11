@@ -3,3 +3,4 @@ export * from './subscribeToChannel';
 export * from './unsubscribeChannel';
 export * from './updateNotificationSettings';
 export * from './getUserProfileInfo';
+export * from './updateUserProfileInfo';

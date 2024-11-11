@@ -37,5 +37,13 @@ export type UserProfileInfoResponse = {
   name: string | null;
   desc: string | null;
   picture: string | null;
-  profileVerificationProof: string | null;
+  profileVerificationProof?: string | null;
+};
+
+export type UpdateProfileInfoResponse = {
+  name: string | null;
+  desc: string | null;
+  picture: string | null;
+  profileVerificationProof?: string | null;
+  blockedUserList?: [];
 };
