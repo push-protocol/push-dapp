@@ -18,7 +18,7 @@ import { useRewardsContext } from 'contexts/RewardsContext';
 import { walletToCAIP10 } from 'helpers/w2w';
 
 // components
-import { Alert, Box, Text } from 'blocks';
+import { Alert, Box, Lozenge, Star, Text } from 'blocks';
 import { BonusActivitiesItem } from './BonusActivitiesItem';
 
 export type BonusActivitiesSectionProps = {};
@@ -69,12 +69,20 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
       flexDirection="column"
       gap="spacing-sm"
     >
-      <Text
-        variant="h4-bold"
-        color="text-primary"
+      <Box
+        display="flex"
+        flexDirection="row"
+        gap="spacing-xs"
+        alignItems="center"
       >
-        Bonus Activities
-      </Text>
+        <Text
+          variant="h4-bold"
+          color="text-primary"
+        >
+          Bonus Activities
+        </Text>
+        <Lozenge icon={<Star />}>NEW</Lozenge>
+      </Box>
 
       {errorMessage && (
         <Box width="-webkit-fill-available">
