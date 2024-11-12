@@ -335,6 +335,7 @@ export default function App() {
   const isSidebarHidden =
     location?.pathname.includes(APP_PATHS.PointsVault) ||
     location?.pathname.includes('/snap') ||
+    location?.pathname.includes('/pricing') ||
     location?.pathname.includes(APP_PATHS.DiscordVerification);
 
   useInAppNotifications();
