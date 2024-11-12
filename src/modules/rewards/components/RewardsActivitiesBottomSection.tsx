@@ -28,8 +28,6 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
         <RewardsActivitiesSection />
       </Box>
 
-      <BonusActivities />
-
       <Box
         backgroundColor="surface-primary"
         borderRadius="radius-md"
@@ -50,7 +48,6 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
         display="flex"
         flexDirection="column"
         padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
-        margin="spacing-none spacing-none spacing-md spacing-none"
       >
         <StakePushSection
           lifeTime={true}
@@ -58,6 +55,8 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
           subtitle="Visit [app.push.org/yield](https://app.push.org/yield) and stake tokens in the Fee Pool or LP Pool to activate multipliers."
         />
       </Box>
+
+      <BonusActivities />
     </Box>
   );
 };
