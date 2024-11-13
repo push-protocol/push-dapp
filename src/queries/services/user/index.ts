@@ -4,3 +4,6 @@ export * from './unsubscribeChannel';
 export * from './updateNotificationSettings';
 export * from './getUserProfileInfo';
 export * from './updateUserProfileInfo';
+export * from './sendEmailVerificationCode';
+export * from './verifyEmailVerificationCode';
+export * from './getUserSocialsStatus';

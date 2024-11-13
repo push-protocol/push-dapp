@@ -3,6 +3,9 @@ import { FC } from 'react';
 
 // Helpers
 import { useDisclosure } from 'common';
+import { useAccount } from 'hooks';
+import { useGetSocialsStatus } from 'queries';
+import { walletToCAIP10 } from 'helpers/w2w';
 
 //Components
 import {
@@ -18,10 +21,23 @@ import {
   TelegramProfile,
   Text,
 } from 'blocks';
-import { AddEmail } from './addEmail';
+import { AddEmail } from './AddEmail';
 
-const UserProfileSocialSettings: FC = () => {
+type UserProfileSocialSettingsType = {
+  errorMessage?: string;
+  setErrorMessage: (errorMessage: string) => void;
+  successMessage?: string;
+  setSuccessMessage: (successMessage: string) => void;
+};
+
+const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setErrorMessage, setSuccessMessage }) => {
   const modalControl = useDisclosure();
+  const { account } = useAccount();
+
+  // Getting user Id by wallet address
+  const channelAddress = walletToCAIP10({ account });
+
+  const { data: socialHandleStatus, refetch: refetchSocialHandleStatus } = useGetSocialsStatus(channelAddress);
 
   const itemList = [
     {
@@ -29,16 +45,19 @@ const UserProfileSocialSettings: FC = () => {
       itemTitle: 'Email',
       itemDescription: 'Receive notifications in your email inbox',
       onClick: () => modalControl.open(),
+      userStatus: socialHandleStatus?.email || null,
     },
     {
       icon: () => <TelegramProfile height={23} />,
       itemTitle: 'Telegram',
       itemDescription: 'Receive notifications as Telegram messages',
+      userStatus: socialHandleStatus?.discord_username || null,
     },
     {
       icon: () => <DiscordProfile height={23} />,
       itemTitle: 'Discord',
       itemDescription: 'Receive notifications as Discord messages',
+      userStatus: socialHandleStatus?.telegram_username || null,
     },
   ];
   return (
@@ -96,7 +115,7 @@ const UserProfileSocialSettings: FC = () => {
               </Box>
             </Box>
 
-            {item.itemTitle != 'Email' ? (
+            {item.userStatus === null ? (
               <Button
                 variant="tertiary"
                 size="extraSmall"
@@ -121,7 +140,7 @@ const UserProfileSocialSettings: FC = () => {
                   size="extraSmall"
                   trailingIcon={<CaretDown size={20} />}
                 >
-                  zeeshan.mac@gmail.com
+                  {item?.userStatus}
                 </Button>
               </Dropdown>
             )}
@@ -129,7 +148,14 @@ const UserProfileSocialSettings: FC = () => {
         ))}
       </Box>
 
-      {modalControl.isOpen && <AddEmail modalControl={modalControl} />}
+      {modalControl.isOpen && (
+        <AddEmail
+          modalControl={modalControl}
+          refetchSocialHandleStatus={refetchSocialHandleStatus}
+          setErrorMessage={setErrorMessage}
+          setSuccessMessage={setSuccessMessage}
+        />
+      )}
     </Box>
   );
 };

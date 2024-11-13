@@ -18,7 +18,7 @@ import UserProfileSettings from 'components/UserProfileSettings/UserProfileSetti
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
-import { Box } from 'blocks';
+import { Alert, Box } from 'blocks';
 import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
 
 interface ChannelListItem {
@@ -39,6 +39,10 @@ function UserSettings() {
 
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // for alerts
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -134,13 +138,37 @@ function UserSettings() {
         </SelectSection>
 
         <ChannelBlock>
+          {successMessage && (
+            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+              <Alert
+                variant="success"
+                heading={successMessage}
+              />
+            </Box>
+          )}
+
+          {errorMessage && (
+            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+              <Alert
+                variant="error"
+                heading={errorMessage}
+              />
+            </Box>
+          )}
           <ChannelWrapper>
             <ChannelContainer selectedOption={selectedOption}>
               {selectOptions[selectedOption]?.title && (
                 <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
               )}
 
-              {selectedOption === 0 && <UserProfileSettings />}
+              {selectedOption === 0 && (
+                <UserProfileSettings
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  successMessage={successMessage}
+                  setSuccessMessage={setSuccessMessage}
+                />
+              )}
               {selectedOption === 1 && <ChannelListSettings />}
               {selectedOption === 2 && <PushSnapSettings />}
             </ChannelContainer>
@@ -149,7 +177,12 @@ function UserSettings() {
           {selectedOption == 0 && (
             <ChannelWrapper>
               <ChannelContainer selectedOption={selectedOption}>
-                <UserProfileSocialSettings />
+                <UserProfileSocialSettings
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  successMessage={successMessage}
+                  setSuccessMessage={setSuccessMessage}
+                />
               </ChannelContainer>
             </ChannelWrapper>
           )}

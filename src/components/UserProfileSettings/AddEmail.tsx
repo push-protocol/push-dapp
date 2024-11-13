@@ -2,16 +2,44 @@ import { FC, useEffect, useState } from 'react';
 import { css } from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
 
 import { ModalResponse } from 'common';
+import { useAccount } from 'hooks';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { useAppContext } from 'contexts/AppContext';
+import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
+import { useSendEmailVerificationCode, useVerifyEmailVerificationCode } from 'queries';
 
 import { Box, Button, Modal, Text, TextInput } from 'blocks';
 
-export type AddEmailProps = { modalControl: ModalResponse };
+type AddEmailProps = {
+  modalControl: ModalResponse;
+  refetchSocialHandleStatus: () => void;
+  setErrorMessage: (errorMessage: string) => void;
+  setSuccessMessage: (successMessage: string) => void;
+};
 
-const AddEmail: FC<AddEmailProps> = ({ modalControl }) => {
+const AddEmail: FC<AddEmailProps> = ({
+  modalControl,
+  refetchSocialHandleStatus,
+  setErrorMessage,
+  setSuccessMessage,
+}) => {
   const { isOpen, onClose } = modalControl;
+  const { account, isWalletConnected, wallet } = useAccount();
+  const { handleConnectWalletAndEnableProfile } = useAppContext();
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+
+  // Getting user Id by wallet address
+  const caip10WalletAddress = walletToCAIP10({ account });
   const [step, setStep] = useState(1); // Step 1 for email input, Step 2 for verification
+
+  const { mutate: sendVerification } = useSendEmailVerificationCode();
+  const { mutate: verifyVerification } = useVerifyEmailVerificationCode();
 
   // Email validation schema for Step 1
   const emailValidationSchema = Yup.object({
@@ -23,7 +51,7 @@ const AddEmail: FC<AddEmailProps> = ({ modalControl }) => {
     initialValues: { email: '' },
     validationSchema: emailValidationSchema,
     onSubmit: () => {
-      setStep(2);
+      handleSendVerificationCode();
     },
   });
 
@@ -36,9 +64,8 @@ const AddEmail: FC<AddEmailProps> = ({ modalControl }) => {
   const codeFormik = useFormik({
     initialValues: { code: '' },
     validationSchema: codeValidationSchema,
-    onSubmit: (values) => {
-      console.log('Verification code submitted:', values.code);
-      // Add your logic here for what happens after the verification code is submitted
+    onSubmit: () => {
+      handleVerificationCode();
     },
   });
 
@@ -48,6 +75,93 @@ const AddEmail: FC<AddEmailProps> = ({ modalControl }) => {
       codeFormik.submitForm();
     }
   }, [codeFormik.values.code, codeFormik.errors.code]);
+
+  const handleSendVerificationCode = async () => {
+    const sdkInstance = !userPushSDKInstance?.signer
+      ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
+      : userPushSDKInstance;
+
+    const data = {
+      wallet: caip10WalletAddress,
+      value: emailFormik.values.email,
+      valueType: 'email',
+    };
+
+    // generate verification proof
+    const verificationProof = await generateVerificationProof(data, sdkInstance);
+
+    //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
+    if (verificationProof === null || verificationProof === undefined) {
+      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
+        console.log('open modal');
+        // setIsAuthModalVisible(true);
+      }
+    }
+
+    sendVerification(
+      {
+        caipAddress: caip10WalletAddress as string,
+        verificationProof: verificationProof as string,
+        value: emailFormik.values.email,
+      },
+      {
+        onSuccess: (response: any) => {
+          if (response?.success) {
+            console.log(response);
+            setStep(2);
+          }
+        },
+        onError: (error: Error) => {
+          console.log('Error sending code', error);
+        },
+      }
+    );
+  };
+
+  const handleVerificationCode = async () => {
+    const sdkInstance = !userPushSDKInstance?.signer
+      ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
+      : userPushSDKInstance;
+
+    const data = {
+      wallet: caip10WalletAddress,
+      value: emailFormik.values.email,
+      valueType: 'email',
+      verificationCode: codeFormik.values.code,
+    };
+
+    // generate verification proof
+    const verificationProof = await generateVerificationProof(data, sdkInstance);
+
+    //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
+    if (verificationProof === null || verificationProof === undefined) {
+      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
+        console.log('open modal');
+        // setIsAuthModalVisible(true);
+      }
+    }
+
+    verifyVerification(
+      {
+        caipAddress: caip10WalletAddress as string,
+        verificationCode: codeFormik.values.code,
+        value: emailFormik.values.email,
+      },
+      {
+        onSuccess: (response: any) => {
+          if (response?.success) {
+            onClose();
+            refetchSocialHandleStatus();
+            setSuccessMessage('Email Account was linked successfully');
+          }
+        },
+        onError: (error: Error) => {
+          console.log('Error verifying code', error);
+          setErrorMessage('Error verifying code');
+        },
+      }
+    );
+  };
 
   return (
     <Modal

@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import { useAccount } from 'hooks';
 import { useAppContext } from 'contexts/AppContext';
 
 //Components
-import { Alert, Box, Button, CameraFilled, TextInput } from 'blocks';
+import { Box, Button, CameraFilled, TextInput } from 'blocks';
 import { useDisclosure } from 'common';
 import UploadAvatarModal from './UploadAvatarModal';
 import { css } from 'styled-components';
@@ -22,15 +22,19 @@ type FormValues = {
   desc: string | null;
 };
 
-const UserProfileSettings: FC = () => {
+type UserProfileSettingsType = {
+  errorMessage: string;
+  setErrorMessage: (errorMessage: string) => void;
+  successMessage: string;
+  setSuccessMessage: (successMessage: string) => void;
+};
+
+const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, setSuccessMessage }) => {
   const modalControl = useDisclosure();
   const { wallet } = useAccount();
   const { handleConnectWalletAndEnableProfile } = useAppContext();
   const { data: userProfileInfo, refetch: refetchUserInfo } = useGetUserProfileInfo();
   const { mutate: updateUserInfo, isPending: updatingInfo } = useUpdateUserProfileInfo();
-
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [successInfo, setSuccessInfo] = useState<string>('');
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -61,12 +65,9 @@ const UserProfileSettings: FC = () => {
         },
         {
           onSuccess: (response: any) => {
-            setSuccessInfo('User Details Updated Successfully');
+            console.log(response);
+            setSuccessMessage('User Details Updated Successfully');
             refetchUserInfo();
-
-            setTimeout(() => {
-              setSuccessInfo('');
-            }, 3000);
           },
           onError: (error: Error) => {
             console.log('Error updating user profile info', error);
@@ -186,24 +187,6 @@ const UserProfileSettings: FC = () => {
         >
           Save Changes
         </Button>
-
-        {successInfo && (
-          <Box margin="spacing-md spacing-none spacing-none spacing-none">
-            <Alert
-              variant="success"
-              heading={successInfo}
-            />
-          </Box>
-        )}
-
-        {errorMessage && (
-          <Box margin="spacing-md spacing-none spacing-none spacing-none">
-            <Alert
-              variant="error"
-              heading={errorMessage}
-            />
-          </Box>
-        )}
       </form>
     </Box>
   );

@@ -47,3 +47,20 @@ export type UpdateProfileInfoResponse = {
   profileVerificationProof?: string | null;
   blockedUserList?: [];
 };
+
+export type SendEmailVerificationResponse = {
+  email: string | null;
+  success: boolean;
+  VerificationCode?: string | null;
+};
+
+export type VerifyEmailVerificationResponse = {
+  message: string;
+  success: boolean;
+};
+
+export type UserSocialStatusResponse = {
+  email: string | null;
+  telegram_username: string | null;
+  discord_username: string | null;
+};
