@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { css } from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -20,6 +20,11 @@ type AddEmailProps = {
   setSuccessMessage: (successMessage: string) => void;
 };
 
+enum Steps {
+  EnterEmail = 1,
+  VerifyCode = 2,
+}
+
 const AddEmail: FC<AddEmailProps> = ({
   modalControl,
   refetchSocialHandleStatus,
@@ -27,26 +32,26 @@ const AddEmail: FC<AddEmailProps> = ({
   setSuccessMessage,
 }) => {
   const { isOpen, onClose } = modalControl;
-  const { account, isWalletConnected, wallet } = useAccount();
+  const { account, wallet } = useAccount();
   const { handleConnectWalletAndEnableProfile } = useAppContext();
 
+  const caip10WalletAddress = walletToCAIP10({ account });
+  const [step, setStep] = useState(1);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
 
-  // Getting user Id by wallet address
-  const caip10WalletAddress = walletToCAIP10({ account });
-  const [step, setStep] = useState(1); // Step 1 for email input, Step 2 for verification
-
   const { mutate: sendVerification } = useSendEmailVerificationCode();
   const { mutate: verifyVerification } = useVerifyEmailVerificationCode();
 
-  // Email validation schema for Step 1
   const emailValidationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Required'),
   });
 
-  // Formik setup for the email form in Step 1
+  const codeValidationSchema = Yup.object({
+    code: Yup.string().length(6, 'Code should be 6 digits').required('Required'),
+  });
+
   const emailFormik = useFormik({
     initialValues: { email: '' },
     validationSchema: emailValidationSchema,
@@ -55,12 +60,6 @@ const AddEmail: FC<AddEmailProps> = ({
     },
   });
 
-  // Verification code validation schema for Step 2
-  const codeValidationSchema = Yup.object({
-    code: Yup.string().length(6, 'Code should be 6 digits').required('Required'),
-  });
-
-  // Formik setup for the verification code form in Step 2
   const codeFormik = useFormik({
     initialValues: { code: '' },
     validationSchema: codeValidationSchema,
@@ -68,6 +67,10 @@ const AddEmail: FC<AddEmailProps> = ({
       handleVerificationCode();
     },
   });
+
+  const getSDKInstance = useCallback(async () => {
+    return userPushSDKInstance?.signer ? userPushSDKInstance : await handleConnectWalletAndEnableProfile({ wallet });
+  }, [userPushSDKInstance, handleConnectWalletAndEnableProfile, wallet]);
 
   // Watch for code length and submit automatically if it reaches 6 digits
   useEffect(() => {
@@ -77,26 +80,16 @@ const AddEmail: FC<AddEmailProps> = ({
   }, [codeFormik.values.code, codeFormik.errors.code]);
 
   const handleSendVerificationCode = async () => {
-    const sdkInstance = !userPushSDKInstance?.signer
-      ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
-      : userPushSDKInstance;
-
+    const sdkInstance = await getSDKInstance();
     const data = {
       wallet: caip10WalletAddress,
       value: emailFormik.values.email,
       valueType: 'email',
     };
 
-    // generate verification proof
     const verificationProof = await generateVerificationProof(data, sdkInstance);
 
-    //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
-    if (verificationProof === null || verificationProof === undefined) {
-      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
-        console.log('open modal');
-        // setIsAuthModalVisible(true);
-      }
-    }
+    if (!verificationProof) return;
 
     sendVerification(
       {
@@ -108,7 +101,7 @@ const AddEmail: FC<AddEmailProps> = ({
         onSuccess: (response: any) => {
           if (response?.success) {
             console.log(response);
-            setStep(2);
+            setStep(Steps.VerifyCode);
           }
         },
         onError: (error: Error) => {
@@ -119,10 +112,7 @@ const AddEmail: FC<AddEmailProps> = ({
   };
 
   const handleVerificationCode = async () => {
-    const sdkInstance = !userPushSDKInstance?.signer
-      ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
-      : userPushSDKInstance;
-
+    const sdkInstance = await getSDKInstance();
     const data = {
       wallet: caip10WalletAddress,
       value: emailFormik.values.email,
@@ -130,16 +120,9 @@ const AddEmail: FC<AddEmailProps> = ({
       verificationCode: codeFormik.values.code,
     };
 
-    // generate verification proof
     const verificationProof = await generateVerificationProof(data, sdkInstance);
 
-    //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
-    if (verificationProof === null || verificationProof === undefined) {
-      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
-        console.log('open modal');
-        // setIsAuthModalVisible(true);
-      }
-    }
+    if (!verificationProof) return;
 
     verifyVerification(
       {
@@ -163,6 +146,10 @@ const AddEmail: FC<AddEmailProps> = ({
     );
   };
 
+  const resendVerificationCode = () => {
+    handleSendVerificationCode();
+  };
+
   return (
     <Modal
       size="small"
@@ -171,7 +158,7 @@ const AddEmail: FC<AddEmailProps> = ({
       acceptButtonProps={null}
       cancelButtonProps={null}
     >
-      {step == 1 && (
+      {step === Steps.EnterEmail && (
         <Box width="100%">
           <Text
             textAlign="center"
@@ -214,7 +201,7 @@ const AddEmail: FC<AddEmailProps> = ({
         </Box>
       )}
 
-      {step == 2 && (
+      {step === Steps.VerifyCode && (
         <Box width="100%">
           <Text
             textAlign="center"
@@ -253,6 +240,7 @@ const AddEmail: FC<AddEmailProps> = ({
             <Text textAlign="center">Didn't receive a code?</Text>
             <Text
               textAlign="center"
+              onClick={resendVerificationCode}
               css={css`
                 text-decoration: underline;
                 cursor: pointer;

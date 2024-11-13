@@ -22,6 +22,8 @@ import {
   Text,
 } from 'blocks';
 import { AddEmail } from './AddEmail';
+import AddTelegram from './AddTelegram';
+import AddDiscord from './AddDiscord';
 
 type UserProfileSocialSettingsType = {
   errorMessage?: string;
@@ -32,6 +34,8 @@ type UserProfileSocialSettingsType = {
 
 const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setErrorMessage, setSuccessMessage }) => {
   const modalControl = useDisclosure();
+  const telegramModalControl = useDisclosure();
+  const discordModalControl = useDisclosure();
   const { account } = useAccount();
 
   // Getting user Id by wallet address
@@ -51,12 +55,14 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
       icon: () => <TelegramProfile height={23} />,
       itemTitle: 'Telegram',
       itemDescription: 'Receive notifications as Telegram messages',
+      onClick: () => telegramModalControl.open(),
       userStatus: socialHandleStatus?.discord_username || null,
     },
     {
       icon: () => <DiscordProfile height={23} />,
       itemTitle: 'Discord',
       itemDescription: 'Receive notifications as Discord messages',
+      onClick: () => discordModalControl.open(),
       userStatus: socialHandleStatus?.telegram_username || null,
     },
   ];
@@ -151,6 +157,24 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
       {modalControl.isOpen && (
         <AddEmail
           modalControl={modalControl}
+          refetchSocialHandleStatus={refetchSocialHandleStatus}
+          setErrorMessage={setErrorMessage}
+          setSuccessMessage={setSuccessMessage}
+        />
+      )}
+
+      {telegramModalControl.isOpen && (
+        <AddTelegram
+          modalControl={telegramModalControl}
+          refetchSocialHandleStatus={refetchSocialHandleStatus}
+          setErrorMessage={setErrorMessage}
+          setSuccessMessage={setSuccessMessage}
+        />
+      )}
+
+      {discordModalControl.isOpen && (
+        <AddDiscord
+          modalControl={discordModalControl}
           refetchSocialHandleStatus={refetchSocialHandleStatus}
           setErrorMessage={setErrorMessage}
           setSuccessMessage={setSuccessMessage}

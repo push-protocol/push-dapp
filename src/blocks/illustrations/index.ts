@@ -105,6 +105,8 @@ export { default as StakePushYellowMultiplier } from './components/StakePushYell
 
 export { default as SubscribePoints } from './components/SubscribePoints';
 
+export { default as Telegram } from './components/Telegram';
+
 export { default as TelegramProfile } from './components/TelegramProfile';
 
 export { default as TripleRewardsCoin } from './components/TripleRewardsCoin';

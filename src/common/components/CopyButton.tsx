@@ -5,9 +5,10 @@ import { FC, useState } from 'react';
 type CopyButtonProps = {
   tooltipTitle: string;
   content: string;
+  size?: number;
 };
 
-const CopyButton: FC<CopyButtonProps> = ({ tooltipTitle, content }) => {
+const CopyButton: FC<CopyButtonProps> = ({ tooltipTitle, content, size }) => {
   const [hover, setHover] = useState(false);
   return (
     <Tooltip title={tooltipTitle}>
@@ -20,7 +21,7 @@ const CopyButton: FC<CopyButtonProps> = ({ tooltipTitle, content }) => {
       >
         <Copy
           color={hover ? 'icon-primary' : 'icon-tertiary'}
-          size={12}
+          size={size || 12}
         />
       </Box>
     </Tooltip>
