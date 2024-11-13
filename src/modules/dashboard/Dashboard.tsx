@@ -2,7 +2,7 @@
 import { FC, useState } from 'react';
 
 // Components
-import { Box } from 'blocks';
+import { Alert, Box } from 'blocks';
 import { AnalyticsOverview } from './components/AnalyticsOverview';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
 import { DashboardHeader } from './components/DashboardHeader';
@@ -15,6 +15,9 @@ export type DashboardProps = {};
 
 const Dashboard: FC<DashboardProps> = () => {
   const [showSubHeader, setSubHeaderVisibility] = useState(true);
+  // for alerts
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   return (
     <Box
@@ -36,7 +39,30 @@ const Dashboard: FC<DashboardProps> = () => {
         flexDirection="column"
         gap="spacing-md"
       >
-        <SocialHandles />
+        {successMessage && (
+          <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+            <Alert
+              variant="success"
+              heading={successMessage}
+            />
+          </Box>
+        )}
+
+        {errorMessage && (
+          <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+            <Alert
+              variant="error"
+              heading={errorMessage}
+            />
+          </Box>
+        )}
+
+        <SocialHandles
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+          successMessage={successMessage}
+          setSuccessMessage={setSuccessMessage}
+        />
         <FeaturedChannels />
         <ChannelVariantsSection />
         <Box

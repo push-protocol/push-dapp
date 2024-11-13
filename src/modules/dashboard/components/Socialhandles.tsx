@@ -5,9 +5,14 @@ import { ClaimSocialHandles } from './ClaimSocialHandles';
 import { ConnectSocialHandles } from './ConnectSocialHandles';
 import { useAccount } from 'hooks';
 
-export type SocialHandlesProps = {};
+export type SocialHandlesProps = {
+  errorMessage?: string;
+  setErrorMessage: (errorMessage: string) => void;
+  successMessage?: string;
+  setSuccessMessage: (successMessage: string) => void;
+};
 
-const SocialHandles: FC<SocialHandlesProps> = () => {
+const SocialHandles: FC<SocialHandlesProps> = ({ setErrorMessage, setSuccessMessage }) => {
   const { isWalletConnected } = useAccount();
 
   // Check if the wallet is connected to the DApp.
@@ -28,7 +33,10 @@ const SocialHandles: FC<SocialHandlesProps> = () => {
       <ClaimSocialHandles />
 
       {/* Render option to connect Social Handles */}
-      <ConnectSocialHandles />
+      <ConnectSocialHandles
+        setErrorMessage={setErrorMessage}
+        setSuccessMessage={setSuccessMessage}
+      />
     </Box>
   );
 };

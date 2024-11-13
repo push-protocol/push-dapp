@@ -1,6 +1,10 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
 
+import { useAccount } from 'hooks';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { useGetSocialsStatus } from 'queries';
+
 import {
   Box,
   Button,
@@ -14,12 +18,58 @@ import {
   TelegramProfile,
   DiscordProfile,
 } from 'blocks';
-import { socialHandlesList } from '../Dashboard.constants';
-import { SocialHandlesItemType } from '../Dashboard.types';
+import { useDisclosure } from 'common';
+import { AddEmail } from 'components/UserProfileSettings/AddEmail';
+import AddDiscord from 'components/UserProfileSettings/AddDiscord';
+import AddTelegram from 'components/UserProfileSettings/AddTelegram';
 
-export type ConnectSocialHandlesProps = {};
+export type ConnectSocialHandlesProps = {
+  setErrorMessage: (errorMessage: string) => void;
+  setSuccessMessage: (successMessage: string) => void;
+};
 
-const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
+export type SocialHandlesItemType = {
+  itemTitle: string;
+  itemDescription: string;
+  type: 'email' | 'telegram' | 'discord';
+  isConnected: boolean;
+};
+
+const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, setSuccessMessage }) => {
+  const modalControl = useDisclosure();
+  const telegramModalControl = useDisclosure();
+  const discordModalControl = useDisclosure();
+  const { account } = useAccount();
+
+  // Getting user Id by wallet address
+  const channelAddress = walletToCAIP10({ account });
+
+  const { data: socialHandleStatus, refetch: refetchSocialHandleStatus } = useGetSocialsStatus(channelAddress);
+
+  const socialHandlesList: any[] = [
+    {
+      icon: () => <EmailProfile height={18} />,
+      itemTitle: 'Email',
+      itemDescription: 'Receive notifications in your email inbox',
+      userStatus: socialHandleStatus?.email || null,
+      onClick: () => modalControl.open(),
+    },
+    {
+      icon: () => <TelegramProfile height={18} />,
+      itemTitle: 'Telegram',
+      itemDescription: 'Receive notifications as Telegram messages',
+      onClick: () => telegramModalControl.open(),
+      userStatus: socialHandleStatus?.telegram_username || null,
+    },
+    {
+      icon: () => <DiscordProfile height={18} />,
+      itemTitle: 'Discord',
+      itemDescription: 'Receive notifications as Discord messages',
+      onClick: () => discordModalControl.open(),
+      userStatus: socialHandleStatus?.discord_username || null,
+    },
+  ];
+
   return (
     <>
       <Box
@@ -29,7 +79,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
         gap={{ tb: 'spacing-xs' }}
         width="100%"
       >
-        {socialHandlesList.map((item: SocialHandlesItemType) => (
+        {socialHandlesList.map((item: any) => (
           <Box
             display="flex"
             flexDirection="column"
@@ -49,23 +99,24 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
             `}
             minHeight={{ initial: 'auto', tb: '180px' }}
           >
-            <Box>
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap="spacing-xxxs"
+            >
               <Box
                 display="flex"
                 gap="spacing-xxs"
                 alignItems="center"
                 flexDirection="row"
               >
-                {/* Social icons will be displayed here */}
-                {item?.type === 'email' && <EmailProfile width={18} />}
-                {item?.type === 'telegram' && <TelegramProfile width={18} />}
-                {item?.type === 'discord' && <DiscordProfile width={18} />}
+                {item?.icon()}
 
                 <Text
                   variant="h5-semibold"
                   color="text-primary"
                 >
-                  {item.heading}
+                  {item.itemTitle}
                 </Text>
               </Box>
 
@@ -73,7 +124,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
                 variant="bs-regular"
                 color="text-tertiary"
               >
-                {item.description}
+                {item.itemDescription}
               </Text>
             </Box>
 
@@ -82,37 +133,65 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = () => {
               alignItems="center"
               alignSelf="flex-start"
             >
-              {item.isConnected ? (
+              {item.userStatus === null ? (
+                <Button
+                  variant="tertiary"
+                  size="small"
+                  onClick={item?.onClick}
+                >
+                  Connect
+                </Button>
+              ) : (
                 <Dropdown
                   overlay={
                     <Menu>
                       <MenuItem
                         label="Disconnect"
                         icon={<OptOut />}
+                        onClick={() => console.log('disconnect')}
                       />
                     </Menu>
                   }
                 >
                   <Button
-                    variant="outline"
-                    size="small"
-                    trailingIcon={<CaretDown />}
+                    variant="secondary"
+                    size="extraSmall"
+                    trailingIcon={<CaretDown size={20} />}
                   >
-                    zeeshan.mac@gmail.com
+                    {item?.userStatus}
                   </Button>
                 </Dropdown>
-              ) : (
-                <Button
-                  aria-label="Connect"
-                  size="small"
-                  variant="tertiary"
-                >
-                  Connect
-                </Button>
               )}
             </Box>
           </Box>
         ))}
+
+        {modalControl.isOpen && (
+          <AddEmail
+            modalControl={modalControl}
+            refetchSocialHandleStatus={refetchSocialHandleStatus}
+            setErrorMessage={setErrorMessage}
+            setSuccessMessage={setSuccessMessage}
+          />
+        )}
+
+        {telegramModalControl.isOpen && (
+          <AddTelegram
+            modalControl={telegramModalControl}
+            refetchSocialHandleStatus={refetchSocialHandleStatus}
+            setErrorMessage={setErrorMessage}
+            setSuccessMessage={setSuccessMessage}
+          />
+        )}
+
+        {discordModalControl.isOpen && (
+          <AddDiscord
+            modalControl={discordModalControl}
+            refetchSocialHandleStatus={refetchSocialHandleStatus}
+            setErrorMessage={setErrorMessage}
+            setSuccessMessage={setSuccessMessage}
+          />
+        )}
       </Box>
     </>
   );

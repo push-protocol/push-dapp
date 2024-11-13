@@ -8,22 +8,11 @@ import { useGetSocialsStatus } from 'queries';
 import { walletToCAIP10 } from 'helpers/w2w';
 
 //Components
-import {
-  Box,
-  Button,
-  CaretDown,
-  DiscordProfile,
-  Dropdown,
-  EmailProfile,
-  Menu,
-  MenuItem,
-  OptOut,
-  TelegramProfile,
-  Text,
-} from 'blocks';
+import { Box, DiscordProfile, EmailProfile, TelegramProfile, Text } from 'blocks';
 import { AddEmail } from './AddEmail';
 import AddTelegram from './AddTelegram';
 import AddDiscord from './AddDiscord';
+import UserProfileSettingsItem from './UserProfileSettingsItem';
 
 type UserProfileSocialSettingsType = {
   errorMessage?: string;
@@ -56,14 +45,14 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
       itemTitle: 'Telegram',
       itemDescription: 'Receive notifications as Telegram messages',
       onClick: () => telegramModalControl.open(),
-      userStatus: socialHandleStatus?.discord_username || null,
+      userStatus: socialHandleStatus?.telegram_username || null,
     },
     {
       icon: () => <DiscordProfile height={23} />,
       itemTitle: 'Discord',
       itemDescription: 'Receive notifications as Discord messages',
       onClick: () => discordModalControl.open(),
-      userStatus: socialHandleStatus?.telegram_username || null,
+      userStatus: socialHandleStatus?.discord_username || null,
     },
   ];
   return (
@@ -86,71 +75,7 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
 
       <Box padding="spacing-sm spacing-none spacing-none spacing-none">
         {itemList?.map((item) => (
-          <Box
-            display="flex"
-            margin="spacing-sm spacing-none spacing-none spacing-none"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Box
-              display="flex"
-              gap="spacing-sm"
-              alignItems="center"
-            >
-              <Box
-                padding="spacing-xs"
-                borderRadius="radius-xs"
-                border="border-xs solid stroke-tertiary"
-              >
-                {item?.icon()}
-              </Box>
-
-              <Box>
-                <Text
-                  variant="h5-semibold"
-                  color="text-primary"
-                >
-                  {item.itemTitle}
-                </Text>
-                <Text
-                  variant="bs-regular"
-                  color="text-tertiary"
-                >
-                  {item.itemDescription}
-                </Text>
-              </Box>
-            </Box>
-
-            {item.userStatus === null ? (
-              <Button
-                variant="tertiary"
-                size="extraSmall"
-                onClick={item?.onClick}
-              >
-                Connect
-              </Button>
-            ) : (
-              <Dropdown
-                overlay={
-                  <Menu>
-                    <MenuItem
-                      label="Disconnect"
-                      icon={<OptOut />}
-                      onClick={() => console.log('disconnect')}
-                    />
-                  </Menu>
-                }
-              >
-                <Button
-                  variant="secondary"
-                  size="extraSmall"
-                  trailingIcon={<CaretDown size={20} />}
-                >
-                  {item?.userStatus}
-                </Button>
-              </Dropdown>
-            )}
-          </Box>
+          <UserProfileSettingsItem item={item} />
         ))}
       </Box>
 

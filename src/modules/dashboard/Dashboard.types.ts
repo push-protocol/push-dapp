@@ -35,10 +35,3 @@ export type ChatType = {
 
 export type EnvKeys = 'prod' | 'staging' | 'dev' | 'alpha';
 export type SourceKeys = 'ETH_MAINNET' | 'All';
-
-export type SocialHandlesItemType = {
-  heading: string;
-  description: string;
-  type: 'email' | 'telegram' | 'discord';
-  isConnected: boolean;
-};

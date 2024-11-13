@@ -90,24 +90,3 @@ export const trendingSource: Record<EnvKeys, SourceKeys> = {
 export const firstEndDate = new Date(Date.now()).toISOString().split('T')[0];
 export const secondEndDate = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
 export const startDate = new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0];
-
-export const socialHandlesList: SocialHandlesItemType[] = [
-  {
-    heading: 'Email',
-    description: 'Receive notifications in your email inbox',
-    type: 'email',
-    isConnected: true,
-  },
-  {
-    heading: 'Telegram',
-    description: 'Receive notifications as Telegram messages',
-    type: 'telegram',
-    isConnected: false,
-  },
-  {
-    heading: 'Discord',
-    description: 'Receive notifications as Discord messages',
-    type: 'discord',
-    isConnected: false,
-  },
-];
