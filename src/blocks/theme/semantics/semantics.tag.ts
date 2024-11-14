@@ -25,6 +25,10 @@ export const tagSemantics = {
     light: surfaceSemantics['state-disabled'].light,
     dark: surfaceSemantics['state-disabled'].dark,
   },
+  'background-brand': {
+    light: surfaceSemantics['brand-medium'].light,
+    dark: surfaceSemantics['brand-medium'].dark,
+  },
 
   'stroke-bg': { light: strokeSemantics['secondary'].light, dark: strokeSemantics['secondary'].dark },
 
@@ -34,6 +38,7 @@ export const tagSemantics = {
   'text-danger': { light: textSemantics['state-danger-bold'].light, dark: textSemantics['state-danger-bold'].dark },
   'text-info': { light: textSemantics['state-info-bold'].light, dark: textSemantics['state-info-bold'].dark },
   'text-disabled': { light: textSemantics['state-disabled'].light, dark: textSemantics['state-disabled'].dark },
+  'text-brand': { light: textSemantics['primary-inverse'].light, dark: textSemantics['primary'].dark },
 
   'icon-default': { light: iconSemantics['primary'].light, dark: iconSemantics['primary'].dark },
   'icon-success': { light: iconSemantics['state-success-bold'].light, dark: iconSemantics['state-success-bold'].dark },
@@ -41,4 +46,5 @@ export const tagSemantics = {
   'icon-danger': { light: iconSemantics['state-danger-bold'].light, dark: iconSemantics['state-danger-bold'].dark },
   'icon-info': { light: iconSemantics['state-info-bold'].light, dark: iconSemantics['state-info-bold'].dark },
   'icon-disabled': { light: iconSemantics['state-disabled'].light, dark: iconSemantics['state-disabled'].dark },
+  'icon-brand': { light: iconSemantics['secondary'].light, dark: iconSemantics['secondary'].dark },
 };

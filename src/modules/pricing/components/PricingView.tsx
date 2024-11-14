@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { Box, Text } from 'blocks';
-import { PricingPlans } from './PricingPlans';
+import { css } from 'styled-components';
+import { Box, Link, Text } from 'blocks';
+import { PricingPlanTabs } from './PricingPlanTabs';
 
 export type PricingViewProps = {};
 
@@ -10,9 +11,7 @@ const PricingView: FC<PricingViewProps> = () => {
       flexDirection="column"
       display="flex"
       width={{ initial: 'auto', ml: '357px' }}
-      margin={{ initial: 'spacing-sm spacing-xl', ml: 'spacing-sm spacing-none' }}
       gap={{ initial: 'spacing-xl' }}
-      height="100%"
     >
       <Box>
         <Text
@@ -38,35 +37,35 @@ const PricingView: FC<PricingViewProps> = () => {
         </Text>
       </Box>
 
+      {/* Render plans tab and list */}
+      <PricingPlanTabs />
+
       <Box
         display="flex"
         flexDirection="row"
         alignSelf="center"
-        gap="spacing-xxs"
-        margin="spacing-sm"
+        gap="spacing-xxxs"
+        padding="spacing-lg spacing-none spacing-none spacing-none"
       >
         <Text
           color="text-primary"
-          variant="bm-semibold"
+          variant="bl-regular"
         >
-          Save
+          Have more questions? Get in touch with our
         </Text>
-        <Text
-          color="text-brand-medium"
-          variant="bm-semibold"
+        <Link
+          target="_blank"
+          to={'#'}
+          textProps={{
+            variant: 'bl-bold',
+            css: css`
+              text-decoration-line: underline;
+            `,
+          }}
         >
-          15%
-        </Text>
-        <Text
-          color="text-primary"
-          variant="bm-semibold"
-        >
-          on selecting a yearly plan
-        </Text>
+          sales team.
+        </Link>
       </Box>
-
-      {/* Render Plans list */}
-      <PricingPlans />
     </Box>
   );
 };

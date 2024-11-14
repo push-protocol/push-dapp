@@ -14,6 +14,7 @@ const Meteor: FC<IconProps> = (allProps) => {
           height="inherit"
           viewBox="0 0 16 16"
           fill="none"
+          {...props}
         >
           <g clip-path="url(#clip0_10640_33711)">
             <path
