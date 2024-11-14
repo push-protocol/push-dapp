@@ -96,8 +96,20 @@ const useDailyRewards = () => {
       }
     }
 
-    setActiveDay(newDay);
-    setActiveItem(newDayData);
+    // first day data after completing all 7
+    const firstDayData = dailyRewardsActivities?.find(
+      (activity) => activity.activityType === `daily_check_in_7_days_day1`
+    );
+
+    // if active day is complete, reset to first day, if not use the next day
+    if (newDay <= 7) {
+      setActiveDay(newDay);
+      setActiveItem(newDayData);
+    } else {
+      setActiveDay(1);
+      setActiveItem(firstDayData);
+    }
+
     setIsLoadingRewards(false);
   }, [sendRecentActivities]);
 
