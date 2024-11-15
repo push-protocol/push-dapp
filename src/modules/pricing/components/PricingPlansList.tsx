@@ -120,7 +120,7 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
                 </Text>
               </Box>
 
-              <Link to={'#'}>
+              <Link to={planItem?.price && planItem?.price > 0 ? `/pricing/${planIndex}` : '#'}>
                 <Button
                   block
                   variant={planItem?.price === 0 ? 'outline' : planItem?.isPopular ? 'primary' : 'tertiary'}
