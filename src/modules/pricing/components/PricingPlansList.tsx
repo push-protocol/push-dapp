@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Button, Meteor, Tag, Text, Tick } from 'blocks';
+import { Box, Button, Link, Meteor, Tag, Text, Tick } from 'blocks';
 import { pricingPlanList } from '../Pricing.constants';
 import { PricingPlanTabsType } from '../Pricing.types';
 
@@ -49,13 +49,13 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
         width={{ initial: 'auto', ml: '357px' }}
         gap="spacing-xs"
       >
-        {pricingPlanList.map((planItem, index) => (
+        {pricingPlanList.map((planItem, planIndex) => (
           <Box
             display="flex"
             flexDirection="column"
             padding="spacing-md"
             gap="spacing-md"
-            key={`${index}-pricing-plan-key`}
+            key={`${planIndex}-pricing-plan-key`}
             border="border-sm solid stroke-tertiary"
             borderRadius="radius-lg"
             width="296px"
@@ -120,9 +120,14 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
                 </Text>
               </Box>
 
-              <Button variant={planItem?.price === 0 ? 'outline' : planItem?.isPopular ? 'primary' : 'secondary'}>
-                Get Started
-              </Button>
+              <Link to={'#'}>
+                <Button
+                  block
+                  variant={planItem?.price === 0 ? 'outline' : planItem?.isPopular ? 'primary' : 'tertiary'}
+                >
+                  Get Started
+                </Button>
+              </Link>
             </Box>
 
             {/* Render the Plan benefit list */}
@@ -130,12 +135,13 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
               flexDirection="column"
               display="flex"
               gap="spacing-sm"
+              padding="spacing-none spacing-none spacing-md spacing-none"
             >
-              {planItem?.planBenefits.map((benefit, index) => (
+              {planItem?.planBenefits.map((benefit, benefitIndex) => (
                 <Box
                   flexDirection="row"
                   display="flex"
-                  key={`${index}-plan-benefits-item-keys`}
+                  key={`${benefitIndex}-plan-benefits-item-keys`}
                   gap="spacing-xxs"
                 >
                   <Tick

@@ -47,7 +47,7 @@ export const secondaryButtonSemantics = {
 
 export const tertiaryButtonSemantics = {
   'background-default': { light: colorBrands['neutral-1000'], dark: colorBrands['neutral-700'] },
-  'background-inverse': { light: colorPrimitives['white-100'], dark: colorBrands['neutral-800'] },
+  'background-inverse': { light: colorPrimitives['white-100'], dark: colorPrimitives['gray-900'] },
   'background-hover': { light: colorBrands['neutral-900'], dark: colorBrands['neutral-300'] },
   'background-pressed': { light: colorBrands['neutral-100'], dark: colorPrimitives['gray-1000'] },
   'background-focus': { light: colorBrands['neutral-1000'], dark: colorBrands['neutral-700'] },

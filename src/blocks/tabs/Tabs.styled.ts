@@ -23,7 +23,7 @@ export const StyledFillTabList = styled(TabList)<TabListProps>`
     width: -webkit-fill-available;
   }
   padding: var(--spacing-xxxs);
-  background-color: var(--surface-secondary);
+  background-color: var(--surface-tertiary);
   border-radius: var(--radius-sm);
   gap: var(--spacing-xxs);
   align-self: ${(props) => props.alignSelf ?? 'flex-start'};
