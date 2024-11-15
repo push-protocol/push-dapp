@@ -9,9 +9,9 @@ import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { useAppContext } from 'contexts/AppContext';
 import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
-import { useSendEmailVerificationCode, useVerifyEmailVerificationCode } from 'queries';
+import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
 
-import { Box, Button, Modal, Text, TextInput } from 'blocks';
+import { Box, Modal, Text, TextInput } from 'blocks';
 
 type AddEmailProps = {
   modalControl: ModalResponse;
@@ -41,8 +41,8 @@ const AddEmail: FC<AddEmailProps> = ({
     return state.user;
   });
 
-  const { mutate: sendVerification } = useSendEmailVerificationCode();
-  const { mutate: verifyVerification } = useVerifyEmailVerificationCode();
+  const { mutate: sendVerification, isPending: sendingVerification } = useSendHandlesVerificationCode();
+  const { mutate: verifyVerification } = useVerifyHandlesVerificationCode();
 
   const emailValidationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Required'),
@@ -96,6 +96,7 @@ const AddEmail: FC<AddEmailProps> = ({
         caipAddress: caip10WalletAddress as string,
         verificationProof: verificationProof as string,
         value: emailFormik.values.email,
+        social_platform: 'email',
       },
       {
         onSuccess: (response: any) => {
@@ -129,6 +130,7 @@ const AddEmail: FC<AddEmailProps> = ({
         caipAddress: caip10WalletAddress as string,
         verificationCode: codeFormik.values.code,
         value: emailFormik.values.email,
+        social_platform: 'email',
       },
       {
         onSuccess: (response: any) => {
@@ -155,7 +157,16 @@ const AddEmail: FC<AddEmailProps> = ({
       size="small"
       isOpen={isOpen}
       onClose={onClose}
-      acceptButtonProps={null}
+      acceptButtonProps={
+        step === Steps.EnterEmail
+          ? {
+              children: 'Next',
+              onClick: () => {
+                emailFormik.handleSubmit();
+              },
+            }
+          : null
+      }
       cancelButtonProps={null}
     >
       {step === Steps.EnterEmail && (
@@ -176,7 +187,7 @@ const AddEmail: FC<AddEmailProps> = ({
 
           <form onSubmit={emailFormik.handleSubmit}>
             <Box
-              margin="spacing-md spacing-none"
+              margin="spacing-md spacing-none spacing-none spacing-none"
               width="100%"
             >
               <TextInput
@@ -186,16 +197,6 @@ const AddEmail: FC<AddEmailProps> = ({
                 error={emailFormik.touched.email && Boolean(emailFormik.errors.email)}
                 errorMessage={emailFormik.touched.email ? emailFormik.errors.email : ''}
               />
-            </Box>
-
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyContent="center"
-              width="100%"
-              padding="spacing-xs"
-            >
-              <Button>Next</Button>
             </Box>
           </form>
         </Box>

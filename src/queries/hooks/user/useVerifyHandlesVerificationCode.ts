@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { verifyVerificationCode } from 'queries/queryKeys';
-import { verifyEmailVerificationCode } from 'queries/services';
+import { verifyHandlesVerificationCode } from 'queries/services';
 
-export const useVerifyEmailVerificationCode = () =>
+export const useVerifyHandlesVerificationCode = () =>
   useMutation({
     mutationKey: [verifyVerificationCode],
-    mutationFn: verifyEmailVerificationCode,
+    mutationFn: verifyHandlesVerificationCode,
   });

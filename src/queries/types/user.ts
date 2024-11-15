@@ -48,13 +48,13 @@ export type UpdateProfileInfoResponse = {
   blockedUserList?: [];
 };
 
-export type SendEmailVerificationResponse = {
+export type SendHandlesVerificationResponse = {
   email: string | null;
   success: boolean;
   VerificationCode?: string | null;
 };
 
-export type VerifyEmailVerificationResponse = {
+export type VerifyHandlesVerificationResponse = {
   message: string;
   success: boolean;
 };

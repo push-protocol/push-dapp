@@ -1,7 +1,16 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+import { CopyButton, ModalResponse } from 'common';
+import { useAccount } from 'hooks';
+import { useAppContext } from 'contexts/AppContext';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
+import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
 
 import { Box, Button, Link, Modal, Telegram, Text, TextInput } from 'blocks';
-import { CopyButton, ModalResponse } from 'common';
 
 type AddTelegramProps = {
   modalControl: ModalResponse;
@@ -22,7 +31,68 @@ const AddTelegram: FC<AddTelegramProps> = ({
   // setSuccessMessage,
 }) => {
   const { isOpen, onClose } = modalControl;
-  const [step, setStep] = useState(2);
+  const { account, wallet } = useAccount();
+  const { handleConnectWalletAndEnableProfile } = useAppContext();
+
+  const caip10WalletAddress = walletToCAIP10({ account });
+  const [step, setStep] = useState(1);
+  const [telegramCode, setTelegramCode] = useState<string>('');
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+
+  const { mutate: sendVerification } = useSendHandlesVerificationCode();
+  const { mutate: verifyVerification } = useVerifyHandlesVerificationCode();
+
+  const telegramValidationSchema = Yup.object({
+    telegram: Yup.string().required('Required'),
+  });
+
+  const telegramFormik = useFormik({
+    initialValues: { telegram: '' },
+    validationSchema: telegramValidationSchema,
+    onSubmit: () => {
+      handleSendVerificationCode();
+    },
+  });
+
+  const getSDKInstance = useCallback(async () => {
+    return userPushSDKInstance?.signer ? userPushSDKInstance : await handleConnectWalletAndEnableProfile({ wallet });
+  }, [userPushSDKInstance, handleConnectWalletAndEnableProfile, wallet]);
+
+  const handleSendVerificationCode = async () => {
+    const sdkInstance = await getSDKInstance();
+    const data = {
+      wallet: caip10WalletAddress,
+      value: telegramFormik.values.telegram,
+      valueType: 'telegram',
+    };
+
+    const verificationProof = await generateVerificationProof(data, sdkInstance);
+
+    if (!verificationProof) return;
+
+    sendVerification(
+      {
+        caipAddress: caip10WalletAddress as string,
+        verificationProof: verificationProof as string,
+        value: telegramFormik.values.telegram,
+        social_platform: 'telegram',
+      },
+      {
+        onSuccess: (response: any) => {
+          if (response?.success) {
+            console.log(response);
+            setTelegramCode(response.verificationCode);
+            setStep(Steps.VerifyId);
+          }
+        },
+        onError: (error: Error) => {
+          console.log('Error sending code', error);
+        },
+      }
+    );
+  };
 
   return (
     <Modal
@@ -30,9 +100,18 @@ const AddTelegram: FC<AddTelegramProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       {...(step === Steps.VerifyId && {
-        onBack: () => setStep(step - 1),
+        onBack: () => setStep(Steps.EnterTelegram),
       })}
-      acceptButtonProps={null}
+      acceptButtonProps={
+        step === Steps.EnterTelegram
+          ? {
+              children: 'Next',
+              onClick: () => {
+                telegramFormik?.handleSubmit();
+              },
+            }
+          : null
+      }
       cancelButtonProps={null}
     >
       {step === Steps.EnterTelegram && (
@@ -60,32 +139,24 @@ const AddTelegram: FC<AddTelegramProps> = ({
             Proceed to the next step after entering your Telegram chat ID
           </Text>
 
-          <Box
-            margin="spacing-md spacing-none"
-            width="100%"
-          >
-            <TextInput
-              label="Telegram ID"
-              value={''}
-              onChange={() => console.log('')}
-              // error={emailFormik.touched.email && Boolean(emailFormik.errors.email)}
-              // errorMessage={emailFormik.touched.email ? emailFormik.errors.email : ''}
-            />
-          </Box>
-
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
-            width="100%"
-            padding="spacing-xs"
-          >
-            <Button>Next</Button>
-          </Box>
+          <form onSubmit={telegramFormik.handleSubmit}>
+            <Box
+              margin="spacing-md spacing-none spacing-none spacing-none"
+              width="100%"
+            >
+              <TextInput
+                label="Telegram ID"
+                value={telegramFormik.values.telegram}
+                onChange={telegramFormik.handleChange('telegram')}
+                error={telegramFormik.touched.telegram && Boolean(telegramFormik.errors.telegram)}
+                errorMessage={telegramFormik.touched.telegram ? telegramFormik.errors.telegram : ''}
+              />
+            </Box>
+          </form>
         </Box>
       )}
 
-      {step === Steps.VerifyId && (
+      {step === Steps.VerifyId && telegramCode && (
         <Box width="100%">
           <Box
             width="100%"
@@ -140,12 +211,12 @@ const AddTelegram: FC<AddTelegramProps> = ({
                 variant="bl-semibold"
                 textAlign="center"
               >
-                /verify 0x123...45678 665889
+                {telegramCode}
               </Text>
 
               <CopyButton
                 tooltipTitle="Copy Address"
-                content={'/verify 0x123...45678 665889'}
+                content={telegramCode}
                 size={24}
               />
             </Box>
@@ -162,6 +233,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
             <Box margin="spacing-xs spacing-none">
               <Link
                 to={'https://telegram.me/pushlinkbot'}
+                target="_blank"
                 isText={true}
                 textProps={{
                   variant: 'bl-semibold',

@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { sendVerificationCode } from 'queries/queryKeys';
-import { sendEmailVerificationCode } from 'queries/services';
+import { sendHandlesVerificationCode } from 'queries/services';
 
-export const useSendEmailVerificationCode = () =>
+export const useSendHandlesVerificationCode = () =>
   useMutation({
     mutationKey: [sendVerificationCode],
-    mutationFn: sendEmailVerificationCode,
+    mutationFn: sendHandlesVerificationCode,
   });
