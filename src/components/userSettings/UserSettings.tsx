@@ -12,11 +12,13 @@ import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
+import { Alert, Box, Text } from 'blocks';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
+import UserPlanAndBillings from 'components/userPlanAndBillings/UserPlanAndBillings';
 
 interface ChannelListItem {
   channel: string;
@@ -97,11 +99,19 @@ function UserSettings() {
       value: 0,
       label: 'Notification Settings',
       title: 'Notification Settings',
+      section: 'top',
     },
     {
       value: 1,
       label: 'Push Snap',
       title: '',
+      section: 'top',
+    },
+    {
+      value: 2,
+      label: 'Plan & Billing',
+      title: 'Plan & Billing',
+      section: 'bottom',
     },
   ];
 
@@ -111,26 +121,82 @@ function UserSettings() {
       <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
       <Wrapper>
         <SelectSection>
-          {selectOptions.map((selectOptions) => (
-            <SelectListOption
-              onClick={() => setSelectedOption(selectOptions.value)}
-              key={selectOptions.value}
-              isSelected={selectOptions.value === selectedOption}
+          {selectOptions
+            .filter((option) => option.section === 'top')
+            .map((option) => (
+              <SelectListOption
+                onClick={() => setSelectedOption(option.value)}
+                key={option.value}
+                isSelected={option.value === selectedOption}
+              >
+                {option.label}
+              </SelectListOption>
+            ))}
+          <Box margin="spacing-lg spacing-none spacing-none spacing-none">
+            <Text
+              variant="os-regular"
+              color="text-tertiary"
             >
-              {selectOptions.label}
-            </SelectListOption>
-          ))}
-        </SelectSection>
-        <ChannelWrapper>
-          <ChannelContainer>
-            {selectOptions[selectedOption]?.title && (
-              <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
-            )}
+              Developers
+            </Text>
+          </Box>
 
-            {selectedOption === 0 && <ChannelListSettings />}
-            {selectedOption === 1 && <PushSnapSettings />}
-          </ChannelContainer>
-        </ChannelWrapper>
+          {selectOptions
+            .filter((option) => option.section === 'bottom')
+            .map((option) => (
+              <SelectListOption
+                onClick={() => setSelectedOption(option.value)}
+                key={option.value}
+                isSelected={option.value === selectedOption}
+              >
+                {option.label}
+              </SelectListOption>
+            ))}
+        </SelectSection>
+
+        <ChannelBlock>
+          {/* {successMessage && (
+            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+              <Alert
+                variant="success"
+                heading={successMessage}
+              />
+            </Box>
+          )}
+
+          {errorMessage && (
+            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+              <Alert
+                variant="error"
+                heading={errorMessage}
+              />
+            </Box>
+          )} */}
+
+          {selectedOption === 2 && (
+            <Alert
+              showIcon={false}
+              heading="Go Pro for $14.99/mo and unlock access to more features"
+              onAction={() => console.log('idea')}
+              actionText="Upgrade Plan"
+              variant="info"
+            />
+          )}
+
+          <ChannelWrapper>
+            <ChannelContainer selectedOption={selectedOption}>
+              {selectOptions[selectedOption]?.title && (
+                <SectionTitle bottomSpacing={selectedOption == 2 ? false : true}>
+                  {selectOptions[selectedOption]?.title}
+                </SectionTitle>
+              )}
+
+              {selectedOption === 0 && <ChannelListSettings />}
+              {selectedOption === 1 && <PushSnapSettings />}
+              {selectedOption === 2 && <UserPlanAndBillings />}
+            </ChannelContainer>
+          </ChannelWrapper>
+        </ChannelBlock>
       </Wrapper>
     </Container>
   );
@@ -142,6 +208,8 @@ export default UserSettings;
 const Container = styled.div`
   padding: 32px 24px;
   flex: 1;
+  height: 100%;
+  overflow: hidden;
 
   @media ${device.tablet} {
     padding: 24px 12px;
@@ -182,6 +250,10 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
 
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+
   @media ${device.tablet} {
     flex-direction: column;
   }
@@ -220,10 +292,9 @@ const SelectListOption = styled(Button)<{ isSelected: boolean }>`
 `;
 
 const ChannelWrapper = styled.div`
-  border: 1px solid ${(props) => props.theme.default.borderColor};
+  border: 1px solid ${(props) => props.theme.userSettingsBorder};
   padding: 12px;
-  border-radius: 16px;
-  flex-grow: 1;
+  border-radius: 24px;
 
   @media ${device.tablet} {
     margin: 8px 0px;
@@ -231,9 +302,43 @@ const ChannelWrapper = styled.div`
   }
 `;
 
-const ChannelContainer = styled.div`
+const ChannelBlock = styled.div`
   overflow: hidden;
-  overflow-y: scroll;
+  display: flex;
+  overflow-y: auto;
+  flex-direction: column;
+  height: auto;
+  flex-grow: 1;
+  min-height: 0;
+  gap: 16px;
+  padding-right: 12px;
+  overflow-y: auto;
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    position: absolute;
+    right: 10px;
+  }
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d53a94;
+    border-radius: 99px;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+  }
+  // Adding margin-bottom to the last child
+  & > *:last-child {
+    margin-bottom: 100px;
+  }
+`;
+
+const ChannelContainer = styled.div<{ selectedOption: number }>`
+  overflow-y: auto;
   height: 55vh;
   padding: 12px;
 
@@ -264,13 +369,13 @@ const ChannelContainer = styled.div`
   }
 `;
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.div<{ bottomSpacing: boolean }>`
   font-size: 22px;
   font-weight: 500;
   line-height: 33px;
   letter-spacing: normal;
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) => (props.bottomSpacing ? '20px' : '0px')};
   color: ${(props) => props.theme.default.color};
 
   @media ${device.tablet} {
