@@ -31,6 +31,7 @@ export type ActvityType =
   | 'daily_check_in_7_days_day5'
   | 'daily_check_in_7_days_day6'
   | 'daily_check_in_7_days_day7'
+  | 'channel_specific_subscriptions:BTC_PRICE_TRACKER_CHANNEL'
   | 'channel_specific_subscriptions:QUICKSWAP_CHANNEL'
   | 'channel_specific_subscriptions:WALLETTRACKER_CHANNEL'
   | 'channel_specific_subscriptions:PRICETRACKER_CHANNEL'
