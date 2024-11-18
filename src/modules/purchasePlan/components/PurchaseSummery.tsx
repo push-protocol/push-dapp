@@ -2,6 +2,10 @@ import { FC, useState } from 'react';
 import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput } from 'blocks';
 import { PricingPlansItemTypes, PricingPlanTabsType } from 'modules/pricing/Pricing.types';
 import { css } from 'styled-components';
+import { ConfirmPurchaseModal } from './ConfirmPurchaseModal';
+import { PurchasePlanModalTypes } from '../PusrchasePlan.types';
+import { PlanPurchasedModal } from './PlanPurchasedModal';
+import { useDisclosure } from 'common';
 
 export type PurchaseSummeryProps = { selectedPlan: PricingPlansItemTypes };
 const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
@@ -23,8 +27,19 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   );
   const [email, setEmail] = useState('');
   const [isApproved, setIsApproved] = useState(false);
+  const [modalType, setShowModalType] = useState<PurchasePlanModalTypes>(null);
+  const modalControl = useDisclosure();
 
   const totalAmount = selectedPlan?.price ? selectedPlan?.price * (selectedPricingPlanTab === 'yearly' ? 12 : 1) : 0;
+
+  const handleOnCloseModal = () => {
+    if (modalType === 'confirmPurchase') {
+      setShowModalType('planPurchased');
+    } else {
+      modalControl.onClose();
+      setShowModalType(null);
+    }
+  };
 
   return (
     <Box
@@ -33,6 +48,22 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
       width="50%"
       gap="spacing-md"
     >
+      {/* Render Plan Purchase confirmation modal */}
+      {modalType === 'confirmPurchase' && (
+        <ConfirmPurchaseModal
+          onClose={handleOnCloseModal}
+          modalControl={modalControl}
+          purchaseAmount={totalAmount}
+        />
+      )}
+      {modalType === 'planPurchased' && (
+        <PlanPurchasedModal
+          onClose={handleOnCloseModal}
+          modalControl={modalControl}
+          plan={selectedPlan}
+        />
+      )}
+
       <Box>
         <Text variant="h3-semibold">Summary</Text>
         <Text
@@ -43,7 +74,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
         </Text>
       </Box>
 
-      {/* Render Summary view */}
+      {/* Render Summary View */}
       <Box
         display="flex"
         flexDirection="column"
@@ -162,6 +193,10 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
             Approve
           </Button>
           <Button
+            onClick={() => {
+              setShowModalType('confirmPurchase');
+              modalControl?.open();
+            }}
             css={css`
               flex: 1 0 0;
             `}

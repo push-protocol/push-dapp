@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Box, Button, Link, Meteor, Tag, Text, Tick } from 'blocks';
 import { pricingPlanList } from '../Pricing.constants';
 import { PricingPlanTabsType } from '../Pricing.types';
+import { css } from 'styled-components';
 
 export type PricingPlansListProps = {
   type: PricingPlanTabsType;
@@ -101,8 +102,14 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
               gap="spacing-lg"
             >
               <Box
-                margin={
-                  planItem?.billingCriteria.length > 0 ? 'spacing-none' : 'spacing-none spacing-none 20px spacing-none'
+                css={
+                  planItem?.billingCriteria.length > 0
+                    ? css`
+                        margin: var(--spacing-none);
+                      `
+                    : css`
+                        margin: var(--spacing-none) var(--spacing-none) 20px var(--spacing-none);
+                      `
                 }
               >
                 <Text

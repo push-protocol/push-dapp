@@ -11,7 +11,6 @@ const FAQMainContainer: FC<FAQMainContainerProps> = ({}) => {
       display="flex"
       width="100%"
       gap="spacing-md"
-      padding="200px spacing-none 200px spacing-none"
     >
       {/* Render FAQ left side container */}
       <Box
