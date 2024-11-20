@@ -12,10 +12,4 @@ export type PricingPlansItemTypes = {
   }[];
 };
 
-export type FAQItemTypes = {
-  id: number;
-  question: string;
-  answer: string;
-};
-
 export type PricingPlanTabsType = 'yearly' | 'monthly';

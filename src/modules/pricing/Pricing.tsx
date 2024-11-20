@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box } from 'blocks';
+import { FAQContainer } from 'common';
 import { PricingView } from './components/PricingView';
-import { FAQMainContainer } from './components/FAQMainContainer';
 import { css } from 'styled-components';
 
 export type PricingProps = {};
@@ -22,7 +22,7 @@ const Pricing: FC<PricingProps> = () => {
       <PricingView />
 
       {/* Render FAQ Component */}
-      <FAQMainContainer />
+      <FAQContainer />
     </Box>
   );
 };
