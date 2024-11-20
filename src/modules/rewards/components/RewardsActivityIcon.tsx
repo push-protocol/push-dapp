@@ -1,5 +1,4 @@
 import { FC } from 'react';
-
 import {
   ActivePushPoints,
   BlueBonusActivitySubscribers,
@@ -39,6 +38,7 @@ import {
   revokeLogo,
   pwnLogo,
   udLogo,
+  btcTrackerLogo,
 } from 'common';
 import { ActvityType } from 'queries';
 
@@ -254,6 +254,17 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
         width={48}
         height={48}
         src={udLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:BTC_PRICE_TRACKER_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={btcTrackerLogo}
         style={{ borderRadius: 'var(--radius-round)' }}
       />
     );

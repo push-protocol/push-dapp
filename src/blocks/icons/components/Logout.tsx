@@ -12,24 +12,24 @@ const Logout: FC<IconProps> = (allProps) => {
           xmlns="http://www.w3.org/2000/svg"
           width="inherit"
           height="inherit"
-          viewBox="0 0 24 24"
+          viewBox="0 0 32 32"
           fill="none"
           {...props}
         >
           <path
-            d="M10.0962 1H3.63464C2.53008 1 1.63464 1.89543 1.63464 3V21C1.63464 22.1046 2.53007 23 3.63464 23H10.0962"
+            d="M14.0962 5H7.63464C6.53008 5 5.63464 5.89543 5.63464 7V25C5.63464 26.1046 6.53007 27 7.63464 27H14.0962"
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
           />
           <path
-            d="M8.8269 11.5769H22.3654"
+            d="M12.8269 15.5769H26.3654"
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
           />
           <path
-            d="M17.7115 6.0769L22.3654 11.5769L17.7115 17.5"
+            d="M21.7115 10.0769L26.3654 15.5769L21.7115 21.5"
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
