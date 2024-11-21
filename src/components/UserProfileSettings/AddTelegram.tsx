@@ -11,6 +11,7 @@ import { generateVerificationProof } from 'modules/rewards/utils/generateVerific
 import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
 
 import { Box, Button, Link, Modal, Telegram, Text, TextInput } from 'blocks';
+import { shortenText } from 'helpers/UtilityHelper';
 
 type AddTelegramProps = {
   modalControl: ModalResponse;
@@ -211,12 +212,12 @@ const AddTelegram: FC<AddTelegramProps> = ({
                 variant="bl-semibold"
                 textAlign="center"
               >
-                {telegramCode}
+                {shortenText(`/verify ${caip10WalletAddress}-${telegramCode}`, 10)}
               </Text>
 
               <CopyButton
                 tooltipTitle="Copy Address"
-                content={telegramCode}
+                content={`/verify ${caip10WalletAddress}-${telegramCode}`}
                 size={24}
               />
             </Box>
@@ -241,7 +242,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
                   color: 'text-brand-medium',
                 }}
               >
-                telegram.me/pushlinkbot
+                https://t.me/PushStagingBot
               </Link>
             </Box>
           </Box>
