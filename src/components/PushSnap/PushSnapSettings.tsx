@@ -10,14 +10,15 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from 'modules/snap/AboutSnapModal';
 import styled, { useTheme } from 'styled-components';
 import PushSnapConfigureModal from './PushSnapConfigureModal';
-import { Alert, Box, Button, Text } from 'blocks';
+import { Alert, Box, Button, Metamask, Text } from 'blocks';
 import { SnoozeDurationType } from 'types';
 
 const PushSnapSettings = () => {
-  const { account, isWalletConnected, connect } = useAccount();
+  const { account, isWalletConnected, connect, provider } = useAccount();
 
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [walletConnected, setWalletConnected] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -31,11 +32,11 @@ const PushSnapSettings = () => {
 
   async function getInstalledSnaps() {
     if (!isWalletConnected) {
-      setErrorMessage("Connect your metamask wallet to install Snap");
+      setErrorMessage('Connect your metamask wallet to install Snap');
       setSnapInstalled(false);
-      return
+      return;
     }
-    setErrorMessage('')
+    setErrorMessage('');
     const installedSnaps = await window.ethereum.request({
       method: 'wallet_getSnaps',
     });
@@ -46,6 +47,39 @@ const PushSnapSettings = () => {
       }
     });
   }
+
+  async function getSignature(account: string) {
+    const signer = provider.getSigner(account);
+    const signature = await signer.signMessage(`Add address ${account} to receive notifications through Push Snap`);
+    return signature;
+  }
+
+  async function addwalletAddress() {
+    try {
+      const signatureResult = await getSignature(account);
+      if (signatureResult) {
+        if (account) {
+          await window.ethereum?.request({
+            method: 'wallet_invokeSnap',
+            params: {
+              snapId: defaultSnapOrigin,
+              request: {
+                method: 'pushproto_addaddress',
+                params: { address: account },
+              },
+            },
+          });
+          console.debug('Added', account);
+          setWalletConnected(true);
+        }
+      } else {
+        console.error('Signature Validation Failed');
+      }
+    } catch (error: any) {
+      setErrorMessage(error.message);
+    }
+  }
+
   async function getWalletAddresses() {
     const result = await window.ethereum?.request({
       method: 'wallet_invokeSnap',
@@ -55,10 +89,10 @@ const PushSnapSettings = () => {
       },
     });
 
-
     console.debug(account);
     if (result.includes(account)) {
       setAddedAddress(true);
+      setWalletConnected(true);
     } else {
       setAddedAddress(false);
     }
@@ -88,12 +122,15 @@ const PushSnapSettings = () => {
       setErrorMessage('Connect your metamask wallet to install Snap');
       return;
     }
-    setErrorMessage('')
+    setErrorMessage('');
     setLoading(true);
     try {
       if (!isWalletConnected) await connect();
       if (!snapInstalled) {
         await connectSnap();
+        getInstalledSnaps();
+      } else {
+        await addwalletAddress();
       }
       setLoading(false);
     } catch (error) {
@@ -164,8 +201,12 @@ const PushSnapSettings = () => {
             />
           )}
 
-          <ItemVV2>
-            {loading ? (
+          <Box
+            gap="spacing-sm"
+            display="flex"
+            flexDirection="column"
+            width='-webkit-fill-available'>
+            {/* {loading ? (
               <LoaderSpinner
                 type={LOADER_TYPE.SEAMLESS}
                 spinnerSize={44}
@@ -173,7 +214,45 @@ const PushSnapSettings = () => {
             ) : (
               <Button onClick={() => connectToMetaMask()}>{!snapInstalled && 'Connect Snap'}</Button>
             )}
-          </ItemVV2>
+            <Button
+              disabled={snapInstalled ? false : true}
+              onClick={() => connectToMetaMask()}
+              trailingIcon={<Metamask />}
+            >
+              Step 2: Sign In with Metamask
+            </Button> */}
+            {loading && !snapInstalled ? (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={44}
+              />
+            ) : (
+              <Button
+                disabled={!snapInstalled ? false : true}
+                onClick={() => connectToMetaMask()}
+                variant="primary"
+                size='large'
+
+
+              >
+                {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
+              </Button>
+            )}
+            {loading && snapInstalled ? (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={44}
+              />
+            ) : (
+              <Button
+                disabled={snapInstalled ? false : true}
+                onClick={() => connectToMetaMask()}
+                trailingIcon={<Metamask />}
+              >
+                Step 2: Sign In with Metamask
+              </Button>
+            )}
+          </Box>
 
           <InfoDiv
             gap="7px"
@@ -198,22 +277,21 @@ const PushSnapSettings = () => {
 
   return (
     <>
-      {!snapInstalled ? (
+      {!walletConnected ? (
         <InstallSnap />
       ) : (
         <>
           <Box
-            display='flex'
-            flexDirection='column'
-            padding='spacing-none spacing-none spacing-none spacing-xxs'
+            display="flex"
+            flexDirection="column"
+            padding="spacing-none spacing-none spacing-none spacing-xxs"
           >
-            <Text variant='h4-semibold'>Push Snap Settings</Text>
+            <Text variant="h4-semibold">Push Snap Settings</Text>
             <PushSnapConfigureModal
               snoozeDuration={snoozeDuration}
               setSnoozeDuration={setSnoozeDuration}
             />
           </Box>
-
         </>
       )}
     </>
@@ -224,7 +302,7 @@ export default PushSnapSettings;
 
 const Container = styled(Section)`
   width: 438px;
-  height: 423px;
+  height: auto;
   border-radius: 32px;
   background: #fff;
   background: ${(props) => props.theme.default.bg};
