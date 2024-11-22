@@ -205,7 +205,8 @@ const PushSnapSettings = () => {
             gap="spacing-sm"
             display="flex"
             flexDirection="column"
-            width='-webkit-fill-available'>
+            width="-webkit-fill-available"
+          >
             {/* {loading ? (
               <LoaderSpinner
                 type={LOADER_TYPE.SEAMLESS}
@@ -231,9 +232,7 @@ const PushSnapSettings = () => {
                 disabled={!snapInstalled ? false : true}
                 onClick={() => connectToMetaMask()}
                 variant="primary"
-                size='large'
-
-
+                size="large"
               >
                 {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
               </Button>
@@ -247,7 +246,12 @@ const PushSnapSettings = () => {
               <Button
                 disabled={snapInstalled ? false : true}
                 onClick={() => connectToMetaMask()}
-                trailingIcon={<Metamask />}
+                trailingIcon={
+                  <Metamask
+                    height={24}
+                    width={24}
+                  />
+                }
               >
                 Step 2: Sign In with Metamask
               </Button>
