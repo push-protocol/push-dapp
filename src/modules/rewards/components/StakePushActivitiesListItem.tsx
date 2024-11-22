@@ -39,7 +39,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   const usersSingleActivity = allUsersActivity?.[activity?.activityType] as UsersActivity;
   const isLoading = isAllActivitiesLoading;
 
-  const hasActivityEndedUnclaimed = usersSingleActivity?.status !== 'COMPLETED' && hasEpochEnded;
+  const hasActivityEndedUnclaimed = hasEpochEnded;
 
   const isLockedOrNotConnected = isLocked || !isWalletConnected;
 
