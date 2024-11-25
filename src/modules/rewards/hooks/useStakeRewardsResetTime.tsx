@@ -65,7 +65,7 @@ const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
 
   const activityTitles = allPushArray?.map((activity) => activity.activityType);
 
-  const { data: sendRecentActivities } = useGetRewardActivityStatus(
+  const { data: sendRecentActivities, refetch: refetchSendActivities } = useGetRewardActivityStatus(
     {
       userId: userDetails?.userId as string,
       activities: activityTitles as string[],
@@ -154,7 +154,7 @@ const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
     }
   }, [userDetails?.userId, isWalletConnected, isLoadingPushStakeData, isLoadingPushUniData, sendRecentActivities]);
 
-  return { stakePushArray, uniV2PushArray, isLoading, daysToReset };
+  return { stakePushArray, uniV2PushArray, isLoading, daysToReset, refetchSendActivities };
 };
 
 export { useStakeRewardsResetTime };
