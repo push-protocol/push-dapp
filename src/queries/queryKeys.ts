@@ -25,6 +25,7 @@ export const pointsVaultPendingUsers = 'pointsVaultPendingUsers';
 export const pointsVaultRejectedUsers = 'pointsVaultRejectedUsers';
 export const pointsVaultSearch = 'pointsVaultSearch';
 export const pointsVaultUserLoginKey = 'pointsVaultUserLogin';
+export const pushPreviousStakeEpoch = 'pushPreviousStakeEpoch';
 export const pushStakeEpoch = 'pushStakeEpoch';
 export const reactivatingChannel = 'reactivatingChannel';
 export const rejectVaultUser = 'rejectVaultUser';

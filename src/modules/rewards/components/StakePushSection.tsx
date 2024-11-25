@@ -25,7 +25,7 @@ export type StakePushPoints = {
 const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, lifeTime }) => {
   const { account, isWalletConnected } = useAccount();
   const { isLocked } = useRewardsContext();
-  const { stakePushArray, uniV2PushArray, isLoading, daysToReset } = useStakeRewardsResetTime({
+  const { stakePushArray, uniV2PushArray, isLoading, daysToReset, refetchSendActivities } = useStakeRewardsResetTime({
     lifeTime,
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -184,7 +184,10 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, life
               hasEpochEnded={hasEpochEnded}
               allUsersActivity={allUsersActivity as StakeActivityResponse}
               isAllActivitiesLoading={isAllActivitiesLoading}
-              refetchActivity={refetchActivity}
+              refetchActivity={() => {
+                refetchActivity();
+                refetchSendActivities();
+              }}
               lifeTime={lifeTime}
             />
           ))}

@@ -65,7 +65,7 @@ const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
 
   const activityTitles = allPushArray?.map((activity) => activity.activityType);
 
-  const { data: sendRecentActivities } = useGetRewardActivityStatus(
+  const { data: sendRecentActivities, refetch: refetchSendActivities } = useGetRewardActivityStatus(
     {
       userId: userDetails?.userId as string,
       activities: activityTitles as string[],
@@ -80,6 +80,7 @@ const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
     const differenceInSeconds = (resetDate as number) - currentTime;
     return Math.floor(differenceInSeconds / (60 * 60 * 24));
   }, [resetDate]);
+  // const daysToReset = -2;
 
   // Helper function to check if 7 days have passed since the stored epoch time (in seconds)
   const hasSevenDaysPassed = (storedEpochTime: number) => {
@@ -126,7 +127,8 @@ const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
       updateResetDate(latestTimestamp);
     }
 
-    if (!isEpochActive && isPastSevenDays) {
+    if (!isEpochActive) {
+      // if (!isEpochActive && isPastSevenDays) {
       setResetEpoch(true);
       console.log(`${stakeType} epoch is reset`);
     } else {
@@ -134,8 +136,6 @@ const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
       console.log(`${stakeType} epoch is not reset`);
     }
   };
-
-  // console.log(daysToReset, 'daysToReset');
 
   // Effect for handling fetch data for both arrays
   useEffect(() => {
@@ -154,7 +154,7 @@ const useStakeRewardsResetTime = ({ lifeTime }: StakeRewardsResetTime) => {
     }
   }, [userDetails?.userId, isWalletConnected, isLoadingPushStakeData, isLoadingPushUniData, sendRecentActivities]);
 
-  return { stakePushArray, uniV2PushArray, isLoading, daysToReset };
+  return { stakePushArray, uniV2PushArray, isLoading, daysToReset, refetchSendActivities };
 };
 
 export { useStakeRewardsResetTime };
