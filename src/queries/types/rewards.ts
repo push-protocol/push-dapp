@@ -93,7 +93,10 @@ export type UsersActivity = {
   activityId: string;
   userId: string;
   activityTypeId: string;
-  data: { twitter?: string; discord?: string };
+  data:
+    | { twitter?: string; discord?: string }
+    | { currentEpoch?: number; fromBlock?: number; toBlock?: number; fromTimestamp?: number; toTimestamp?: number }
+    | any;
   status: 'COMPLETED' | 'PENDING' | 'REJECTED';
   points: number;
   multiplier: number;
