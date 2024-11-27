@@ -65,7 +65,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
     const sdkInstance = await getSDKInstance();
     const data = {
       wallet: caip10WalletAddress,
-      value: telegramFormik.values.telegram,
+      value: {telegram_username: telegramFormik.values.telegram},
       valueType: 'telegram',
     };
 
