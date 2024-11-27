@@ -4,7 +4,7 @@ import { sendHandlesVerificationCodeModelCreator } from 'queries/models';
 
 type sendHandlesVerificationCodeType = {
   caipAddress: string;
-  value: string;
+  value: string | { telegram_username: string };
   verificationProof: string;
   social_platform: 'email' | 'discord' | 'telegram';
 };

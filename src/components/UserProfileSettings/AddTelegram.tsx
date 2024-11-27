@@ -77,7 +77,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
       {
         caipAddress: caip10WalletAddress as string,
         verificationProof: verificationProof as string,
-        value: telegramFormik.values.telegram,
+        value: { telegram_username: telegramFormik.values.telegram },
         social_platform: 'telegram',
       },
       {
