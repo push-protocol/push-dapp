@@ -65,7 +65,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
     const sdkInstance = await getSDKInstance();
     const data = {
       wallet: caip10WalletAddress,
-      value: {telegram_username: telegramFormik.values.telegram},
+      value: { telegram_username: telegramFormik.values.telegram },
       valueType: 'telegram',
     };
 
@@ -233,7 +233,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
 
             <Box margin="spacing-xs spacing-none">
               <Link
-                to={'https://telegram.me/pushlinkbot'}
+                to={'https://t.me/PushStagingBot'}
                 target="_blank"
                 isText={true}
                 textProps={{
