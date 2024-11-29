@@ -1,7 +1,17 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+
+import { useAccount } from 'hooks';
+import { useAppContext } from 'contexts/AppContext';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
+import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
 
 import { Box, Button, Discord, Link, Modal, Text, TextInput } from 'blocks';
 import { CopyButton, ModalResponse } from 'common';
+import { shortenText } from 'helpers/UtilityHelper';
 
 type AddDiscordProps = {
   modalControl: ModalResponse;
@@ -22,7 +32,68 @@ const AddDiscord: FC<AddDiscordProps> = ({
   // setSuccessMessage,
 }) => {
   const { isOpen, onClose } = modalControl;
-  const [step, setStep] = useState(2);
+  const { account, wallet } = useAccount();
+  const { handleConnectWalletAndEnableProfile } = useAppContext();
+
+  const caip10WalletAddress = walletToCAIP10({ account });
+  const [step, setStep] = useState(1);
+  const [discordCode, setDiscordCode] = useState<string>('');
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+
+  const { mutate: sendVerification } = useSendHandlesVerificationCode();
+  const { mutate: verifyVerification } = useVerifyHandlesVerificationCode();
+
+  const discordValidationSchema = Yup.object({
+    discord: Yup.string().required('Required'),
+  });
+
+  const discordFormik = useFormik({
+    initialValues: { discord: '' },
+    validationSchema: discordValidationSchema,
+    onSubmit: () => {
+      handleSendVerificationCode();
+    },
+  });
+
+  const getSDKInstance = useCallback(async () => {
+    return userPushSDKInstance?.signer ? userPushSDKInstance : await handleConnectWalletAndEnableProfile({ wallet });
+  }, [userPushSDKInstance, handleConnectWalletAndEnableProfile, wallet]);
+
+  const handleSendVerificationCode = async () => {
+    const sdkInstance = await getSDKInstance();
+    const data = {
+      wallet: caip10WalletAddress,
+      value: { discord_username: discordFormik.values.discord },
+      valueType: 'telegram',
+    };
+
+    const verificationProof = await generateVerificationProof(data, sdkInstance);
+
+    if (!verificationProof) return;
+
+    sendVerification(
+      {
+        caipAddress: caip10WalletAddress as string,
+        verificationProof: verificationProof as string,
+        value: { discord_username: discordFormik.values.discord },
+        social_platform: 'discord',
+      },
+      {
+        onSuccess: (response: any) => {
+          if (response?.success) {
+            console.log(response);
+            setDiscordCode(response.verificationCode);
+            setStep(Steps.VerifyId);
+          }
+        },
+        onError: (error: Error) => {
+          console.log('Error sending code', error);
+        },
+      }
+    );
+  };
 
   return (
     <Modal
@@ -30,9 +101,18 @@ const AddDiscord: FC<AddDiscordProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       {...(step === Steps.VerifyId && {
-        onBack: () => setStep(step - 1),
+        onBack: () => setStep(Steps.EnterDiscord),
       })}
-      acceptButtonProps={null}
+      acceptButtonProps={
+        step === Steps.EnterDiscord
+          ? {
+              children: 'Next',
+              onClick: () => {
+                discordFormik?.handleSubmit();
+              },
+            }
+          : null
+      }
       cancelButtonProps={null}
     >
       {step === Steps.EnterDiscord && (
@@ -63,32 +143,24 @@ const AddDiscord: FC<AddDiscordProps> = ({
             Follow the steps to link your Discord to Push and receive notifications
           </Text>
 
-          <Box
-            margin="spacing-md spacing-none"
-            width="100%"
-          >
-            <TextInput
-              label="Discord ID"
-              value={''}
-              onChange={() => console.log('')}
-              // error={emailFormik.touched.email && Boolean(emailFormik.errors.email)}
-              // errorMessage={emailFormik.touched.email ? emailFormik.errors.email : ''}
-            />
-          </Box>
-
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
-            width="100%"
-            padding="spacing-xs"
-          >
-            <Button>Next</Button>
-          </Box>
+          <form onSubmit={discordFormik.handleSubmit}>
+            <Box
+              margin="spacing-md spacing-none spacing-none spacing-none"
+              width="100%"
+            >
+              <TextInput
+                label="Discord ID"
+                value={discordFormik.values.discord}
+                onChange={discordFormik.handleChange('discord')}
+                error={discordFormik.touched.discord && Boolean(discordFormik.errors.discord)}
+                errorMessage={discordFormik.touched.discord ? discordFormik.errors.discord : ''}
+              />
+            </Box>
+          </form>
         </Box>
       )}
 
-      {step === Steps.VerifyId && (
+      {step === Steps.VerifyId && discordCode && (
         <Box width="100%">
           <Box
             width="100%"
@@ -146,12 +218,12 @@ const AddDiscord: FC<AddDiscordProps> = ({
                 variant="bl-semibold"
                 textAlign="center"
               >
-                /verify 0x123...45678 665889
+                {shortenText(`${caip10WalletAddress}-${discordCode}`, 10)}
               </Text>
 
               <CopyButton
                 tooltipTitle="Copy Address"
-                content={'/verify 0x123...45678 665889'}
+                content={`${caip10WalletAddress}-${discordCode}`}
                 size={24}
               />
             </Box>
@@ -166,6 +238,7 @@ const AddDiscord: FC<AddDiscordProps> = ({
             </Text>
 
             <Box margin="spacing-xs spacing-none">
+              {/* generate call link shortly */}
               <Link
                 to={'https://discordapp.com/users/pushlinkbot'}
                 isText={true}
