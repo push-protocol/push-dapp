@@ -46,25 +46,12 @@ const UserProfileSettingsItem = ({ item }: any) => {
           Connect
         </Button>
       ) : (
-        <Dropdown
-          overlay={
-            <Menu>
-              <MenuItem
-                label="Disconnect"
-                icon={<OptOut />}
-                onClick={() => console.log('disconnect')}
-              />
-            </Menu>
-          }
+        <Button
+          variant="secondary"
+          size="extraSmall"
         >
-          <Button
-            variant="secondary"
-            size="extraSmall"
-            trailingIcon={<CaretDown size={20} />}
-          >
-            {item?.userStatus}
-          </Button>
-        </Dropdown>
+          {item?.userStatus}
+        </Button>
       )}
     </Box>
   );
