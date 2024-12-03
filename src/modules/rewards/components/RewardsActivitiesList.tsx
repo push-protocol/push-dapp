@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { css } from 'styled-components';
 
@@ -15,14 +15,11 @@ import {
 import { useRewardsContext } from 'contexts/RewardsContext';
 
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
-import { SocialHandles } from 'modules/dashboard/components/Socialhandles';
+import SocialHandleItem from './SocialHandleItem';
 
 export type RewardActivitiesProps = {};
 
 const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
-  // for alerts
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
   const { account, isWalletConnected } = useAccount();
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
@@ -141,13 +138,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           </Box>
         )}
 
-        <SocialHandles
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
-          successMessage={successMessage}
-          setSuccessMessage={setSuccessMessage}
-          padding="spacing-none spacing-none spacing-none spacing-none"
-        />
+        <SocialHandleItem />
       </Box>
 
       <Box
