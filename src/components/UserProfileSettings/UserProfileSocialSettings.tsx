@@ -1,5 +1,6 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 // Helpers
 import { useDisclosure } from 'common';
@@ -13,6 +14,11 @@ import { AddEmail } from './AddEmail';
 import AddTelegram from './AddTelegram';
 import AddDiscord from './AddDiscord';
 import UserProfileSettingsItem from './UserProfileSettingsItem';
+import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
+import { css } from 'styled-components';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import APP_PATHS from 'config/AppPaths';
+import { useNavigate } from 'react-router-dom';
 
 type UserProfileSocialSettingsType = {
   errorMessage?: string;
@@ -21,16 +27,70 @@ type UserProfileSocialSettingsType = {
   setSuccessMessage: (successMessage: string) => void;
 };
 
+type SocialHandleStatusType = {
+  email: string | null;
+  discord_username: string | null;
+  telegram_username: string | null;
+};
+
 const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setErrorMessage, setSuccessMessage }) => {
   const modalControl = useDisclosure();
   const telegramModalControl = useDisclosure();
   const discordModalControl = useDisclosure();
   const { account } = useAccount();
+  const navigate = useNavigate();
+
+  const [socialHandleStatus, setSocialHandleStatus] = useState<SocialHandleStatusType>();
+  const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   // Getting user Id by wallet address
   const channelAddress = walletToCAIP10({ account });
 
-  const { data: socialHandleStatus, refetch: refetchSocialHandleStatus } = useGetSocialsStatus(channelAddress);
+  const { mutate: fetchSocialStatus, isPending } = useGetSocialsStatus();
+
+  // Fetch social status logic
+  const getSocialStatus = async () => {
+    if (!channelAddress) return;
+
+    const data = {};
+
+    const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
+
+    if (!verificationProof) return;
+
+    if (channelAddress) {
+      fetchSocialStatus(
+        { channelAddress, verificationProof: verificationProof as string },
+        {
+          onError: (error) => {
+            setErrorMessage('Failed to fetch social status.');
+            console.error('Error fetching social status:', error);
+          },
+          onSuccess: (data) => {
+            setSocialHandleStatus(data);
+          },
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (!userPushSDKInstance || !channelAddress) return;
+    getSocialStatus();
+  }, [userPushSDKInstance, channelAddress]);
+
+  useEffect(() => {
+    setIsAuthModalVisible(userPushSDKInstance && userPushSDKInstance?.readmode());
+  }, [userPushSDKInstance]);
+
+  const handleCloseAuthModal = () => {
+    setIsAuthModalVisible(false);
+    navigate(APP_PATHS.WelcomeDashboard);
+  };
 
   const itemList = [
     {
@@ -75,14 +135,36 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
 
       <Box padding="spacing-sm spacing-none spacing-none spacing-none">
         {itemList?.map((item) => (
-          <UserProfileSettingsItem item={item} />
+          <UserProfileSettingsItem
+            item={item}
+            isPending={isPending}
+          />
         ))}
       </Box>
+
+      {isAuthModalVisible && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="-webkit-fill-available"
+          alignItems="center"
+          css={css`
+            z-index: 99999;
+          `}
+        >
+          <UnlockProfileWrapper
+            type={UNLOCK_PROFILE_TYPE.MODAL}
+            showConnectModal={true}
+            onClose={handleCloseAuthModal}
+            description="Unlock your profile to proceed."
+          />
+        </Box>
+      )}
 
       {modalControl.isOpen && (
         <AddEmail
           modalControl={modalControl}
-          refetchSocialHandleStatus={refetchSocialHandleStatus}
+          refetchSocialHandleStatus={getSocialStatus}
           setErrorMessage={setErrorMessage}
           setSuccessMessage={setSuccessMessage}
         />
@@ -91,7 +173,7 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
       {telegramModalControl.isOpen && (
         <AddTelegram
           modalControl={telegramModalControl}
-          refetchSocialHandleStatus={refetchSocialHandleStatus}
+          refetchSocialHandleStatus={getSocialStatus}
           setErrorMessage={setErrorMessage}
           setSuccessMessage={setSuccessMessage}
         />
@@ -100,7 +182,7 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
       {discordModalControl.isOpen && (
         <AddDiscord
           modalControl={discordModalControl}
-          refetchSocialHandleStatus={refetchSocialHandleStatus}
+          refetchSocialHandleStatus={getSocialStatus}
           setErrorMessage={setErrorMessage}
           setSuccessMessage={setSuccessMessage}
         />

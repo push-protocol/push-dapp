@@ -1,28 +1,23 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
-import { Box } from 'blocks';
+import { BlocksSpaceType, Box, ResponsiveProp } from 'blocks';
 import { ClaimSocialHandles } from './ClaimSocialHandles';
 import { ConnectSocialHandles } from './ConnectSocialHandles';
-import { useAccount } from 'hooks';
 
 export type SocialHandlesProps = {
   errorMessage?: string;
   setErrorMessage: (errorMessage: string) => void;
   successMessage?: string;
   setSuccessMessage: (successMessage: string) => void;
+  padding?: ResponsiveProp<BlocksSpaceType>;
+  claimButton?: ReactNode;
 };
 
-const SocialHandles: FC<SocialHandlesProps> = ({ setErrorMessage, setSuccessMessage }) => {
-  const { isWalletConnected } = useAccount();
-
-  // Check if the wallet is connected to the DApp.
-  // If not, return null. If connected, return SocialHandles.
-  if (!isWalletConnected) return null;
-
+const SocialHandles: FC<SocialHandlesProps> = ({ setErrorMessage, setSuccessMessage, padding, claimButton }) => {
   return (
     <Box
       borderRadius="radius-md"
-      padding={{ ml: 'spacing-md spacing-sm', initial: 'spacing-md' }}
+      padding={padding}
       display="flex"
       flexDirection="column"
       backgroundColor="surface-primary"
@@ -30,7 +25,7 @@ const SocialHandles: FC<SocialHandlesProps> = ({ setErrorMessage, setSuccessMess
       alignItems="flex-start"
     >
       {/* Render Claim based on Social Handles if wallet is connected */}
-      <ClaimSocialHandles />
+      <ClaimSocialHandles claimButton={claimButton} />
 
       {/* Render option to connect Social Handles */}
       <ConnectSocialHandles

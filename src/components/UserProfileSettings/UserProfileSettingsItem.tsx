@@ -1,6 +1,6 @@
-import { Box, Text, Button, Menu, Dropdown, MenuItem, OptOut, CaretDown } from 'blocks';
+import { Box, Text, Button, Skeleton } from 'blocks';
 
-const UserProfileSettingsItem = ({ item }: any) => {
+const UserProfileSettingsItem = ({ item, isPending }: any) => {
   return (
     <Box
       display="flex"
@@ -46,12 +46,14 @@ const UserProfileSettingsItem = ({ item }: any) => {
           Connect
         </Button>
       ) : (
-        <Button
-          variant="secondary"
-          size="extraSmall"
-        >
-          {item?.userStatus}
-        </Button>
+        <Skeleton isLoading={isPending}>
+          <Button
+            variant="secondary"
+            size="extraSmall"
+          >
+            {item?.userStatus}
+          </Button>
+        </Skeleton>
       )}
     </Box>
   );

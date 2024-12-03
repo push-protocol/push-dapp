@@ -1,10 +1,12 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
-import { Box, Button, Lozenge, Multiplier, RewardsBell, Star, Text } from 'blocks';
+import { Box, Lozenge, Multiplier, RewardsBell, Star, Text } from 'blocks';
 
-export type ClaimSocialHandlesProps = {};
+export type ClaimSocialHandlesProps = {
+  claimButton?: ReactNode;
+};
 
-const ClaimSocialHandles: FC<ClaimSocialHandlesProps> = () => {
+const ClaimSocialHandles: FC<ClaimSocialHandlesProps> = ({ claimButton }) => {
   return (
     <Box
       display="flex"
@@ -74,13 +76,7 @@ const ClaimSocialHandles: FC<ClaimSocialHandlesProps> = () => {
             25,000
           </Text>
         </Box>
-        <Button
-          aria-label="Claim"
-          size="small"
-          variant="tertiary"
-        >
-          Claim
-        </Button>
+        {claimButton}
       </Box>
     </Box>
   );

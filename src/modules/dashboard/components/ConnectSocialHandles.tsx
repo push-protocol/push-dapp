@@ -1,23 +1,10 @@
-import { FC } from 'react';
-import { css } from 'styled-components';
+import { FC, useEffect, useState } from 'react';
 
 import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { useGetSocialsStatus } from 'queries';
 
-import {
-  Box,
-  Button,
-  Dropdown,
-  Menu,
-  MenuItem,
-  Text,
-  CaretDown,
-  OptOut,
-  EmailProfile,
-  TelegramProfile,
-  DiscordProfile,
-} from 'blocks';
+import { Box, Button, Text, EmailProfile, TelegramProfile, DiscordProfile, Tick, Skeleton } from 'blocks';
 import { useDisclosure } from 'common';
 import { AddEmail } from 'components/UserProfileSettings/AddEmail';
 import AddDiscord from 'components/UserProfileSettings/AddDiscord';
@@ -35,16 +22,48 @@ export type SocialHandlesItemType = {
   isConnected: boolean;
 };
 
+type SocialHandleStatusType = {
+  email: string | boolean | null;
+  discord_username: string | boolean | null;
+  telegram_username: string | boolean | null;
+};
+
 const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, setSuccessMessage }) => {
   const modalControl = useDisclosure();
   const telegramModalControl = useDisclosure();
   const discordModalControl = useDisclosure();
   const { account } = useAccount();
+  const [socialHandleStatus, setSocialHandleStatus] = useState<SocialHandleStatusType>();
 
   // Getting user Id by wallet address
   const channelAddress = walletToCAIP10({ account });
 
-  const { data: socialHandleStatus, refetch: refetchSocialHandleStatus } = useGetSocialsStatus(channelAddress);
+  const { mutate: fetchSocialStatus, isPending } = useGetSocialsStatus();
+
+  // Fetch social status logic
+  const getSocialStatus = async () => {
+    if (!channelAddress) return;
+
+    if (channelAddress) {
+      fetchSocialStatus(
+        { channelAddress },
+        {
+          onError: (error) => {
+            setErrorMessage('Failed to fetch social status.');
+            console.error('Error fetching social status:', error);
+          },
+          onSuccess: (data) => {
+            setSocialHandleStatus(data);
+          },
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (!channelAddress) return;
+    getSocialStatus();
+  }, [channelAddress]);
 
   const socialHandlesList: any[] = [
     {
@@ -75,8 +94,8 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
       <Box
         display="flex"
         justifyContent="space-between"
-        flexDirection="row"
-        gap={{ tb: 'spacing-xs' }}
+        flexDirection={{ initial: 'row', ml: 'column' }}
+        gap={{ initial: 'spacing-sm', tb: 'spacing-xs' }}
         width="100%"
       >
         {socialHandlesList.map((item: any) => (
@@ -87,17 +106,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
             padding={{ initial: 'spacing-md', ml: 'spacing-md spacing-sm', tb: 'spacing-sm', lp: 'spacing-sm' }}
             borderRadius="radius-md"
             gap="spacing-sm"
-            width={{
-              initial: '290px',
-              mm: '258px',
-              ml: 'auto',
-              tb: '278px',
-              lp: '278px',
-            }}
-            css={css`
-              flex-shrink: 0;
-            `}
-            minHeight={{ initial: 'auto', tb: '180px' }}
+            width="-webkit-fill-available"
           >
             <Box
               display="flex"
@@ -133,20 +142,23 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
               alignItems="center"
               alignSelf="flex-start"
             >
-              {item.userStatus === null ? (
+              {item.userStatus ? (
+                <Skeleton isLoading={isPending}>
+                  <Button
+                    variant="secondary"
+                    size="extraSmall"
+                    leadingIcon={<Tick />}
+                  >
+                    Linked
+                  </Button>
+                </Skeleton>
+              ) : (
                 <Button
                   variant="tertiary"
                   size="small"
                   onClick={item?.onClick}
                 >
                   Connect
-                </Button>
-              ) : (
-                <Button
-                  variant="secondary"
-                  size="extraSmall"
-                >
-                  {item?.userStatus}
                 </Button>
               )}
             </Box>
@@ -156,7 +168,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
         {modalControl.isOpen && (
           <AddEmail
             modalControl={modalControl}
-            refetchSocialHandleStatus={refetchSocialHandleStatus}
+            refetchSocialHandleStatus={getSocialStatus}
             setErrorMessage={setErrorMessage}
             setSuccessMessage={setSuccessMessage}
           />
@@ -165,7 +177,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
         {telegramModalControl.isOpen && (
           <AddTelegram
             modalControl={telegramModalControl}
-            refetchSocialHandleStatus={refetchSocialHandleStatus}
+            refetchSocialHandleStatus={getSocialStatus}
             setErrorMessage={setErrorMessage}
             setSuccessMessage={setSuccessMessage}
           />
@@ -174,7 +186,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
         {discordModalControl.isOpen && (
           <AddDiscord
             modalControl={discordModalControl}
-            refetchSocialHandleStatus={refetchSocialHandleStatus}
+            refetchSocialHandleStatus={getSocialStatus}
             setErrorMessage={setErrorMessage}
             setSuccessMessage={setSuccessMessage}
           />

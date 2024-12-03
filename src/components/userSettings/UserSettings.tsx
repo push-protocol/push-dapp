@@ -119,10 +119,8 @@ function UserSettings() {
 
   return (
     <Container>
-      {/* <Box> */}
       <PageTitle>Settings</PageTitle>
       <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
-      {/* </Box> */}
 
       <Wrapper>
         <SelectSection>
