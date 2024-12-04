@@ -9,7 +9,7 @@ export type ConfirmPurchaseModalProps = {
 };
 
 const ConfirmPurchaseModal: FC<ConfirmPurchaseModalProps> = ({ purchaseAmount, modalControl, onClose }) => {
-  const { isOpen } = modalControl || {};
+  const { isOpen } = modalControl;
   return (
     <Modal
       size={'small'}

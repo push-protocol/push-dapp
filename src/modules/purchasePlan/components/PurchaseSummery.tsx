@@ -1,13 +1,13 @@
 import { FC, useState } from 'react';
-import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput } from 'blocks';
-import { PricingPlansItemTypes, PricingPlanTabsType } from 'modules/pricing/Pricing.types';
+import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput, Tick } from 'blocks';
+import { PricingPlan, PricingPlanTabsType } from 'modules/pricing/Pricing.types';
 import { css } from 'styled-components';
 import { ConfirmPurchaseModal } from './ConfirmPurchaseModal';
 import { PurchasePlanModalTypes } from '../PusrchasePlan.types';
 import { PlanPurchasedModal } from './PlanPurchasedModal';
 import { useDisclosure } from 'common';
 
-export type PurchaseSummeryProps = { selectedPlan: PricingPlansItemTypes };
+export type PurchaseSummeryProps = { selectedPlan: PricingPlan };
 const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   const pricingPlanTabs: TabItem[] = [
     {
@@ -183,27 +183,28 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
           flexDirection="row"
           gap="spacing-md"
         >
-          <Button
-            css={css`
-              flex: 1 0 0;
-            `}
-            onClick={() => setIsApproved(true)}
-            disabled={isApproved}
-          >
-            Approve
-          </Button>
-          <Button
-            onClick={() => {
-              setShowModalType('confirmPurchase');
-              modalControl?.open();
-            }}
-            css={css`
-              flex: 1 0 0;
-            `}
-            disabled={!isApproved}
-          >
-            Purchase
-          </Button>
+          <Box width="250px">
+            <Button
+              onClick={() => setIsApproved(true)}
+              disabled={isApproved}
+              leadingIcon={isApproved ? <Tick /> : null}
+              block
+            >
+              Approve
+            </Button>
+          </Box>
+          <Box width="250px">
+            <Button
+              onClick={() => {
+                setShowModalType('confirmPurchase');
+                modalControl?.open();
+              }}
+              disabled={!isApproved}
+              block
+            >
+              Purchase
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

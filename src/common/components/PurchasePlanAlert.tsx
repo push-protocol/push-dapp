@@ -1,5 +1,5 @@
 import { Alert } from 'blocks';
-import { PurchasePlanAlertObjType, purchasePlanAlertTypes } from 'common';
+import { PurchasePlanAlertObjType, purchasePlanAlertConfig } from 'common';
 import { FC } from 'react';
 
 export type PurchasePlanAlertProps = {
@@ -10,7 +10,7 @@ export type PurchasePlanAlertProps = {
 };
 
 const PurchasePlanAlert: FC<PurchasePlanAlertProps> = ({ variant, onClose, purchasedPlan, onAction }) => {
-  const alert: PurchasePlanAlertObjType = purchasePlanAlertTypes[variant](purchasedPlan?.planName);
+  const alert: PurchasePlanAlertObjType = purchasePlanAlertConfig[variant](purchasedPlan?.planName);
   return (
     <Alert
       variant={alert.variant}

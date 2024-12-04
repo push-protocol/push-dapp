@@ -13,7 +13,15 @@ import Optimisim from 'blocks/illustrations/components/Optimisim';
 import Polygon from 'blocks/illustrations/components/Polygon';
 import PolygonZK from 'blocks/illustrations/components/PolygonZK';
 import { FC } from 'react';
-import { FAQItemTypes, PurchasePlanAlertObjType } from 'common';
+import {
+  FAQItemTypes,
+  PurchasePlanAlertObjType,
+  FirstFAQAnswer,
+  SecondFAQAnswer,
+  ThirdFAQAnswer,
+  FourthFAQAnswer,
+  FifthFAQAnswer,
+} from 'common';
 
 export const LOGO_ALIAS_CHAIN: {
   [x: number]: FC<IllustrationProps>;
@@ -140,7 +148,7 @@ export const channelCategoriesMap: Record<string, string> = {
   '0x80375eAD5561e19668eb1Dd2b6A44Fa14D5eB6BF': 'Service',
 };
 
-export const purchasePlanAlertTypes: { [x: string]: (planName?: string) => PurchasePlanAlertObjType } = {
+export const purchasePlanAlertConfig: { [x: string]: (planName?: string) => PurchasePlanAlertObjType } = {
   success: (planName) => ({
     description: `Purchase Successful. Push ${planName} Plan`,
     actionText: 'View on Explorer',
@@ -167,21 +175,26 @@ export const faqList: FAQItemTypes[] = [
   {
     id: 1,
     question: 'What is Push?',
+    answer: <FirstFAQAnswer />,
   },
   {
     id: 2,
     question: 'What is Push trying to solve?',
+    answer: <SecondFAQAnswer />,
   },
   {
     id: 3,
     question: 'What are the web3 communication products launched by Push?',
+    answer: <ThirdFAQAnswer />,
   },
   {
     id: 4,
     question: 'How can I use Push as an end-user?',
+    answer: <FourthFAQAnswer />,
   },
   {
     id: 5,
     question: 'Is Push a blockchain? Is Push decentralised?',
+    answer: <FifthFAQAnswer />,
   },
 ];

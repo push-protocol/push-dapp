@@ -1,3 +1,4 @@
+export * from './FAQAnswers';
 export * from './ChannelDetailsCard';
 export * from './ContentLayout';
 export * from './Stepper';

@@ -3,19 +3,19 @@ import { useState } from 'react';
 import { TabItem, Tabs } from 'blocks';
 
 import { PricingPlanTabsType } from '../Pricing.types';
-import { PricingPlansList } from './PricingPlansList';
+import { PricingPlansContainer } from './PricingPlansContainer';
 
 const PricingPlanTabs = () => {
   const pricingPlanTabs: TabItem[] = [
     {
       label: 'Yearly',
       key: 'yearly',
-      children: <PricingPlansList type="yearly" />,
+      children: <PricingPlansContainer type="yearly" />,
     },
     {
       label: 'Monthly',
       key: 'monthly',
-      children: <PricingPlansList type="monthly" />,
+      children: <PricingPlansContainer type="monthly" />,
     },
   ];
   const [selectedPricingPlanTab, setSelectedPricingPlanTab] = useState<PricingPlanTabsType>(

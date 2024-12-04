@@ -1,4 +1,4 @@
-export type PricingPlansItemTypes = {
+export type PricingPlan = {
   id: number;
   planName: string;
   currency: string | null;

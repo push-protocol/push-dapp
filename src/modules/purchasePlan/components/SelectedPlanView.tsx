@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Box, Link, Text, Tick } from 'blocks';
-import { PricingPlansItemTypes } from 'modules/pricing/Pricing.types';
+import { PricingPlan } from 'modules/pricing/Pricing.types';
 import { css } from 'styled-components';
 
-export type SelectedPlanViewProps = { selectedPlan: PricingPlansItemTypes };
+export type SelectedPlanViewProps = { selectedPlan: PricingPlan };
 const SelectedPlanView: FC<SelectedPlanViewProps> = ({ selectedPlan }) => {
   return (
     <Box

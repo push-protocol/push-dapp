@@ -1,6 +1,6 @@
-import { PricingPlansItemTypes } from './Pricing.types';
+import { PricingPlan } from './Pricing.types';
 
-export const pricingPlanList: PricingPlansItemTypes[] = [
+export const pricingPlanList: PricingPlan[] = [
   {
     id: 1,
     planName: 'Basic',

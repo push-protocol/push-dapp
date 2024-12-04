@@ -1,21 +1,18 @@
 import { FC } from 'react';
-import { Box, Modal, Text, Tick } from 'blocks';
-import { PricingPlansItemTypes } from 'modules/pricing/Pricing.types';
-import PushLogoDark from '../../../assets/pushDark.svg';
-import PushLogoLight from '../../../assets/pushLight.svg';
-import styled from 'styled-components';
+import { Box, Modal, PushLogo, PushLogoWithNameDark, PushLogoWithNameLight, Text, Tick } from 'blocks';
+import { PricingPlan } from 'modules/pricing/Pricing.types';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModalResponse } from 'common';
 
 export type PlanPurchasedModalProps = {
-  plan: PricingPlansItemTypes;
+  plan: PricingPlan;
   modalControl: ModalResponse;
   onClose: () => void;
 };
 
 const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, onClose }) => {
   const { mode } = useBlocksTheme();
-  const { isOpen } = modalControl || {};
+  const { isOpen } = modalControl;
   return (
     <Modal
       size={'medium'}
@@ -36,7 +33,7 @@ const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, o
           gap="spacing-md"
           alignItems="center"
         >
-          <Logo src={mode === 'light' ? PushLogoLight : PushLogoDark} />
+          {mode === 'light' ? <PushLogoWithNameLight /> : <PushLogoWithNameDark />}
           <Text
             textAlign="center"
             variant="h3-semibold"
@@ -103,7 +100,3 @@ const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, o
 };
 
 export { PlanPurchasedModal };
-
-const Logo = styled.img`
-  height: 40px;
-`;
