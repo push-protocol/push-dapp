@@ -6,7 +6,7 @@ const PushLogoWithNameLight: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="PushDev"
+      componentName="PushLogoWithNameLight"
       illustration={
         <svg
           width={restProps.width ?? '134'}

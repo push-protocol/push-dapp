@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput, Tick } from 'blocks';
 import { PricingPlan, PricingPlanTabsType } from 'modules/pricing/Pricing.types';
-import { css } from 'styled-components';
 import { ConfirmPurchaseModal } from './ConfirmPurchaseModal';
 import { PurchasePlanModalTypes } from '../PusrchasePlan.types';
 import { PlanPurchasedModal } from './PlanPurchasedModal';
