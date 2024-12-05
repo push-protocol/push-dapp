@@ -40,9 +40,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     ? Array(2).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`social-activity`) && activity?.status === 'ENABLED');
 
-  const emailTelegramActivities = activityList.filter((activity) =>
-    activity.index.startsWith(`notifications_integration_email_telegram`)
-  )[0];
+  const emailTelegramActivities = activityList.filter((activity) => activity.index.startsWith(`custom-delivery`))[0];
 
   const platformRewardActivities = isLoading
     ? Array(7).fill(0)
