@@ -4,7 +4,7 @@ import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { useGetSocialsStatus } from 'queries';
 
-import { Box, Button, Text, EmailProfile, TelegramProfile, DiscordProfile, Tick, Skeleton } from 'blocks';
+import { Box, Button, Text, EmailProfile, TelegramProfile, Tick, Skeleton, DiscordProfile } from 'blocks';
 import { useDisclosure } from 'common';
 import { AddEmail } from 'components/UserProfileSettings/AddEmail';
 import AddDiscord from 'components/UserProfileSettings/AddDiscord';
@@ -80,6 +80,7 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
       onClick: () => telegramModalControl.open(),
       userStatus: socialHandleStatus?.telegram_username || null,
     },
+    // disable discord on prod
     {
       icon: () => <DiscordProfile height={18} />,
       itemTitle: 'Discord',

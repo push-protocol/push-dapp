@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCustomDeliveryURL } from 'queries/baseURL';
 
 import { verifyHandlesVerificationCodeModelCreator } from 'queries/models';
 
@@ -12,7 +13,7 @@ type verifyHandlesVerificationCodeType = {
 export const verifyHandlesVerificationCode = async (payload: verifyHandlesVerificationCodeType) => {
   const response = await axios({
     method: 'POST',
-    url: `http://localhost:7575/apis/v1/users/verify/${payload?.caipAddress}/${payload?.social_platform}`,
+    url: `${getCustomDeliveryURL()}/apis/v1/users/verify/${payload?.caipAddress}/${payload?.social_platform}`,
     data: {
       value: payload?.value,
       verificationCode: payload?.verificationCode,

@@ -8,9 +8,9 @@ import { useAccount } from 'hooks';
 import { useAppContext } from 'contexts/AppContext';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
-import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
+import { useSendHandlesVerificationCode } from 'queries';
 
-import { Box, Button, Link, Modal, Telegram, Text, TextInput } from 'blocks';
+import { Box, Link, Modal, Telegram, Text, TextInput } from 'blocks';
 import { shortenText } from 'helpers/UtilityHelper';
 
 type AddTelegramProps = {
@@ -42,8 +42,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
     return state.user;
   });
 
-  const { mutate: sendVerification } = useSendHandlesVerificationCode();
-  const { mutate: verifyVerification } = useVerifyHandlesVerificationCode();
+  const { mutate: sendVerification, isPending: isSendingVerification } = useSendHandlesVerificationCode();
 
   const telegramValidationSchema = Yup.object({
     telegram: Yup.string().required('Required'),
@@ -107,6 +106,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
         step === Steps.EnterTelegram
           ? {
               children: 'Next',
+              loading: isSendingVerification,
               onClick: () => {
                 telegramFormik?.handleSubmit();
               },

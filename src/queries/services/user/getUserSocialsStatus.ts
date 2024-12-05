@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCustomDeliveryURL } from 'queries/baseURL';
 import { getSocialsStatusModelCreator } from 'queries/models';
 
 type SocialStatusType = {
@@ -6,12 +7,13 @@ type SocialStatusType = {
   verificationProof?: string;
 };
 
-export const getUserSocialsStatus = (payload: SocialStatusType) => {
-  return axios({
+export const getUserSocialsStatus = async (payload: SocialStatusType) => {
+  const response = await axios({
     method: 'POST',
-    url: `http://localhost:7575/apis/v1/users/${payload?.channelAddress}`,
+    url: `${getCustomDeliveryURL()}/apis/v1/users/${payload?.channelAddress}`,
     data: {
       verificationProof: payload?.verificationProof,
     },
-  }).then((response) => getSocialsStatusModelCreator(response.data));
+  });
+  return getSocialsStatusModelCreator(response.data);
 };

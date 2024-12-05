@@ -41,7 +41,7 @@ const AddEmail: FC<AddEmailProps> = ({
     return state.user;
   });
 
-  const { mutate: sendVerification, isPending: sendingVerification } = useSendHandlesVerificationCode();
+  const { mutate: sendVerification, isPending: isSendingVerification } = useSendHandlesVerificationCode();
   const { mutate: verifyVerification } = useVerifyHandlesVerificationCode();
 
   const emailValidationSchema = Yup.object({
@@ -161,6 +161,7 @@ const AddEmail: FC<AddEmailProps> = ({
         step === Steps.EnterEmail
           ? {
               children: 'Next',
+              loading: isSendingVerification,
               onClick: () => {
                 emailFormik.handleSubmit();
               },

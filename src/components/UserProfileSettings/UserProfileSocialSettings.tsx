@@ -107,6 +107,7 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
       onClick: () => telegramModalControl.open(),
       userStatus: socialHandleStatus?.telegram_username || null,
     },
+    // disable discord on prod
     {
       icon: () => <DiscordProfile height={23} />,
       itemTitle: 'Discord',

@@ -40,6 +40,10 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     ? Array(2).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`social-activity`) && activity?.status === 'ENABLED');
 
+  const emailTelegramActivities = activityList.filter((activity) =>
+    activity.index.startsWith(`notifications_integration_email_telegram`)
+  )[0];
+
   const platformRewardActivities = isLoading
     ? Array(7).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`reward-activity`) && activity?.status === 'ENABLED');
@@ -51,11 +55,16 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const { isLocked } = useRewardsContext();
 
   // Combine all activities into a single array
-  const allActivities = [...socialActivities, ...platformRewardActivities, ...channelSubscriptionActivities];
+  const allActivities = [
+    ...socialActivities,
+    ...platformRewardActivities,
+    ...channelSubscriptionActivities,
+    emailTelegramActivities,
+  ];
 
   // Extract the `activityType` from each activity and filter out any undefined values
   const activityTypes = allActivities
-    .map((activity) => activity.activityType) // Extract `activityType`
+    .map((activity) => activity?.activityType) // Extract `activityType`
     .filter(Boolean); // Remove undefined/null values
 
   const {
@@ -138,7 +147,16 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           </Box>
         )}
 
-        <SocialHandleItem />
+        <SocialHandleItem
+          key={emailTelegramActivities?.activityType}
+          userId={userDetails?.userId || ''}
+          activity={emailTelegramActivities!}
+          isLoadingItem={isLoading}
+          isLocked={isLocked}
+          allUsersActivity={allUsersActivity as StakeActivityResponse}
+          isAllActivitiesLoading={isAllActivitiesLoading}
+          refetchActivity={refetchActivity}
+        />
       </Box>
 
       <Box
