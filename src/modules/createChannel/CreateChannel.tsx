@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, Box } from 'blocks';
 import { appConfig } from 'config';
 import APP_PATHS from 'config/AppPaths';
-import { Stepper } from 'common';
+import { PurchasePlanAlert, Stepper } from 'common';
 import { useAccount } from 'hooks';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -213,17 +213,25 @@ const CreateChannel = () => {
 
   return (
     <CreateChannelFormProvider onSubmit={(values: ChannelInfoFormValues) => handleCreateNewChannel(values)}>
+      {/* Use this wrapper to display the Alert of purchased plan status */}
+      {/* <Box width={{ initial: '712px', ml: '385px' }}>
+        <PurchasePlanAlert
+          variant="success"
+          purchasedPlan={{ planName: 'Pro' }}
+        />
+      </Box> */}
+
       <Box
-        padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
+        padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
         display="flex"
         flexDirection="column"
         gap="spacing-xl"
         alignSelf="center"
-        width={{ dp: '648px', ml: '357px' }}
+        width={{ initial: '648px', ml: '357px' }}
         borderRadius="radius-md"
         alignItems="center"
         backgroundColor="surface-primary"
-        margin={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
+        margin={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
       >
         <CreateChannelHeader />
 

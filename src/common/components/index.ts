@@ -1,3 +1,4 @@
+export * from './FAQAnswers';
 export * from './ChannelDetailsCard';
 export * from './ContentLayout';
 export * from './Stepper';
@@ -10,3 +11,5 @@ export * from './CopyButton';
 export * from './VerifiedChannelTooltipContent';
 export * from './InAppChannelNotifications';
 export * from './InAppChatNotifications';
+export * from './PurchasePlanAlert';
+export * from './FAQContainer';

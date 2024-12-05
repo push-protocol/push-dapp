@@ -1,7 +1,13 @@
 import { Tabs as ReachTabs, TabList, Tab } from '@reach/tabs';
 import { textVariants } from '../text';
-import styled from 'styled-components';
+import styled, { CSSProperties } from 'styled-components';
+import { ResponsiveProp } from 'blocks';
 import { deviceMediaQ } from '../theme';
+
+export type TabListProps = {
+  /* Used to align tabs */
+  alignSelf?: ResponsiveProp<CSSProperties['alignSelf']>;
+};
 
 export const StyledFillTabs = styled(ReachTabs)`
   display: flex;
@@ -9,7 +15,7 @@ export const StyledFillTabs = styled(ReachTabs)`
   gap: var(--spacing-sm);
 `;
 
-export const StyledFillTabList = styled(TabList)`
+export const StyledFillTabList = styled(TabList)<TabListProps>`
   overflow: auto hidden;
   display: flex;
   width: fit-content;
@@ -17,9 +23,10 @@ export const StyledFillTabList = styled(TabList)`
     width: -webkit-fill-available;
   }
   padding: var(--spacing-xxxs);
-  background-color: var(--surface-secondary);
+  background-color: var(--surface-tertiary);
   border-radius: var(--radius-sm);
   gap: var(--spacing-xxs);
+  align-self: ${(props) => props.alignSelf ?? 'flex-start'};
 `;
 
 export const StyledFillTab = styled(Tab)`
@@ -72,13 +79,14 @@ export const StyledLineTabs = styled(ReachTabs)`
   gap: var(--spacing-sm);
 `;
 
-export const StyledLineTabList = styled(TabList)`
+export const StyledLineTabList = styled(TabList)<TabListProps>`
   overflow: auto hidden;
   display: flex;
   background-color: var(--surface-transparent);
   gap: var(--spacing-xs);
   justify-content: flex-start;
   border-bottom: var(--border-sm) solid var(--stroke-secondary);
+  align-self: ${(props) => props.alignSelf ?? 'flex-start'};
 `;
 
 export const StyledLineTab = styled(Tab)`
