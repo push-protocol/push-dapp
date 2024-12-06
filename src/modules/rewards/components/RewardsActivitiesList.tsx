@@ -40,14 +40,16 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     ? Array(2).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`social-activity`) && activity?.status === 'ENABLED');
 
-  const emailTelegramActivities = activityList.filter((activity) => activity.index.startsWith(`custom-delivery`))[0];
+  const emailTelegramActivities = activityList.filter(
+    (activity) => activity.index.startsWith(`custom-delivery`) && activity?.status === 'ENABLED'
+  )[0];
 
   const platformRewardActivities = isLoading
     ? Array(7).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`reward-activity`) && activity?.status === 'ENABLED');
 
-  const channelSubscriptionActivities = activityList.filter(
-    (activity) => activity.index.startsWith(`channel-subscription`) && activity?.status === 'ENABLED'
+  const channelSubscriptionActivities = activityList.filter((activity) =>
+    activity.index.startsWith(`channel-subscription`)
   );
 
   const { isLocked } = useRewardsContext();
@@ -73,6 +75,8 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     { userId: userDetails?.userId as string, activityTypes: activityTypes },
     { enabled: !!userDetails?.userId && activityTypes.length > 0 }
   );
+
+  console.log(emailTelegramActivities);
 
   return (
     <Box
