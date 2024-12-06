@@ -1,12 +1,20 @@
 // React and other libraries
 import { FC, useEffect, useState } from 'react';
+import { css } from 'styled-components';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-// Helpers
+//Hooks
 import { useDisclosure } from 'common';
 import { useAccount } from 'hooks';
 import { useGetSocialsStatus } from 'queries';
+
+// Helpers
+import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
+import { appConfig } from 'config';
 import { walletToCAIP10 } from 'helpers/w2w';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import APP_PATHS from 'config/AppPaths';
 
 //Components
 import { Box, DiscordProfile, EmailProfile, TelegramProfile, Text } from 'blocks';
@@ -14,11 +22,6 @@ import { AddEmail } from './AddEmail';
 import AddTelegram from './AddTelegram';
 import AddDiscord from './AddDiscord';
 import UserProfileSettingsItem from './UserProfileSettingsItem';
-import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
-import { css } from 'styled-components';
-import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
-import APP_PATHS from 'config/AppPaths';
-import { useNavigate } from 'react-router-dom';
 
 type UserProfileSocialSettingsType = {
   errorMessage?: string;
@@ -100,22 +103,22 @@ const UserProfileSocialSettings: FC<UserProfileSocialSettingsType> = ({ setError
       onClick: () => modalControl.open(),
       userStatus: socialHandleStatus?.email || null,
     },
-    {
+    appConfig?.telegramExternalURL && {
       icon: () => <TelegramProfile height={23} />,
       itemTitle: 'Telegram',
       itemDescription: 'Receive notifications as Telegram messages',
       onClick: () => telegramModalControl.open(),
       userStatus: socialHandleStatus?.telegram_username || null,
     },
-    // disable discord on prod
-    {
+    appConfig?.discordExternalURL && {
       icon: () => <DiscordProfile height={23} />,
       itemTitle: 'Discord',
       itemDescription: 'Receive notifications as Discord messages',
       onClick: () => discordModalControl.open(),
       userStatus: socialHandleStatus?.discord_username || null,
     },
-  ];
+  ].filter(Boolean);
+
   return (
     <Box>
       <Box>

@@ -81,6 +81,10 @@ export const config = {
     extension: 'https://chrome.google.com/webstore/detail/epns-protocol-beta/lbdcbpaldalgiieffakjhiccoeebchmg',
     howto: 'https://push.org/docs',
   },
+
+  // social media integration
+  telegramExternalURL: 'https://t.me/PushCommDevBot',
+  discordExternalURL: null,
 };
 
 /**

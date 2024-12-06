@@ -9,6 +9,7 @@ import { useAppContext } from 'contexts/AppContext';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
 import { useSendHandlesVerificationCode } from 'queries';
+import { appConfig } from 'config';
 
 import { Box, Link, Modal, Telegram, Text, TextInput } from 'blocks';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -233,7 +234,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
 
             <Box margin="spacing-xs spacing-none">
               <Link
-                to={'https://t.me/PushStagingBot'}
+                to={appConfig?.telegramExternalURL}
                 target="_blank"
                 isText={true}
                 textProps={{
@@ -242,7 +243,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
                   color: 'text-brand-medium',
                 }}
               >
-                https://t.me/PushStagingBot
+                {appConfig?.telegramExternalURL}
               </Link>
             </Box>
           </Box>

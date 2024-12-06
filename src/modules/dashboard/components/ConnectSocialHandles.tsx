@@ -3,9 +3,10 @@ import { FC, useEffect, useState } from 'react';
 import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { useGetSocialsStatus } from 'queries';
+import { appConfig } from 'config';
+import { useDisclosure } from 'common';
 
 import { Box, Button, Text, EmailProfile, TelegramProfile, Tick, Skeleton, DiscordProfile } from 'blocks';
-import { useDisclosure } from 'common';
 import { AddEmail } from 'components/UserProfileSettings/AddEmail';
 import AddDiscord from 'components/UserProfileSettings/AddDiscord';
 import AddTelegram from 'components/UserProfileSettings/AddTelegram';
@@ -67,28 +68,27 @@ const ConnectSocialHandles: FC<ConnectSocialHandlesProps> = ({ setErrorMessage, 
 
   const socialHandlesList: any[] = [
     {
-      icon: () => <EmailProfile height={18} />,
+      icon: () => <EmailProfile height={23} />,
       itemTitle: 'Email',
       itemDescription: 'Receive notifications in your email inbox',
-      userStatus: socialHandleStatus?.email || null,
       onClick: () => modalControl.open(),
+      userStatus: socialHandleStatus?.email || null,
     },
-    {
-      icon: () => <TelegramProfile height={18} />,
+    appConfig?.telegramExternalURL && {
+      icon: () => <TelegramProfile height={23} />,
       itemTitle: 'Telegram',
       itemDescription: 'Receive notifications as Telegram messages',
       onClick: () => telegramModalControl.open(),
       userStatus: socialHandleStatus?.telegram_username || null,
     },
-    // disable discord on prod
-    {
-      icon: () => <DiscordProfile height={18} />,
+    appConfig?.discordExternalURL && {
+      icon: () => <DiscordProfile height={23} />,
       itemTitle: 'Discord',
       itemDescription: 'Receive notifications as Discord messages',
       onClick: () => discordModalControl.open(),
       userStatus: socialHandleStatus?.discord_username || null,
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <>

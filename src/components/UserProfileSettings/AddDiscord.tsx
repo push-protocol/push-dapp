@@ -6,10 +6,11 @@ import { useFormik } from 'formik';
 import { useAccount } from 'hooks';
 import { useAppContext } from 'contexts/AppContext';
 import { walletToCAIP10 } from 'helpers/w2w';
-import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
+import { useSendHandlesVerificationCode } from 'queries';
 import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
+import { appConfig } from 'config';
 
-import { Box, Button, Discord, Link, Modal, Text, TextInput } from 'blocks';
+import { Box, Discord, Link, Modal, Text, TextInput } from 'blocks';
 import { CopyButton, ModalResponse } from 'common';
 import { shortenText } from 'helpers/UtilityHelper';
 
@@ -42,8 +43,7 @@ const AddDiscord: FC<AddDiscordProps> = ({
     return state.user;
   });
 
-  const { mutate: sendVerification } = useSendHandlesVerificationCode();
-  const { mutate: verifyVerification } = useVerifyHandlesVerificationCode();
+  const { mutate: sendVerification, isPending: isSendingVerification } = useSendHandlesVerificationCode();
 
   const discordValidationSchema = Yup.object({
     discord: Yup.string().required('Required'),
@@ -107,6 +107,7 @@ const AddDiscord: FC<AddDiscordProps> = ({
         step === Steps.EnterDiscord
           ? {
               children: 'Next',
+              loading: isSendingVerification,
               onClick: () => {
                 discordFormik?.handleSubmit();
               },
@@ -240,7 +241,7 @@ const AddDiscord: FC<AddDiscordProps> = ({
             <Box margin="spacing-xs spacing-none">
               {/* generate call link shortly */}
               <Link
-                to={'https://discordapp.com/users/pushlinkbot'}
+                to={appConfig?.discordExternalURL}
                 isText={true}
                 textProps={{
                   variant: 'bl-semibold',
@@ -248,7 +249,7 @@ const AddDiscord: FC<AddDiscordProps> = ({
                   color: 'text-brand-medium',
                 }}
               >
-                discordapp.com/users/pushlinkbot
+                {appConfig?.discordExternalURL}
               </Link>
             </Box>
           </Box>

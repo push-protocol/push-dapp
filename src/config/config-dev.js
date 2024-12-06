@@ -81,6 +81,10 @@ export const config = {
     extension: 'https://chrome.google.com/webstore/detail/epns-staging-protocol-alp/bjiennpmhdcandkpigcploafccldlakj',
     howto: 'https://push.org/docs',
   },
+
+  // social media integration
+  telegramExternalURL: 'https://t.me/PushStagingBot',
+  discordExternalURL: 'https://discordapp.com/users/pushlinkbot',
 };
 
 /**
