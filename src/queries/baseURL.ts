@@ -23,7 +23,7 @@ export const getRewardsBaseURL = () => {
 export const getCustomDeliveryURL = () => {
   switch (appConfig.appEnv) {
     case 'prod':
-      return `https://custom-delivery-prod.push.org`;
+      return `https://custom-delivery.push.org`;
     case 'staging':
       return `https://custom-delivery-dev.push.org`;
     case 'dev':

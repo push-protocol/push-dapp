@@ -101,8 +101,9 @@ const AddEmail: FC<AddEmailProps> = ({
       {
         onSuccess: (response: any) => {
           if (response?.success) {
-            console.log(response);
             setStep(Steps.VerifyCode);
+          } else {
+            emailFormik?.setFieldError('email', 'Error sending code. Please try again');
           }
         },
         onError: (error: Error) => {
@@ -138,6 +139,8 @@ const AddEmail: FC<AddEmailProps> = ({
             onClose();
             refetchSocialHandleStatus();
             setSuccessMessage('Email Account was linked successfully');
+          } else {
+            codeFormik?.setFieldError('code', 'Error verifying code. Please try again');
           }
         },
         onError: (error: Error) => {

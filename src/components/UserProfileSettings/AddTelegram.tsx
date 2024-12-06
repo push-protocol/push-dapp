@@ -28,7 +28,7 @@ enum Steps {
 
 const AddTelegram: FC<AddTelegramProps> = ({
   modalControl,
-  // refetchSocialHandleStatus,
+  refetchSocialHandleStatus,
   // setErrorMessage,
   // setSuccessMessage,
 }) => {
@@ -83,9 +83,10 @@ const AddTelegram: FC<AddTelegramProps> = ({
       {
         onSuccess: (response: any) => {
           if (response?.success) {
-            console.log(response);
             setTelegramCode(response.verificationCode);
             setStep(Steps.VerifyId);
+          } else {
+            telegramFormik?.setFieldError('telegram', 'Error sending code. Please try again');
           }
         },
         onError: (error: Error) => {
@@ -99,7 +100,10 @@ const AddTelegram: FC<AddTelegramProps> = ({
     <Modal
       size="small"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        refetchSocialHandleStatus();
+        onClose();
+      }}
       {...(step === Steps.VerifyId && {
         onBack: () => setStep(Steps.EnterTelegram),
       })}

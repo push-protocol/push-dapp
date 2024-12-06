@@ -28,7 +28,7 @@ enum Steps {
 
 const AddDiscord: FC<AddDiscordProps> = ({
   modalControl,
-  // refetchSocialHandleStatus,
+  refetchSocialHandleStatus,
   // setErrorMessage,
   // setSuccessMessage,
 }) => {
@@ -83,9 +83,10 @@ const AddDiscord: FC<AddDiscordProps> = ({
       {
         onSuccess: (response: any) => {
           if (response?.success) {
-            console.log(response);
             setDiscordCode(response.verificationCode);
             setStep(Steps.VerifyId);
+          } else {
+            discordFormik?.setFieldError('discord', 'Error sending code. Please try again');
           }
         },
         onError: (error: Error) => {
@@ -99,7 +100,10 @@ const AddDiscord: FC<AddDiscordProps> = ({
     <Modal
       size="small"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        refetchSocialHandleStatus();
+        onClose();
+      }}
       {...(step === Steps.VerifyId && {
         onBack: () => setStep(Steps.EnterDiscord),
       })}
