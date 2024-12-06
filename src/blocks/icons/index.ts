@@ -70,10 +70,12 @@ export { default as ErrorFilled } from './components/ErrorFilled';
 export { default as ExternalLink } from './components/ExternalLink';
 
 export { default as Front } from './components/Front';
+export { default as FillCircle } from './components/FillCircle';
 
 export { default as Gif } from './components/Gif';
 
 export { default as InfoFilled } from './components/InfoFilled';
+export { default as Image } from './components/Image';
 
 export { default as Governance } from './components/Governance';
 export { default as GovernanceFilled } from './components/GovernanceFilled';

@@ -63,4 +63,13 @@ export type UserSocialStatusResponse = {
   email: string | null;
   telegram_username: string | null;
   discord_username: string | null;
+ };
+
+export type UserProfileDetailsResponse = {
+  blockedUsersList: Array<string>;
+  desc: string | null;
+  name: string | null;
+  picture: string;
+  profileVerificationProof: string | null;
 };
+

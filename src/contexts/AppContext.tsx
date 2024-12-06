@@ -223,7 +223,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     // call initializePushSDK if decryptedPGPKeys is not null
     if (decryptedPGPKeys) {
       console.debug('src::contexts::AppContext::initializePushSdkReadMode::Called initializePushSDK()');
-      return initializePushSDK();
+      return initializePushSDK(wallet);
     }
 
     // else initialize push sdk in read mode
@@ -288,10 +288,10 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
           progress: 100,
         });
       }
-      dispatch(setUserPushSDKInstance(userInstance));
 
       // connect stream as well
       await setupStream(userInstance);
+      dispatch(setUserPushSDKInstance(userInstance));
       return userInstance;
     } catch (error) {
       // Handle initialization error
@@ -307,12 +307,11 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         CONSTANTS.STREAM.CONNECT,
         CONSTANTS.STREAM.DISCONNECT,
         CONSTANTS.STREAM.CHAT,
-        CONSTANTS.STREAM.CHAT_OPS,
         CONSTANTS.STREAM.NOTIF,
         CONSTANTS.STREAM.VIDEO,
       ]);
 
-      if (userInstance.readmode()) await stream.connect();
+      await stream.connect();
       console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
     }
   };
@@ -489,7 +488,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     initialize();
-  }, [account, provider]);
+  }, [account]);
 
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {

@@ -7,4 +7,5 @@ export * from './createUserRewardsDetail.ts';
 export * from './getRewardsLeaderboard';
 export * from './getRewardActivityStatus.ts';
 export * from './getPushStakeEpoch.ts';
+export * from './getPreviousPushStakeEpoch.ts';
 export * from './getUniV2StakeEpoch.ts';

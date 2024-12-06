@@ -2,6 +2,7 @@ import { appConfig } from 'config';
 import { LOGO_ALIAS_CHAIN } from './Common.constants';
 import { networkName } from 'helpers/UtilityHelper';
 import { EnvType } from './Common.types';
+import moment from 'moment';
 
 export const allowedNetworks = appConfig.allowedNetworks.filter(
   (chain: number) => chain != appConfig.coreContractChain
@@ -53,3 +54,19 @@ export const isValidURL = (str: string | undefined) => {
 export const getCurrentEnv = (): EnvType => {
   return appConfig.appEnv;
 };
+
+export function convertTimeStamp(timestamp: string) {
+  const date = moment.unix(Number(timestamp));
+  const now = moment();
+
+  const diffInSeconds = now.diff(date, 'seconds');
+  const diffInMinutes = now.diff(date, 'minutes');
+
+  if (diffInSeconds < 60) {
+    return 'now';
+  } else if (diffInMinutes < 60) {
+    return `${diffInMinutes} minutes ago`;
+  } else {
+    return date.format('hh:mm A');
+  }
+}

@@ -21,6 +21,7 @@ export const channelSubscriptionActivities: ActvityType[] = [
   'channel_specific_subscriptions:REVOKE_NOTIFICATIONS_CHANNEL',
   'channel_specific_subscriptions:PWN_NOTIFICATIONS_CHANNEL',
   'channel_specific_subscriptions:UNSTOPPABLE_DOMAINS_CHANNEL',
+  'channel_specific_subscriptions:BTC_PRICE_TRACKER_CHANNEL',
 ];
 
 export const bonusRewardActivities: ActvityType[] = [

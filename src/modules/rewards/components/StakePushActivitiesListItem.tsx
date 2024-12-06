@@ -6,7 +6,7 @@ import { Activity, StakeActivityResponse, UsersActivity } from 'queries';
 import { useAccount } from 'hooks';
 
 // components
-import { Box, Button, Lock, Multiplier, RewardsBell, Skeleton, Text } from 'blocks';
+import { Box, Button, Lock, Lozenge, Multiplier, RewardsBell, Skeleton, Star, Text } from 'blocks';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { ActivityButton } from './ActivityButton';
 
@@ -39,7 +39,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   const usersSingleActivity = allUsersActivity?.[activity?.activityType] as UsersActivity;
   const isLoading = isAllActivitiesLoading;
 
-  const hasActivityEndedUnclaimed = usersSingleActivity?.status !== 'COMPLETED' && hasEpochEnded;
+  const hasActivityEndedUnclaimed = hasEpochEnded;
 
   const isLockedOrNotConnected = isLocked || !isWalletConnected;
 
@@ -93,7 +93,11 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
             gap={{ ml: 'spacing-sm', initial: 'spacing-xxxs' }}
             alignItems={{ ml: 'center' }}
           >
-            <Box display={{ ml: 'block', initial: 'none' }}>
+            <Box
+              display={{ ml: 'flex', initial: 'none' }}
+              flexDirection="column"
+              alignItems="center"
+            >
               <Text
                 color="text-primary"
                 variant="h6-bold"
@@ -101,8 +105,19 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
               >
                 {activity?.activityTitle}
               </Text>
+              {activity?.tags?.map((tag) => (
+                <Lozenge
+                  size="small"
+                  icon={<Star />}
+                >
+                  {tag}
+                </Lozenge>
+              ))}
             </Box>
-            <Box display={{ ml: 'none', initial: 'block' }}>
+            <Box
+              display={{ ml: 'none', initial: 'flex' }}
+              gap="spacing-xs"
+            >
               <Text
                 color="text-primary"
                 variant="bl-semibold"
@@ -110,6 +125,14 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
               >
                 {activity?.activityTitle}
               </Text>
+              {activity?.tags?.map((tag) => (
+                <Lozenge
+                  size="small"
+                  icon={<Star />}
+                >
+                  {tag}
+                </Lozenge>
+              ))}
             </Box>
 
             {activity.points > 0 && (

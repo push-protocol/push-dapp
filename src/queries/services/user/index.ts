@@ -7,3 +7,4 @@ export * from './updateUserProfileInfo';
 export * from './sendHandlesVerificationCode';
 export * from './verifyHandlesVerificationCode';
 export * from './getUserSocialsStatus';
+export * from './getUserProfileDetails';

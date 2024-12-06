@@ -7,4 +7,5 @@ export * from './createUserRewardsDetailsModel';
 export * from './getRewardsLeaderboardModalCreator';
 export * from './getRewardActivityStatusModel';
 export * from './getPushStakeEpochModel';
+export * from './getPreviousPushStakeEpochModel';
 export * from './getUniV2StakeEpochModel';

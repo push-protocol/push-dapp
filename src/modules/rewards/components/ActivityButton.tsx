@@ -2,7 +2,7 @@
 import { FC } from 'react';
 
 //Queries
-import { ActvityType, UsersActivity } from 'queries';
+import { ActvityType, useGetPushStakeEpoch, useGetUniV2StakeEpoch, UsersActivity } from 'queries';
 import { Button } from 'blocks';
 import { ActivityVerificationButton } from './ActivityVerificationButton';
 import { useRewardsContext } from 'contexts/RewardsContext';
@@ -31,14 +31,39 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   usersSingleActivity,
   isLoadingActivity,
   label,
-  isStakeSection,
-  lifeTime,
 }) => {
   const { resetEpoch } = useRewardsContext();
+  const { data: pushStakeData } = useGetPushStakeEpoch();
+  const { data: uniV2StakeData } = useGetUniV2StakeEpoch();
+  const isPushEpochRelated =
+    typeof usersSingleActivity?.activityTypeId === 'string' &&
+    usersSingleActivity.activityTypeId.endsWith('push_epoch');
 
-  if (usersSingleActivity?.status === 'COMPLETED' && isStakeSection && resetEpoch && !lifeTime) {
+  const isUniV2EpochRelated =
+    typeof usersSingleActivity?.activityTypeId === 'string' && usersSingleActivity.activityTypeId.endsWith('v2_epoch');
+
+  const isEpochRelated =
+    usersSingleActivity?.data?.currentEpoch == pushStakeData?.currentEpoch ||
+    usersSingleActivity?.data?.currentEpoch == uniV2StakeData?.currentEpoch;
+
+  // claimed status for the same epoch
+  if (usersSingleActivity?.status === 'COMPLETED' && (isPushEpochRelated || isUniV2EpochRelated) && isEpochRelated) {
+    console.log('claimed in this epoch button');
     return (
-      // default verify button
+      <Button
+        variant="tertiary"
+        size="small"
+        disabled
+      >
+        Claimed
+      </Button>
+    );
+  }
+
+  // default verify button for stake epoch section
+  if (usersSingleActivity?.status === 'COMPLETED' && resetEpoch && (isPushEpochRelated || isUniV2EpochRelated)) {
+    console.log('reset button');
+    return (
       <ActivityVerificationButton
         activityType={activityType}
         userId={userId}

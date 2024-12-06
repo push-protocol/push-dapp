@@ -32,6 +32,7 @@ export type ActvityType =
   | 'daily_check_in_7_days_day5'
   | 'daily_check_in_7_days_day6'
   | 'daily_check_in_7_days_day7'
+  | 'channel_specific_subscriptions:BTC_PRICE_TRACKER_CHANNEL'
   | 'channel_specific_subscriptions:QUICKSWAP_CHANNEL'
   | 'channel_specific_subscriptions:WALLETTRACKER_CHANNEL'
   | 'channel_specific_subscriptions:PRICETRACKER_CHANNEL'
@@ -93,7 +94,10 @@ export type UsersActivity = {
   activityId: string;
   userId: string;
   activityTypeId: string;
-  data: { twitter?: string; discord?: string };
+  data:
+    | { twitter?: string; discord?: string }
+    | { currentEpoch?: number; fromBlock?: number; toBlock?: number; fromTimestamp?: number; toTimestamp?: number }
+    | any;
   status: 'COMPLETED' | 'PENDING' | 'REJECTED';
   points: number;
   multiplier: number;
