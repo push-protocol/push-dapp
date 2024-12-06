@@ -76,8 +76,6 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     { enabled: !!userDetails?.userId && activityTypes.length > 0 }
   );
 
-  console.log(emailTelegramActivities);
-
   return (
     <Box
       display="flex"
