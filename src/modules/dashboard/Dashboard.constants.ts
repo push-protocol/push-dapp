@@ -1,6 +1,6 @@
 import { PushAlpha, PushBot, PushDev } from 'blocks';
 
-import { ChatType, EnvKeys, SourceKeys } from './Dashboard.types';
+import { ChatType, EnvKeys, SocialHandlesItemType, SourceKeys } from './Dashboard.types';
 
 export const recommendedChatList: ChatType[] = [
   {
