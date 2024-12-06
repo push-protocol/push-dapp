@@ -1,5 +1,8 @@
-import { Box, Button, ProgressBar, Text } from 'blocks';
+import { css } from 'styled-components';
+
 import { useDisclosure } from 'common';
+
+import { Box, Button, ProgressBar, Text } from 'blocks';
 import UpgradePlanModal from './UpgradePlanModal';
 
 const UserPlanAndBillings = () => {
@@ -83,6 +86,9 @@ const UserPlanAndBillings = () => {
           <Text
             variant="bs-semibold"
             color="text-primary"
+            css={css`
+              cursor: pointer;
+            `}
             onClick={() => modalControl.open()}
           >
             Cancel Plan
