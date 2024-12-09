@@ -39,6 +39,7 @@ import {
   pwnLogo,
   udLogo,
   btcTrackerLogo,
+  rivoChannelLogo,
 } from 'common';
 import { ActvityType } from 'queries';
 
@@ -265,6 +266,17 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
         width={48}
         height={48}
         src={btcTrackerLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:RIVO_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={rivoChannelLogo}
         style={{ borderRadius: 'var(--radius-round)' }}
       />
     );
