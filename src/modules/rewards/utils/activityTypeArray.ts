@@ -9,6 +9,7 @@ export const otherRewardActivities: ActvityType[] = [
   'active_push_chat_user',
   'hold_push_alpha_access_nft',
   'hold_push_rockstar_nft',
+  'notifications_integration_email_telegram_discord',
 ];
 
 export const channelSubscriptionActivities: ActvityType[] = [

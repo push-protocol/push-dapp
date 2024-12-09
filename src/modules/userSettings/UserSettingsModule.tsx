@@ -7,7 +7,6 @@ import styled from 'styled-components';
 // Internal Compoonents
 import UserSettings from 'components/userSettings/UserSettings';
 
-
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
@@ -18,7 +17,7 @@ const UserSettingsModule = () => {
       <UserSettings />
     </Container>
   );
-}
+};
 
 // css styles
 const Container = styled.div`
@@ -44,8 +43,8 @@ const Container = styled.div`
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-      globalsMargin.MINI_MODULES.TABLET.BOTTOM
-    });
+  globalsMargin.MINI_MODULES.TABLET.BOTTOM
+});
   }
 
   @media ${device.mobileL} {
