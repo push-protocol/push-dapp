@@ -86,7 +86,7 @@ export const config = {
 
   // social media integration
   telegramExternalURL: 'https://t.me/PushCommDevBot',
-  discordExternalURL: 'https://discordapp.com/users/pushlinkbot',
+  discordExternalURL: null,
 };
 
 /**
