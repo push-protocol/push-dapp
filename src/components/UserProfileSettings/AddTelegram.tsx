@@ -1,7 +1,5 @@
 import { FC, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 
 import { CopyButton, ModalResponse } from 'common';
 import { useAccount } from 'hooks';
@@ -13,6 +11,7 @@ import { appConfig } from 'config';
 
 import { Box, Link, Modal, Telegram, Text, TextInput } from 'blocks';
 import { shortenText } from 'helpers/UtilityHelper';
+import { useTelegramFormik } from './AddTelegram.form';
 
 type AddTelegramProps = {
   modalControl: ModalResponse;
@@ -44,18 +43,6 @@ const AddTelegram: FC<AddTelegramProps> = ({
   });
 
   const { mutate: sendVerification, isPending: isSendingVerification } = useSendHandlesVerificationCode();
-
-  const telegramValidationSchema = Yup.object({
-    telegram: Yup.string().required('Required'),
-  });
-
-  const telegramFormik = useFormik({
-    initialValues: { telegram: '' },
-    validationSchema: telegramValidationSchema,
-    onSubmit: () => {
-      handleSendVerificationCode();
-    },
-  });
 
   const getSDKInstance = useCallback(async () => {
     return userPushSDKInstance?.signer ? userPushSDKInstance : await handleConnectWalletAndEnableProfile({ wallet });
@@ -95,6 +82,9 @@ const AddTelegram: FC<AddTelegramProps> = ({
       }
     );
   };
+
+  // Formik hooks from form.ts
+  const telegramFormik = useTelegramFormik(handleSendVerificationCode);
 
   return (
     <Modal
@@ -213,7 +203,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
               borderRadius="radius-sm"
             >
               <Text
-                color="text-brand-subtle"
+                color="text-brand-medium"
                 variant="bl-semibold"
                 textAlign="center"
               >
