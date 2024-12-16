@@ -43,10 +43,11 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
   // Validation schema using Yup
   const validationSchema = Yup.object({
     displayName: Yup.string().max(50, 'Display Name cannot exceed 50 characters').required('Display Name is required'),
+    desc: Yup.string().max(150, 'Bio cannot exceed 150 characters').nullable(),
   });
 
   // Formik setup
-  const formik = useFormik<FormValues>({
+  const userFormik = useFormik<FormValues>({
     initialValues: { displayName: '', picture: null, desc: '' },
     validationSchema,
     onSubmit: async (values) => {
@@ -81,7 +82,7 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
   // Populate initial form values when userProfileInfo is fetched
   useEffect(() => {
     if (userProfileInfo) {
-      formik.setValues({
+      userFormik.setValues({
         displayName: userProfileInfo.name || '',
         picture: userProfileInfo.picture || null,
         desc: userProfileInfo.desc || null,
@@ -91,7 +92,7 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
 
   return (
     <Box>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={userFormik.handleSubmit}>
         <Box
           display="flex"
           flexDirection="row"
@@ -99,7 +100,7 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
           alignItems="center"
           margin="spacing-xs spacing-none spacing-md spacing-none"
         >
-          {formik.values.picture ? (
+          {userFormik.values.picture ? (
             <Box
               width="90px"
               height="90px"
@@ -114,7 +115,7 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
               <img
                 width="100%"
                 height="100%"
-                src={formik.values.picture}
+                src={userFormik.values.picture}
               />
             </Box>
           ) : (
@@ -146,8 +147,8 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
         {modalControl.isOpen && (
           <UploadAvatarModal
             modalControl={modalControl}
-            formValues={formik.values}
-            setFieldValue={formik.setFieldValue}
+            formValues={userFormik.values}
+            setFieldValue={userFormik.setFieldValue}
           />
         )}
 
@@ -158,10 +159,10 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
         >
           <TextInput
             label="Display Name"
-            value={formik.values.displayName as string}
-            onChange={formik.handleChange('displayName')}
-            error={formik.touched.displayName && Boolean(formik.errors.displayName)}
-            errorMessage={formik.touched.displayName ? formik.errors.displayName : ''}
+            value={userFormik.values.displayName as string}
+            onChange={userFormik.handleChange('displayName')}
+            error={userFormik.touched.displayName && Boolean(userFormik.errors.displayName)}
+            errorMessage={userFormik.touched.displayName ? userFormik.errors.displayName : ''}
             totalCount={50}
           />
         </Box>
@@ -173,10 +174,10 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
         >
           <TextInput
             label="Bio"
-            value={formik.values.desc as string}
-            onChange={formik.handleChange('desc')}
-            error={formik.touched.displayName && Boolean(formik.errors.desc)}
-            errorMessage={formik.touched.desc ? formik.errors.desc : ''}
+            value={userFormik.values.desc as string}
+            onChange={userFormik.handleChange('desc')}
+            error={Boolean(userFormik.errors.desc)}
+            errorMessage={userFormik.errors.desc ? userFormik.errors.desc : ''}
             totalCount={150}
           />
         </Box>

@@ -1,9 +1,8 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { css } from 'styled-components';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 
+import { useEmailFormik, useCodeFormik } from './AddEmail.form'; // Import Formik hooks
 import { ModalResponse } from 'common';
 import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -44,40 +43,9 @@ const AddEmail: FC<AddEmailProps> = ({
   const { mutate: sendVerification, isPending: isSendingVerification } = useSendHandlesVerificationCode();
   const { mutate: verifyVerification } = useVerifyHandlesVerificationCode();
 
-  const emailValidationSchema = Yup.object({
-    email: Yup.string().email('Invalid email address').required('Required'),
-  });
-
-  const codeValidationSchema = Yup.object({
-    code: Yup.string().length(6, 'Code should be 6 digits').required('Required'),
-  });
-
-  const emailFormik = useFormik({
-    initialValues: { email: '' },
-    validationSchema: emailValidationSchema,
-    onSubmit: () => {
-      handleSendVerificationCode();
-    },
-  });
-
-  const codeFormik = useFormik({
-    initialValues: { code: '' },
-    validationSchema: codeValidationSchema,
-    onSubmit: () => {
-      handleVerificationCode();
-    },
-  });
-
   const getSDKInstance = useCallback(async () => {
     return userPushSDKInstance?.signer ? userPushSDKInstance : await handleConnectWalletAndEnableProfile({ wallet });
   }, [userPushSDKInstance, handleConnectWalletAndEnableProfile, wallet]);
-
-  // Watch for code length and submit automatically if it reaches 6 digits
-  useEffect(() => {
-    if (codeFormik.values.code.length === 6 && !codeFormik.errors.code) {
-      codeFormik.submitForm();
-    }
-  }, [codeFormik.values.code, codeFormik.errors.code]);
 
   const handleSendVerificationCode = async () => {
     const sdkInstance = await getSDKInstance();
@@ -151,9 +119,22 @@ const AddEmail: FC<AddEmailProps> = ({
     );
   };
 
+  // Formik hooks from form.ts
+  const emailFormik = useEmailFormik(handleSendVerificationCode);
+  const codeFormik = useCodeFormik(handleVerificationCode);
+
+  // Watch for code length and submit automatically if it reaches 6 digits
+  useEffect(() => {
+    if (codeFormik.values.code.length === 6 && !codeFormik.errors.code) {
+      codeFormik.submitForm();
+    }
+  }, [codeFormik.values.code, codeFormik.errors.code]);
+
   const resendVerificationCode = () => {
     handleSendVerificationCode();
   };
+
+  console.log(emailFormik.touched.email);
 
   return (
     <Modal
