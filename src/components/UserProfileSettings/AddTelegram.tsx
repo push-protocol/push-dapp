@@ -36,8 +36,8 @@ const AddTelegram: FC<AddTelegramProps> = ({
   const { handleConnectWalletAndEnableProfile } = useAppContext();
 
   const caip10WalletAddress = walletToCAIP10({ account });
-  const [step, setStep] = useState(2);
-  const [telegramCode, setTelegramCode] = useState<string>('00000000');
+  const [step, setStep] = useState(1);
+  const [telegramCode, setTelegramCode] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -214,11 +214,13 @@ const AddTelegram: FC<AddTelegramProps> = ({
                 {shortenText(`/verify ${caip10WalletAddress}-${telegramCode}`, 10)}
               </Text>
 
-              <CopyButton
-                tooltipTitle="Copy Address"
-                content={`/verify ${caip10WalletAddress}-${telegramCode}`}
-                size={24}
-              />
+              {isOpen && (
+                <CopyButton
+                  tooltipTitle="Copy Address"
+                  content={`/verify ${caip10WalletAddress}-${telegramCode}`}
+                  size={24}
+                />
+              )}
             </Box>
           </Box>
 

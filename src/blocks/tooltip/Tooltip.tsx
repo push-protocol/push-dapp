@@ -97,21 +97,23 @@ const Tooltip: FC<TooltipProps> = ({
           {children}
         </RadixTooltip.Trigger>
         <RadixTooltip.Portal>
-          <RadixTooltipContent
-            sideOffset={8}
-            {...{ style, width, maxWidth }}
-            {...cssProps}
-            {...props}
-          >
-            {overlay ? (
-              overlay
-            ) : (
-              <>
-                {title && <StyledTitle>{title}</StyledTitle>}
-                {description && <StyledDescription>{description}</StyledDescription>}
-              </>
-            )}
-          </RadixTooltipContent>
+          {(title || overlay || description) && (
+            <RadixTooltipContent
+              sideOffset={8}
+              {...{ style, width, maxWidth }}
+              {...cssProps}
+              {...props}
+            >
+              {overlay ? (
+                overlay
+              ) : (
+                <>
+                  {title && <StyledTitle>{title}</StyledTitle>}
+                  {description && <StyledDescription>{description}</StyledDescription>}
+                </>
+              )}
+            </RadixTooltipContent>
+          )}
         </RadixTooltip.Portal>
       </RadixTooltip.Root>
     </RadixTooltip.Provider>
