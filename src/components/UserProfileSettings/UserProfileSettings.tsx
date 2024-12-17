@@ -143,8 +143,18 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
             label="Display Name"
             value={userFormik.values.displayName as string}
             onChange={userFormik.handleChange('displayName')}
-            error={userFormik.touched.displayName && Boolean(userFormik.errors.displayName)}
-            errorMessage={userFormik.touched.displayName ? userFormik.errors.displayName : ''}
+            error={
+              userFormik.submitCount > 0 && !userFormik.values.displayName
+                ? true // Required error on submit
+                : userFormik.values.displayName.length > 50 // Length error during typing
+            }
+            errorMessage={
+              userFormik.submitCount > 0 && !userFormik.values.displayName
+                ? 'Display Name is required'
+                : userFormik.values.displayName.length > 50
+                ? 'Display Name cannot exceed 50 characters'
+                : ''
+            }
             totalCount={50}
           />
         </Box>

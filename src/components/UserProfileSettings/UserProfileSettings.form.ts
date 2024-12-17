@@ -4,7 +4,7 @@ import { getRequiredFieldMessage } from 'common';
 
 // Define Formik initial values type
 type FormValues = {
-  displayName: string | null;
+  displayName: string;
   picture: string | null;
   desc: string | null;
 };

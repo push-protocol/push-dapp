@@ -12,6 +12,7 @@ import { appConfig } from 'config';
 import { Box, Link, Modal, Telegram, Text, TextInput } from 'blocks';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useTelegramFormik } from './AddTelegram.form';
+import { css } from 'styled-components';
 
 type AddTelegramProps = {
   modalControl: ModalResponse;
@@ -232,7 +233,10 @@ const AddTelegram: FC<AddTelegramProps> = ({
               Step 2: Visit the link and paste the code
             </Text>
 
-            <Box margin="spacing-xs spacing-none">
+            <Box
+              margin="spacing-xs spacing-none"
+              width="100%"
+            >
               <Link
                 to={appConfig?.telegramExternalURL}
                 target="_blank"
@@ -242,6 +246,11 @@ const AddTelegram: FC<AddTelegramProps> = ({
                   textAlign: 'center',
                   color: 'text-brand-medium',
                 }}
+                css={css`
+                  overflow: auto;
+                  word-wrap: break-word;
+                  width: 100%;
+                `}
               >
                 {appConfig?.telegramExternalURL}
               </Link>
