@@ -29,6 +29,8 @@ export type ButtonProps = {
   block?: boolean;
   /* Button loading state */
   loading?: boolean;
+  /* indicate button type ina a form or similar usecases */
+  type?: 'button' | 'submit';
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button<ButtonProps>`
@@ -81,6 +83,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       iconOnly,
       circular = false,
       children,
+      type,
       ...props
     },
     ref
@@ -94,6 +97,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       role="button"
       ref={ref}
       size={size}
+      type={type}
       variant={variant}
       {...props}
     >

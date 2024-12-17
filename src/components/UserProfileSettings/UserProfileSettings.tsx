@@ -1,12 +1,11 @@
 // React and other libraries
 import { FC, useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 
 // hooks
 import { useAccount } from 'hooks';
 import { useAppContext } from 'contexts/AppContext';
+import { useUserFormik } from './UserProfileSettings.form';
 
 //Components
 import { Box, Button, CameraFilled, TextInput } from 'blocks';
@@ -14,13 +13,6 @@ import { useDisclosure } from 'common';
 import UploadAvatarModal from './UploadAvatarModal';
 import { css } from 'styled-components';
 import { useGetUserProfileInfo, useUpdateUserProfileInfo } from 'queries';
-
-// Define Formik initial values type
-type FormValues = {
-  displayName: string | null;
-  picture: string | null;
-  desc: string | null;
-};
 
 type UserProfileSettingsType = {
   errorMessage: string;
@@ -40,52 +32,41 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
     return state.user;
   });
 
-  // Validation schema using Yup
-  const validationSchema = Yup.object({
-    displayName: Yup.string().max(50, 'Display Name cannot exceed 50 characters').required('Display Name is required'),
-    desc: Yup.string().max(150, 'Bio cannot exceed 150 characters').nullable(),
-  });
+  const handleSubmit = async () => {
+    const sdkInstance = !userPushSDKInstance?.signer
+      ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
+      : userPushSDKInstance;
 
-  // Formik setup
-  const userFormik = useFormik<FormValues>({
-    initialValues: { displayName: '', picture: null, desc: '' },
-    validationSchema,
-    onSubmit: async (values) => {
-      // Add your save logic here
-
-      const sdkInstance = !userPushSDKInstance?.signer
-        ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
-        : userPushSDKInstance;
-
-      updateUserInfo(
-        {
-          userPushSDKInstance: sdkInstance,
-          name: values.displayName,
-          desc: values.desc,
-          picture: values.picture,
+    updateUserInfo(
+      {
+        userPushSDKInstance: sdkInstance,
+        name: userFormik?.values.displayName,
+        desc: userFormik?.values.desc,
+        picture: userFormik?.values.picture,
+      },
+      {
+        onSuccess: (response: any) => {
+          console.log(response);
+          setSuccessMessage('User Details Updated Successfully');
+          refetchUserInfo();
         },
-        {
-          onSuccess: (response: any) => {
-            console.log(response);
-            setSuccessMessage('User Details Updated Successfully');
-            refetchUserInfo();
-          },
-          onError: (error: Error) => {
-            console.log('Error updating user profile info', error);
-            setErrorMessage('Error while updating User Info!');
-          },
-        }
-      );
-    },
-  });
+        onError: (error: Error) => {
+          console.log('Error updating user profile info', error);
+          setErrorMessage('Error while updating User Info!');
+        },
+      }
+    );
+  };
+
+  const userFormik = useUserFormik(handleSubmit);
 
   // Populate initial form values when userProfileInfo is fetched
   useEffect(() => {
     if (userProfileInfo) {
       userFormik.setValues({
         displayName: userProfileInfo.name || '',
-        picture: userProfileInfo.picture || null,
-        desc: userProfileInfo.desc || null,
+        picture: userProfileInfo?.picture || null,
+        desc: userProfileInfo?.desc || null,
       });
     }
   }, [userProfileInfo]);
@@ -139,6 +120,7 @@ const UserProfileSettings: FC<UserProfileSettingsType> = ({ setErrorMessage, set
             variant="tertiary"
             size="extraSmall"
             onClick={() => modalControl.open()}
+            type="button"
           >
             Change Avatar
           </Button>

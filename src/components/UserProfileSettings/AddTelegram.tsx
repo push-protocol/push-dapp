@@ -36,8 +36,9 @@ const AddTelegram: FC<AddTelegramProps> = ({
   const { handleConnectWalletAndEnableProfile } = useAppContext();
 
   const caip10WalletAddress = walletToCAIP10({ account });
-  const [step, setStep] = useState(1);
-  const [telegramCode, setTelegramCode] = useState<string>('');
+  const [step, setStep] = useState(2);
+  const [telegramCode, setTelegramCode] = useState<string>('00000000');
+  const [isLoading, setIsLoading] = useState(false);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -49,6 +50,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
   }, [userPushSDKInstance, handleConnectWalletAndEnableProfile, wallet]);
 
   const handleSendVerificationCode = async () => {
+    setIsLoading(true);
     const sdkInstance = await getSDKInstance();
     const data = {
       wallet: caip10WalletAddress,
@@ -75,9 +77,11 @@ const AddTelegram: FC<AddTelegramProps> = ({
           } else {
             telegramFormik?.setFieldError('telegram', 'Error sending code. Please try again');
           }
+          setIsLoading(false);
         },
         onError: (error: Error) => {
           console.log('Error sending code', error);
+          setIsLoading(false);
         },
       }
     );
@@ -101,7 +105,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
         step === Steps.EnterTelegram
           ? {
               children: 'Next',
-              loading: isSendingVerification,
+              loading: isSendingVerification || isLoading,
               onClick: () => {
                 telegramFormik?.handleSubmit();
               },

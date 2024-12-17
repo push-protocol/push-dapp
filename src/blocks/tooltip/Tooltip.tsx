@@ -20,6 +20,7 @@ const RadixTooltipContent = styled(RadixTooltip.Content).withConfig({
   word-wrap: break-word;
   color: var(--text-primary-inverse);
   background-color: var(--surface-primary-inverse);
+  z-index: 9999999999;
 
   /* Tooltip non-responsive styles */
   width: ${({ width }) => width};

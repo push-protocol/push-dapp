@@ -10,7 +10,7 @@ import { useAppContext } from 'contexts/AppContext';
 import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
 import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
 
-import { Box, Modal, Text, TextInput } from 'blocks';
+import { Box, Modal, Spinner, Text, TextInput } from 'blocks';
 
 type AddEmailProps = {
   modalControl: ModalResponse;
@@ -33,6 +33,7 @@ const AddEmail: FC<AddEmailProps> = ({
   const { isOpen, onClose } = modalControl;
   const { account, wallet } = useAccount();
   const { handleConnectWalletAndEnableProfile } = useAppContext();
+  const [isLoading, setIsLoading] = useState(false);
 
   const caip10WalletAddress = walletToCAIP10({ account });
   const [step, setStep] = useState(1);
@@ -48,6 +49,7 @@ const AddEmail: FC<AddEmailProps> = ({
   }, [userPushSDKInstance, handleConnectWalletAndEnableProfile, wallet]);
 
   const handleSendVerificationCode = async () => {
+    setIsLoading(true);
     const sdkInstance = await getSDKInstance();
     const data = {
       wallet: caip10WalletAddress,
@@ -73,9 +75,11 @@ const AddEmail: FC<AddEmailProps> = ({
           } else {
             emailFormik?.setFieldError('email', 'Error sending code. Please try again');
           }
+          setIsLoading(false);
         },
         onError: (error: Error) => {
           console.log('Error sending code', error);
+          setIsLoading(false);
         },
       }
     );
@@ -134,8 +138,6 @@ const AddEmail: FC<AddEmailProps> = ({
     handleSendVerificationCode();
   };
 
-  console.log(emailFormik.touched.email);
-
   return (
     <Modal
       size="small"
@@ -145,7 +147,7 @@ const AddEmail: FC<AddEmailProps> = ({
         step === Steps.EnterEmail
           ? {
               children: 'Next',
-              loading: isSendingVerification,
+              loading: isSendingVerification || isLoading,
               onClick: () => {
                 emailFormik.handleSubmit();
               },
@@ -234,6 +236,7 @@ const AddEmail: FC<AddEmailProps> = ({
             >
               Send code again
             </Text>
+            {(isSendingVerification || isLoading) && <Spinner variant="secondary"></Spinner>}
           </Box>
         </Box>
       )}
