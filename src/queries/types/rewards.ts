@@ -9,6 +9,7 @@ export type RewardsAcitivitesResponse = {
 export type ActvityType =
   | 'follow_push_on_discord'
   | 'follow_push_on_twitter'
+  | 'notifications_integration_email_telegram_discord'
   | 'create_gated_group_push_chat'
   | 'subscribe_5_channels_push'
   | 'subscribe_20_channels_push'
