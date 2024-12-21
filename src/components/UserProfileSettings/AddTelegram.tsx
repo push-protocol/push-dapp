@@ -30,7 +30,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
   modalControl,
   refetchSocialHandleStatus,
   // setErrorMessage,
-  // setSuccessMessage,
+  setSuccessMessage,
 }) => {
   const { isOpen, onClose } = modalControl;
   const { account, wallet } = useAccount();
@@ -96,6 +96,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
       size="small"
       isOpen={isOpen}
       onClose={() => {
+        setSuccessMessage('')
         refetchSocialHandleStatus();
         onClose();
       }}
@@ -105,12 +106,12 @@ const AddTelegram: FC<AddTelegramProps> = ({
       acceptButtonProps={
         step === Steps.EnterTelegram
           ? {
-              children: 'Next',
-              loading: isSendingVerification || isLoading,
-              onClick: () => {
-                telegramFormik?.handleSubmit();
-              },
-            }
+            children: 'Next',
+            loading: isSendingVerification || isLoading,
+            onClick: () => {
+              telegramFormik?.handleSubmit();
+            },
+          }
           : null
       }
       cancelButtonProps={null}
