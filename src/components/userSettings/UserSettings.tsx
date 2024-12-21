@@ -12,11 +12,14 @@ import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
+import UserProfileSettings from 'components/UserProfileSettings/UserProfileSettings';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
+import { Alert, Box } from 'blocks';
+import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
 
 interface ChannelListItem {
   channel: string;
@@ -36,6 +39,10 @@ function UserSettings() {
 
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // for alerts
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -95,11 +102,16 @@ function UserSettings() {
   const selectOptions = [
     {
       value: 0,
+      label: 'My Profile',
+      title: 'Your Profile',
+    },
+    {
+      value: 1,
       label: 'Notification Settings',
       title: 'Notification Settings',
     },
     {
-      value: 1,
+      value: 2,
       label: 'Push Snap',
       title: '',
     },
@@ -109,6 +121,7 @@ function UserSettings() {
     <Container>
       <PageTitle>Settings</PageTitle>
       <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
+
       <Wrapper>
         <SelectSection>
           {selectOptions.map((selectOptions) => (
@@ -121,16 +134,57 @@ function UserSettings() {
             </SelectListOption>
           ))}
         </SelectSection>
-        <ChannelWrapper>
-          <ChannelContainer>
-            {selectOptions[selectedOption]?.title && (
-              <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
-            )}
 
-            {selectedOption === 0 && <ChannelListSettings />}
-            {selectedOption === 1 && <PushSnapSettings />}
-          </ChannelContainer>
-        </ChannelWrapper>
+        <ChannelBlock>
+          {successMessage && (
+            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+              <Alert
+                variant="success"
+                heading={successMessage}
+              />
+            </Box>
+          )}
+
+          {errorMessage && (
+            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+              <Alert
+                variant="error"
+                heading={errorMessage}
+              />
+            </Box>
+          )}
+          <ChannelWrapper>
+            <ChannelContainer selectedOption={selectedOption}>
+              {selectOptions[selectedOption]?.title && (
+                <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
+              )}
+
+              {selectedOption === 0 && (
+                <UserProfileSettings
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  successMessage={successMessage}
+                  setSuccessMessage={setSuccessMessage}
+                />
+              )}
+              {selectedOption === 1 && <ChannelListSettings />}
+              {selectedOption === 2 && <PushSnapSettings />}
+            </ChannelContainer>
+          </ChannelWrapper>
+
+          {selectedOption == 0 && (
+            <ChannelWrapper>
+              <ChannelContainer selectedOption={selectedOption}>
+                <UserProfileSocialSettings
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  successMessage={successMessage}
+                  setSuccessMessage={setSuccessMessage}
+                />
+              </ChannelContainer>
+            </ChannelWrapper>
+          )}
+        </ChannelBlock>
       </Wrapper>
     </Container>
   );
@@ -142,6 +196,8 @@ export default UserSettings;
 const Container = styled.div`
   padding: 32px 24px;
   flex: 1;
+  height: 100%;
+  overflow: hidden;
 
   @media ${device.tablet} {
     padding: 24px 12px;
@@ -182,6 +238,10 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
 
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+
   @media ${device.tablet} {
     flex-direction: column;
   }
@@ -220,10 +280,9 @@ const SelectListOption = styled(Button)<{ isSelected: boolean }>`
 `;
 
 const ChannelWrapper = styled.div`
-  border: 1px solid ${(props) => props.theme.default.borderColor};
+  border: 1px solid ${(props) => props.theme.userSettingsBorder};
   padding: 12px;
-  border-radius: 16px;
-  flex-grow: 1;
+  border-radius: 24px;
 
   @media ${device.tablet} {
     margin: 8px 0px;
@@ -231,10 +290,45 @@ const ChannelWrapper = styled.div`
   }
 `;
 
-const ChannelContainer = styled.div`
-  overflow: hidden;
-  overflow-y: scroll;
-  height: 55vh;
+const ChannelBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
+  gap: 16px;
+  padding-right: 12px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    position: absolute;
+    right: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #d53a94;
+    border-radius: 99px;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+  }
+
+  // Adding margin-bottom to the last child
+  & > *:last-child {
+    margin-bottom: 100px;
+  }
+`;
+
+const ChannelContainer = styled.div<{ selectedOption: number }>`
+  overflow-y: auto;
+  height: ${(props) => (props.selectedOption === 0 ? 'auto' : '55vh')};
   padding: 12px;
 
   &::-webkit-scrollbar-track {

@@ -20,6 +20,7 @@ const RadixTooltipContent = styled(RadixTooltip.Content).withConfig({
   word-wrap: break-word;
   color: var(--text-primary-inverse);
   background-color: var(--surface-primary-inverse);
+  z-index: 9999999999;
 
   /* Tooltip non-responsive styles */
   width: ${({ width }) => width};
@@ -96,21 +97,23 @@ const Tooltip: FC<TooltipProps> = ({
           {children}
         </RadixTooltip.Trigger>
         <RadixTooltip.Portal>
-          <RadixTooltipContent
-            sideOffset={8}
-            {...{ style, width, maxWidth }}
-            {...cssProps}
-            {...props}
-          >
-            {overlay ? (
-              overlay
-            ) : (
-              <>
-                {title && <StyledTitle>{title}</StyledTitle>}
-                {description && <StyledDescription>{description}</StyledDescription>}
-              </>
-            )}
-          </RadixTooltipContent>
+          {(title || overlay || description) && (
+            <RadixTooltipContent
+              sideOffset={8}
+              {...{ style, width, maxWidth }}
+              {...cssProps}
+              {...props}
+            >
+              {overlay ? (
+                overlay
+              ) : (
+                <>
+                  {title && <StyledTitle>{title}</StyledTitle>}
+                  {description && <StyledDescription>{description}</StyledDescription>}
+                </>
+              )}
+            </RadixTooltipContent>
+          )}
         </RadixTooltip.Portal>
       </RadixTooltip.Root>
     </RadixTooltip.Provider>
