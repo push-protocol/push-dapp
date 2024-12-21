@@ -7,18 +7,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineMore } from 'react-icons/ai';
 
+// Internal Configs
+import { device } from 'config/Globals';
+
 // Internal Components
 import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { Alert, Box, Text } from 'blocks';
-
-// Internal Configs
-import { device } from 'config/Globals';
+import UserProfileSettings from 'components/UserProfileSettings/UserProfileSettings';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
 import UserPlanAndBillings from 'components/userPlanAndBillings/UserPlanAndBillings';
+import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
 
 interface ChannelListItem {
   channel: string;
@@ -38,6 +40,10 @@ function UserSettings() {
 
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // for alerts
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -97,18 +103,24 @@ function UserSettings() {
   const selectOptions = [
     {
       value: 0,
+      label: 'My Profile',
+      title: 'Your Profile',
+      section: 'top',
+    },
+    {
+      value: 1,
       label: 'Notification Settings',
       title: 'Notification Settings',
       section: 'top',
     },
     {
-      value: 1,
+      value: 2,
       label: 'Push Snap',
       title: '',
       section: 'top',
     },
     {
-      value: 2,
+      value: 3,
       label: 'Plan & Billing',
       title: 'Plan & Billing',
       section: 'bottom',
@@ -119,6 +131,7 @@ function UserSettings() {
     <Container>
       <PageTitle>Settings</PageTitle>
       <PageDescription>Customize your Push profile or manage your notification preferences</PageDescription>
+
       <Wrapper>
         <SelectSection>
           {selectOptions
@@ -155,7 +168,7 @@ function UserSettings() {
         </SelectSection>
 
         <ChannelBlock>
-          {/* {successMessage && (
+          {successMessage && (
             <Box margin="spacing-sm spacing-none spacing-none spacing-none">
               <Alert
                 variant="success"
@@ -171,9 +184,9 @@ function UserSettings() {
                 heading={errorMessage}
               />
             </Box>
-          )} */}
+          )}
 
-          {selectedOption === 2 && (
+          {selectedOption === 3 && (
             <Alert
               showIcon={false}
               heading="Go Pro for $14.99/mo and unlock access to more features"
@@ -191,11 +204,32 @@ function UserSettings() {
                 </SectionTitle>
               )}
 
-              {selectedOption === 0 && <ChannelListSettings />}
-              {selectedOption === 1 && <PushSnapSettings />}
-              {selectedOption === 2 && <UserPlanAndBillings />}
+              {selectedOption === 0 && (
+                <UserProfileSettings
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  successMessage={successMessage}
+                  setSuccessMessage={setSuccessMessage}
+                />
+              )}
+              {selectedOption === 1 && <ChannelListSettings />}
+              {selectedOption === 2 && <PushSnapSettings />}
+              {selectedOption === 3 && <UserPlanAndBillings />}
             </ChannelContainer>
           </ChannelWrapper>
+
+          {selectedOption == 0 && (
+            <ChannelWrapper>
+              <ChannelContainer selectedOption={selectedOption}>
+                <UserProfileSocialSettings
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  successMessage={successMessage}
+                  setSuccessMessage={setSuccessMessage}
+                />
+              </ChannelContainer>
+            </ChannelWrapper>
+          )}
         </ChannelBlock>
       </Wrapper>
     </Container>
@@ -339,7 +373,7 @@ const ChannelBlock = styled.div`
 
 const ChannelContainer = styled.div<{ selectedOption: number }>`
   overflow-y: auto;
-  height: 55vh;
+  height: ${(props) => (props.selectedOption === 0 ? 'auto' : '55vh')};
   padding: 12px;
 
   &::-webkit-scrollbar-track {

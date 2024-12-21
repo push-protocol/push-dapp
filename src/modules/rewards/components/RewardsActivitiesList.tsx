@@ -15,6 +15,7 @@ import {
 import { useRewardsContext } from 'contexts/RewardsContext';
 
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
+import SocialHandleItem from './SocialHandleItem';
 
 export type RewardActivitiesProps = {};
 
@@ -39,22 +40,31 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     ? Array(2).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`social-activity`) && activity?.status === 'ENABLED');
 
+  const emailTelegramActivities = activityList.filter(
+    (activity) => activity.index.startsWith(`custom-delivery`) && activity?.status === 'ENABLED'
+  )[0];
+
   const platformRewardActivities = isLoading
     ? Array(7).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`reward-activity`) && activity?.status === 'ENABLED');
 
-  const channelSubscriptionActivities = activityList.filter(
-    (activity) => activity.index.startsWith(`channel-subscription`) && activity?.status === 'ENABLED'
+  const channelSubscriptionActivities = activityList.filter((activity) =>
+    activity.index.startsWith(`channel-subscription`)
   );
 
   const { isLocked } = useRewardsContext();
 
   // Combine all activities into a single array
-  const allActivities = [...socialActivities, ...platformRewardActivities, ...channelSubscriptionActivities];
+  const allActivities = [
+    ...socialActivities,
+    ...platformRewardActivities,
+    ...channelSubscriptionActivities,
+    emailTelegramActivities,
+  ];
 
   // Extract the `activityType` from each activity and filter out any undefined values
   const activityTypes = allActivities
-    .map((activity) => activity.activityType) // Extract `activityType`
+    .map((activity) => activity?.activityType) // Extract `activityType`
     .filter(Boolean); // Remove undefined/null values
 
   const {
@@ -70,84 +80,122 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     <Box
       display="flex"
       flexDirection="column"
-      gap="spacing-sm"
+      gap="spacing-md"
     >
-      {/* These are the social activites Twitter and discord */}
-      {socialActivities.map((activity: Activity) => (
-        <RewardsActivitiesListItem
-          key={activity.activityType}
-          userId={userDetails?.userId || ''}
-          activity={activity}
-          isLoadingItem={isLoading}
-          isLocked={isLocked}
-          allUsersActivity={allUsersActivity as StakeActivityResponse}
-          isAllActivitiesLoading={isAllActivitiesLoading}
-          refetchActivity={refetchActivity}
-        />
-      ))}
-      {(isLocked || !isWalletConnected) && (
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          margin="spacing-xxs spacing-none"
-          gap="spacing-xxs"
-          css={css`
-            &:before,
-            &:after {
-              content: '';
-              flex: 1 1;
-              border-bottom: 1px solid var(--stroke-secondary);
-              margin: auto;
-            }
-            &:before {
-              margin-right: var(--s3);
-            }
-            &:after {
-              margin-left: var(--s3);
-            }
-          `}
+      <Box
+        gap="spacing-sm"
+        backgroundColor="surface-primary"
+        borderRadius="radius-md"
+        display="flex"
+        flexDirection="column"
+        margin="spacing-xs spacing-none spacing-none spacing-none"
+        padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
+      >
+        <Text
+          variant="h4-bold"
+          color="text-primary"
         >
-          <Lock
-            size={28}
-            color="icon-tertiary"
+          Activities
+        </Text>
+
+        {/* These are the social activites Twitter and discord */}
+        {socialActivities.map((activity: Activity) => (
+          <RewardsActivitiesListItem
+            key={activity.activityType}
+            userId={userDetails?.userId || ''}
+            activity={activity}
+            isLoadingItem={isLoading}
+            isLocked={isLocked}
+            allUsersActivity={allUsersActivity as StakeActivityResponse}
+            isAllActivitiesLoading={isAllActivitiesLoading}
+            refetchActivity={refetchActivity}
           />
-          <Text
-            variant="bs-semibold"
-            color="text-tertiary"
+        ))}
+        {(isLocked || !isWalletConnected) && (
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            margin="spacing-xxs spacing-none"
+            gap="spacing-xxs"
+            css={css`
+              &:before,
+              &:after {
+                content: '';
+                flex: 1 1;
+                border-bottom: 1px solid var(--stroke-secondary);
+                margin: auto;
+              }
+              &:before {
+                margin-right: var(--s3);
+              }
+              &:after {
+                margin-left: var(--s3);
+              }
+            `}
           >
-            Verify X and Discord to unlock more activities
-          </Text>
-        </Box>
-      )}
+            <Lock
+              size={28}
+              color="icon-tertiary"
+            />
+            <Text
+              variant="bs-semibold"
+              color="text-tertiary"
+            >
+              Verify X and Discord to unlock more activities
+            </Text>
+          </Box>
+        )}
 
-      {/* Activites related specific channel subscription */}
-      {channelSubscriptionActivities.map((activity: Activity) => (
-        <RewardsActivitiesListItem
-          key={activity.activityType}
+        <SocialHandleItem
+          key={emailTelegramActivities?.activityType}
           userId={userDetails?.userId || ''}
-          activity={activity}
+          activity={emailTelegramActivities!}
           isLoadingItem={isLoading}
           isLocked={isLocked}
           allUsersActivity={allUsersActivity as StakeActivityResponse}
           isAllActivitiesLoading={isAllActivitiesLoading}
           refetchActivity={refetchActivity}
         />
-      ))}
+      </Box>
 
-      {/* These are other platform specifc reward activities */}
-      {platformRewardActivities.map((activity: Activity) => (
-        <RewardsActivitiesListItem
-          key={activity.activityType}
-          userId={userDetails?.userId || ''}
-          activity={activity}
-          isLoadingItem={isLoading}
-          isLocked={isLocked}
-          allUsersActivity={allUsersActivity as StakeActivityResponse}
-          isAllActivitiesLoading={isAllActivitiesLoading}
-          refetchActivity={refetchActivity}
-        />
-      ))}
+      <Box
+        gap="spacing-sm"
+        backgroundColor="surface-primary"
+        borderRadius="radius-md"
+        display="flex"
+        flexDirection="column"
+        margin="spacing-xs spacing-none spacing-none spacing-none"
+        padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
+      >
+        {/* Activites related specific channel subscription */}
+        {channelSubscriptionActivities.map((activity: Activity) => (
+          <RewardsActivitiesListItem
+            key={activity.activityType}
+            userId={userDetails?.userId || ''}
+            activity={activity}
+            isLoadingItem={isLoading}
+            isLocked={isLocked}
+            allUsersActivity={allUsersActivity as StakeActivityResponse}
+            isAllActivitiesLoading={isAllActivitiesLoading}
+            refetchActivity={refetchActivity}
+          />
+        ))}
+
+        {/* These are other platform specifc reward activities */}
+        {platformRewardActivities.map((activity: Activity) => (
+          <RewardsActivitiesListItem
+            key={activity.activityType}
+            userId={userDetails?.userId || ''}
+            activity={activity}
+            isLoadingItem={isLoading}
+            isLocked={isLocked}
+            allUsersActivity={allUsersActivity as StakeActivityResponse}
+            isAllActivitiesLoading={isAllActivitiesLoading}
+            refetchActivity={refetchActivity}
+          />
+        ))}
+      </Box>
     </Box>
   );
 };

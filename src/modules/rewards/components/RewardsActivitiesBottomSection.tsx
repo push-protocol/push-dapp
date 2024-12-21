@@ -17,16 +17,7 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
       gap="spacing-lg"
       margin="spacing-none spacing-none spacing-md spacing-none"
     >
-      <Box
-        backgroundColor="surface-primary"
-        borderRadius="radius-md"
-        display="flex"
-        flexDirection="column"
-        margin="spacing-xs spacing-none spacing-none spacing-none"
-        padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
-      >
-        <RewardsActivitiesSection />
-      </Box>
+      <RewardsActivitiesSection />
 
       <Box
         backgroundColor="surface-primary"

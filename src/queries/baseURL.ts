@@ -20,4 +20,17 @@ export const getRewardsBaseURL = () => {
   }
 };
 
+export const getCustomDeliveryURL = () => {
+  switch (appConfig.appEnv) {
+    case 'prod':
+      return `https://custom-delivery.push.org`;
+    case 'staging':
+      return `https://custom-delivery-dev.push.org`;
+    case 'dev':
+      return `https://custom-delivery-dev.push.org`;
+    default:
+      return `https://custom-delivery-dev.push.org`;
+  }
+};
+
 export const analyticsBaseURL = 'https://backend.epns.io/apis/v1';

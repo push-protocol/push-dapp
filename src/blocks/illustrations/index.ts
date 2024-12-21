@@ -7,6 +7,8 @@ export { default as AlphaAccessNFT } from './components/AlphaAccessNFT';
 
 export { default as Arbitrum } from './components/Arbitrum';
 
+export { default as Avatar } from './components/Avatar';
+
 export { default as Base } from './components/Base';
 
 export { default as BlueBonusActivitySubscribers } from './components/BlueBonusActivitySubscribers';
@@ -29,7 +31,11 @@ export { default as CyberLogoRewards } from './components/CyberLogoRewards';
 
 export { default as Discord } from './components/Discord';
 
+export { default as DiscordProfile } from './components/DiscordProfile';
+
 export { default as EarnOnPush } from './components/EarnOnPush';
+
+export { default as EmailProfile } from './components/EmailProfile';
 
 export { default as Ethereum } from './components/Ethereum';
 
@@ -98,6 +104,10 @@ export { default as StakePushYellowCoin } from './components/StakePushYellowCoin
 export { default as StakePushYellowMultiplier } from './components/StakePushYellowMultiplier';
 
 export { default as SubscribePoints } from './components/SubscribePoints';
+
+export { default as Telegram } from './components/Telegram';
+
+export { default as TelegramProfile } from './components/TelegramProfile';
 
 export { default as TripleRewardsCoin } from './components/TripleRewardsCoin';
 
