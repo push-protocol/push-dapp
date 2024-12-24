@@ -75,7 +75,7 @@ const NotificationItem: FC<NotificationProps> = ({ overlay, onClose, title, desc
   const handleNotificationClick = () => onClick?.();
   const handleNotificationClose = () => {
     onClose?.();
-    console.log('close close');
+    notification.hide();
   };
   return (
     <Container onClick={handleNotificationClick}>
