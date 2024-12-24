@@ -43,17 +43,17 @@ const AnalyticsOverview: FC<AnalyticsOverviewProps> = () => {
       <Text variant="h4-bold">Analytics Overview</Text>
       <StatsContainer
         title="Notifications Sent"
-        stats={notificationCount || 139000000}
+        stats={notificationCount || 140902329}
         isLoading={loadingNotificationCount}
       />
       <StatsContainer
         title="Subscribers"
-        stats={subscriberCount || 300000}
+        stats={subscriberCount || 296625}
         isLoading={loadingSubscriberCount}
       />
       <StatsContainer
         title="Messages Sent"
-        stats={messageCount || 0}
+        stats={messageCount || 58834}
         isLoading={loadingMessageCount}
       />
     </Box>
