@@ -127,8 +127,7 @@ const notification = {
   },
   hide: () => {
     if (toastIds.length > 0) {
-      const toastId = toastIds.pop();
-      toast.dismiss(toastId);
+      toast.dismiss();
     }
   },
 };
