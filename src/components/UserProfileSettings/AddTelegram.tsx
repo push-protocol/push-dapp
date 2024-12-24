@@ -6,7 +6,7 @@ import { useAccount } from 'hooks';
 import { useAppContext } from 'contexts/AppContext';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
-import { useSendHandlesVerificationCode } from 'queries';
+import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
 import { appConfig } from 'config';
 
 import { Box, Button, Link, Modal, Telegram, Text, TextInput } from 'blocks';
@@ -29,7 +29,7 @@ enum Steps {
 const AddTelegram: FC<AddTelegramProps> = ({
   modalControl,
   refetchSocialHandleStatus,
-  // setErrorMessage,
+  setErrorMessage,
   setSuccessMessage,
 }) => {
   const { isOpen, onClose } = modalControl;
@@ -37,14 +37,15 @@ const AddTelegram: FC<AddTelegramProps> = ({
   const { handleConnectWalletAndEnableProfile } = useAppContext();
 
   const caip10WalletAddress = walletToCAIP10({ account });
-  const [step, setStep] = useState(2);
-  const [telegramCode, setTelegramCode] = useState<string>('0000000');
+  const [step, setStep] = useState(1);
+  const [telegramCode, setTelegramCode] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
 
   const { mutate: sendVerification, isPending: isSendingVerification } = useSendHandlesVerificationCode();
+  const { mutate: verifyVerification, isPending: isVerifyingTelegram } = useVerifyHandlesVerificationCode();
 
   const getSDKInstance = useCallback(async () => {
     return userPushSDKInstance?.signer ? userPushSDKInstance : await handleConnectWalletAndEnableProfile({ wallet });
@@ -83,6 +84,44 @@ const AddTelegram: FC<AddTelegramProps> = ({
         onError: (error: Error) => {
           console.log('Error sending code', error);
           setIsLoading(false);
+        },
+      }
+    );
+  };
+
+  const handleVerificationCode = async () => {
+    const sdkInstance = await getSDKInstance();
+    const data = {
+      wallet: caip10WalletAddress,
+      value: { telegram_username: telegramFormik.values.telegram },
+      valueType: 'telegram',
+      verificationCode: telegramCode,
+    };
+
+    const verificationProof = await generateVerificationProof(data, sdkInstance);
+
+    if (!verificationProof) return;
+
+    verifyVerification(
+      {
+        caipAddress: caip10WalletAddress as string,
+        verificationCode: telegramCode,
+        value: { telegram_username: telegramFormik.values.telegram },
+        social_platform: 'telegram',
+      },
+      {
+        onSuccess: (response: any) => {
+          if (response?.success) {
+            onClose();
+            refetchSocialHandleStatus();
+            setSuccessMessage('Telegram Account was linked successfully');
+          } else {
+            telegramFormik?.setFieldError('telegram', 'Error verifying code. Please try again');
+          }
+        },
+        onError: (error: Error) => {
+          console.log('Error verifying code', error);
+          setErrorMessage('Error verifying code');
         },
       }
     );
@@ -280,7 +319,12 @@ const AddTelegram: FC<AddTelegramProps> = ({
               justifyContent="center"
               width="100%"
             >
-              <Button>Complete Verification</Button>
+              <Button
+                loading={isVerifyingTelegram}
+                onClick={handleVerificationCode}
+              >
+                Complete Verification
+              </Button>
             </Box>
           </Box>
         </Box>
