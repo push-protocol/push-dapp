@@ -75,7 +75,7 @@ const NotificationItem: FC<NotificationProps> = ({ overlay, onClose, title, desc
   const handleNotificationClick = () => onClick?.();
   const handleNotificationClose = () => {
     onClose?.();
-    notification.hide();
+    console.log('close close');
   };
   return (
     <Container onClick={handleNotificationClick}>
@@ -127,8 +127,7 @@ const notification = {
   },
   hide: () => {
     if (toastIds.length > 0) {
-      const toastId = toastIds.pop();
-      toast.dismiss(toastId);
+      toast.dismiss();
     }
   },
 };

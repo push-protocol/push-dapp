@@ -27,6 +27,7 @@ export const useRewardsNotification = () => {
       },
       onClose: () => {
         localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
+        notification.hide();
       },
     });
 
