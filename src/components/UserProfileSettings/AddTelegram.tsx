@@ -9,7 +9,7 @@ import { generateVerificationProof } from 'modules/rewards/utils/generateVerific
 import { useSendHandlesVerificationCode } from 'queries';
 import { appConfig } from 'config';
 
-import { Box, Link, Modal, Telegram, Text, TextInput } from 'blocks';
+import { Box, Button, Link, Modal, Telegram, Text, TextInput } from 'blocks';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useTelegramFormik } from './AddTelegram.form';
 import { css } from 'styled-components';
@@ -37,8 +37,8 @@ const AddTelegram: FC<AddTelegramProps> = ({
   const { handleConnectWalletAndEnableProfile } = useAppContext();
 
   const caip10WalletAddress = walletToCAIP10({ account });
-  const [step, setStep] = useState(1);
-  const [telegramCode, setTelegramCode] = useState<string>('');
+  const [step, setStep] = useState(2);
+  const [telegramCode, setTelegramCode] = useState<string>('0000000');
   const [isLoading, setIsLoading] = useState(false);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -93,10 +93,10 @@ const AddTelegram: FC<AddTelegramProps> = ({
 
   return (
     <Modal
-      size="small"
+      size={step === Steps.EnterTelegram ? 'small' : 'medium'}
       isOpen={isOpen}
       onClose={() => {
-        setSuccessMessage('')
+        setSuccessMessage('');
         refetchSocialHandleStatus();
         onClose();
       }}
@@ -106,12 +106,12 @@ const AddTelegram: FC<AddTelegramProps> = ({
       acceptButtonProps={
         step === Steps.EnterTelegram
           ? {
-            children: 'Next',
-            loading: isSendingVerification || isLoading,
-            onClick: () => {
-              telegramFormik?.handleSubmit();
-            },
-          }
+              children: 'Next',
+              loading: isSendingVerification || isLoading,
+              onClick: () => {
+                telegramFormik?.handleSubmit();
+              },
+            }
           : null
       }
       cancelButtonProps={null}
@@ -263,8 +263,26 @@ const AddTelegram: FC<AddTelegramProps> = ({
             variant="bs-regular"
             color="text-tertiary"
           >
-            Please ensure you’re logged into your Telegram account. Click on Complete Verification below once complete.
+            Please ensure you’re logged into your Telegram account.
           </Text>
+
+          <Box margin="spacing-lg spacing-none spacing-none spacing-none">
+            <Text
+              textAlign="center"
+              variant="bl-regular"
+            >
+              Step 3: Click on the Complete Verification button once the above steps are completed
+            </Text>
+
+            <Box
+              margin="spacing-xs spacing-none"
+              display="flex"
+              justifyContent="center"
+              width="100%"
+            >
+              <Button>Complete Verification</Button>
+            </Box>
+          </Box>
         </Box>
       )}
     </Modal>
