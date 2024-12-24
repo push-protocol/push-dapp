@@ -1,0 +1,1 @@
+import{d_ as e,es as s,__tla as r}from"./index-DEzdR-F1.js";let a,l=Promise.all([(()=>{try{return r}catch{}})()]).then(async()=>{let t;t={height:"45px"},a=()=>e.jsx(s,{color:"#CF1C84",height:9,width:2.5,margin:0,css:t})});export{a as L,l as __tla};
