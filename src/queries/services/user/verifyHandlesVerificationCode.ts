@@ -5,7 +5,7 @@ import { verifyHandlesVerificationCodeModelCreator } from 'queries/models';
 
 type verifyHandlesVerificationCodeType = {
   caipAddress: string;
-  value: string;
+  value: string | { telegram_username: string } | { discord_username: string };
   verificationCode: string;
   social_platform: 'email' | 'discord' | 'telegram';
 };

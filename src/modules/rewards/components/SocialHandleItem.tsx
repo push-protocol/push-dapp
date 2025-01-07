@@ -7,6 +7,7 @@ import useLockedStatus from '../hooks/useLockedStatus';
 import { Alert, Box, Button, Skeleton } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { SocialHandles } from 'modules/dashboard/components/Socialhandles';
+import { useSocialHandles } from 'modules/dashboard/hooks/useSocialHandles';
 
 export type SocialHandleItemFCType = {
   userId: string;
@@ -36,6 +37,8 @@ const SocialHandleItem: FC<SocialHandleItemFCType> = ({
   const [successMessage, setSuccessMessage] = useState<string>('');
   const { refetchRecentActivities, getLockStatus, statusRecentActivities } = useLockedStatus();
 
+  const { socialHandleStatus } = useSocialHandles(setErrorMessage, false);
+
   const isRewardsLocked = useMemo(() => {
     return (
       (isLocked || !isWalletConnected) &&
@@ -43,6 +46,8 @@ const SocialHandleItem: FC<SocialHandleItemFCType> = ({
       activity?.activityType !== 'follow_push_on_twitter'
     );
   }, [isLocked, isWalletConnected, activity?.activityType]);
+
+  const hasUserConnectedAccounts = socialHandleStatus?.email && socialHandleStatus?.telegram_username;
 
   const updateActivities = () => {
     refetchActivity();
@@ -55,6 +60,8 @@ const SocialHandleItem: FC<SocialHandleItemFCType> = ({
       getLockStatus();
     }
   }, [usersSingleActivity?.status, activity?.activityType, statusRecentActivities]);
+
+  console.log(socialHandleStatus, 'soc soc', hasUserConnectedAccounts);
 
   return (
     <Skeleton isLoading={isLoadingItem}>
@@ -96,7 +103,7 @@ const SocialHandleItem: FC<SocialHandleItemFCType> = ({
               >
                 Locked
               </Button>
-            ) : (
+            ) : hasUserConnectedAccounts ? (
               <ActivityButton
                 userId={userId}
                 activityTypeId={activity?.id}
@@ -107,6 +114,14 @@ const SocialHandleItem: FC<SocialHandleItemFCType> = ({
                 isLoadingActivity={isLoading}
                 label={'Claim'}
               />
+            ) : (
+              <Button
+                size="small"
+                variant="tertiary"
+                disabled
+              >
+                Claim
+              </Button>
             )
           }
         />

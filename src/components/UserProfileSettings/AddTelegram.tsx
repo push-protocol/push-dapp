@@ -6,10 +6,10 @@ import { useAccount } from 'hooks';
 import { useAppContext } from 'contexts/AppContext';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { generateVerificationProof } from 'modules/rewards/utils/generateVerificationProof';
-import { useSendHandlesVerificationCode } from 'queries';
+import { useSendHandlesVerificationCode, useVerifyHandlesVerificationCode } from 'queries';
 import { appConfig } from 'config';
 
-import { Box, Link, Modal, Telegram, Text, TextInput } from 'blocks';
+import { Box, Button, Link, Modal, Telegram, Text, TextInput } from 'blocks';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useTelegramFormik } from './AddTelegram.form';
 import { css } from 'styled-components';
@@ -29,7 +29,7 @@ enum Steps {
 const AddTelegram: FC<AddTelegramProps> = ({
   modalControl,
   refetchSocialHandleStatus,
-  // setErrorMessage,
+  setErrorMessage,
   setSuccessMessage,
 }) => {
   const { isOpen, onClose } = modalControl;
@@ -45,6 +45,7 @@ const AddTelegram: FC<AddTelegramProps> = ({
   });
 
   const { mutate: sendVerification, isPending: isSendingVerification } = useSendHandlesVerificationCode();
+  const { mutate: verifyVerification, isPending: isVerifyingTelegram } = useVerifyHandlesVerificationCode();
 
   const getSDKInstance = useCallback(async () => {
     return userPushSDKInstance?.signer ? userPushSDKInstance : await handleConnectWalletAndEnableProfile({ wallet });
@@ -88,15 +89,53 @@ const AddTelegram: FC<AddTelegramProps> = ({
     );
   };
 
+  const handleVerificationCode = async () => {
+    const sdkInstance = await getSDKInstance();
+    const data = {
+      wallet: caip10WalletAddress,
+      value: { telegram_username: telegramFormik.values.telegram },
+      valueType: 'telegram',
+      verificationCode: telegramCode,
+    };
+
+    const verificationProof = await generateVerificationProof(data, sdkInstance);
+
+    if (!verificationProof) return;
+
+    verifyVerification(
+      {
+        caipAddress: caip10WalletAddress as string,
+        verificationCode: telegramCode,
+        value: { telegram_username: telegramFormik.values.telegram },
+        social_platform: 'telegram',
+      },
+      {
+        onSuccess: (response: any) => {
+          if (response?.success) {
+            onClose();
+            refetchSocialHandleStatus();
+            setSuccessMessage('Telegram Account was linked successfully');
+          } else {
+            telegramFormik?.setFieldError('telegram', 'Error verifying code. Please try again');
+          }
+        },
+        onError: (error: Error) => {
+          console.log('Error verifying code', error);
+          setErrorMessage('Error verifying code');
+        },
+      }
+    );
+  };
+
   // Formik hooks from form.ts
   const telegramFormik = useTelegramFormik(handleSendVerificationCode);
 
   return (
     <Modal
-      size="small"
+      size={step === Steps.EnterTelegram ? 'small' : 'medium'}
       isOpen={isOpen}
       onClose={() => {
-        setSuccessMessage('')
+        setSuccessMessage('');
         refetchSocialHandleStatus();
         onClose();
       }}
@@ -106,12 +145,12 @@ const AddTelegram: FC<AddTelegramProps> = ({
       acceptButtonProps={
         step === Steps.EnterTelegram
           ? {
-            children: 'Next',
-            loading: isSendingVerification || isLoading,
-            onClick: () => {
-              telegramFormik?.handleSubmit();
-            },
-          }
+              children: 'Next',
+              loading: isSendingVerification || isLoading,
+              onClick: () => {
+                telegramFormik?.handleSubmit();
+              },
+            }
           : null
       }
       cancelButtonProps={null}
@@ -263,8 +302,31 @@ const AddTelegram: FC<AddTelegramProps> = ({
             variant="bs-regular"
             color="text-tertiary"
           >
-            Please ensure you’re logged into your Telegram account. Click on Complete Verification below once complete.
+            Please ensure you’re logged into your Telegram account.
           </Text>
+
+          <Box margin="spacing-lg spacing-none spacing-none spacing-none">
+            <Text
+              textAlign="center"
+              variant="bl-regular"
+            >
+              Step 3: Click on the Complete Verification button once the above steps are completed
+            </Text>
+
+            <Box
+              margin="spacing-xs spacing-none"
+              display="flex"
+              justifyContent="center"
+              width="100%"
+            >
+              <Button
+                loading={isVerifyingTelegram}
+                onClick={handleVerificationCode}
+              >
+                Complete Verification
+              </Button>
+            </Box>
+          </Box>
         </Box>
       )}
     </Modal>
