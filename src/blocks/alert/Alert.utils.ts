@@ -28,6 +28,13 @@ export const alertVariants: Record<
     bgColor: 'components-alert-background-info',
     ctaColor: 'components-alert-text-cta-info',
   },
+  basic: {
+    icon: InfoFilled,
+    iconColor: 'components-alert-icon-basic',
+    borderColor: 'components-alert-stroke-basic',
+    bgColor: 'components-alert-background-basic',
+    ctaColor: 'components-alert-text-cta-basic',
+  },
   error: {
     icon: WarningCircleFilled,
     iconColor: 'components-alert-icon-error',

@@ -9,12 +9,12 @@ import { AiOutlineMore } from 'react-icons/ai';
 
 // Internal Configs
 import { device } from 'config/Globals';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
+import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 
 // Internal Components
-import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
-import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { Alert, Box, Text } from 'blocks';
 import UserProfileSettings from 'components/UserProfileSettings/UserProfileSettings';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
@@ -31,6 +31,8 @@ interface ChannelListItem {
 }
 
 function UserSettings() {
+  const isMobile = useDeviceWidthCheck(800);
+
   const { account, chainId } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -145,14 +147,17 @@ function UserSettings() {
                 {option.label}
               </SelectListOption>
             ))}
-          <Box margin="spacing-lg spacing-none spacing-none spacing-none">
-            <Text
-              variant="os-regular"
-              color="text-tertiary"
-            >
-              Developers
-            </Text>
-          </Box>
+
+          {!isMobile && (
+            <Box margin="spacing-lg spacing-none spacing-none spacing-none">
+              <Text
+                variant="os-regular"
+                color="text-tertiary"
+              >
+                Developers
+              </Text>
+            </Box>
+          )}
 
           {selectOptions
             .filter((option) => option.section === 'bottom')
@@ -168,22 +173,25 @@ function UserSettings() {
         </SelectSection>
 
         <ChannelBlock>
-          {successMessage && (
-            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
-              <Alert
-                variant="success"
-                heading={successMessage}
-              />
-            </Box>
-          )}
-
-          {errorMessage && (
-            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
-              <Alert
-                variant="error"
-                heading={errorMessage}
-              />
-            </Box>
+          {selectedOption === 0 && (
+            <>
+              {successMessage && (
+                <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+                  <Alert
+                    variant="success"
+                    heading={successMessage}
+                  />
+                </Box>
+              )}
+              {errorMessage && (
+                <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+                  <Alert
+                    variant="error"
+                    heading={errorMessage}
+                  />
+                </Box>
+              )}
+            </>
           )}
 
           {selectedOption === 3 && (
@@ -192,7 +200,7 @@ function UserSettings() {
               heading="Go Pro for $14.99/mo and unlock access to more features"
               onAction={() => console.log('idea')}
               actionText="Upgrade Plan"
-              variant="info"
+              variant="basic"
             />
           )}
 
@@ -372,8 +380,8 @@ const ChannelBlock = styled.div`
 `;
 
 const ChannelContainer = styled.div<{ selectedOption: number }>`
-  overflow-y: auto;
-  height: ${(props) => (props.selectedOption === 0 ? 'auto' : '55vh')};
+  overflow-y: ${(props) => (props.selectedOption === 3 ? 'none' : 'auto')};
+  height: ${(props) => (props.selectedOption === 0 || props.selectedOption === 3 ? 'auto' : '55vh')};
   padding: 12px;
 
   &::-webkit-scrollbar-track {
