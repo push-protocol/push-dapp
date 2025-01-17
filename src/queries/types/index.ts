@@ -5,3 +5,4 @@ export * from './pointsVault';
 export * from './createChannel';
 export * from './notificationsettings';
 export * from './chat';
+export * from './support';
