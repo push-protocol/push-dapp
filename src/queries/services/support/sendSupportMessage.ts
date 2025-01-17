@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { analyticsBaseURL } from 'queries/baseURL';
 
 import { sendSupportMessageModelCreator } from 'queries/models';
 
@@ -13,7 +14,7 @@ type sendSupportMessageType = {
 export const sendSupportMessage = async (payload: sendSupportMessageType) => {
   const response = await axios({
     method: 'POST',
-    url: 'https://backend-kovan.epns.io/apis/mailing/sendMail',
+    url: `${analyticsBaseURL}/mailing/send`,
     data: payload,
     headers: {
       'Content-Type': 'application/json',
