@@ -13,7 +13,7 @@ type sendSupportMessageType = {
 export const sendSupportMessage = async (payload: sendSupportMessageType) => {
   const response = await axios({
     method: 'POST',
-    url: 'https://backend-kovan.epns.io/apis/mailing/sendMail',
+    url: 'https://tooling.push.org/apis/mailing/send_mail',
     data: payload,
     headers: {
       'Content-Type': 'application/json',
