@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { analyticsBaseURL } from 'queries/baseURL';
+import { pushsupportBaseURL } from 'queries/baseURL';
 
 import { sendSupportMessageModelCreator } from 'queries/models';
 
@@ -14,7 +14,7 @@ type sendSupportMessageType = {
 export const sendSupportMessage = async (payload: sendSupportMessageType) => {
   const response = await axios({
     method: 'POST',
-    url: `${analyticsBaseURL}/mailing/send`,
+    url: `${pushsupportBaseURL}/mailing/send_mail`,
     data: payload,
     headers: {
       'Content-Type': 'application/json',

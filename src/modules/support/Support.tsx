@@ -48,7 +48,7 @@ const Support: FC<SupportProps> = () => {
         },
         onError: (error: Error) => {
           console.log('Error sending code', error);
-          setContactFormAlertMsg('Mayday! Mayday! something went wrong. Please retry...');
+          setContactFormAlertMsg('Error in sending mail, please try again later...');
           setStatus(2);
         },
       }
