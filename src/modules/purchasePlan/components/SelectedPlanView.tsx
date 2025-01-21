@@ -1,9 +1,12 @@
 import { FC } from 'react';
-import { Box, Link, Text, Tick } from 'blocks';
-import { PricingPlan } from 'modules/pricing/Pricing.types';
 import { css } from 'styled-components';
 
-export type SelectedPlanViewProps = { selectedPlan: PricingPlan };
+import { formatSentenceWithBoldNumbers, parseStringToArray } from 'modules/pricing/utils';
+import { PricingPlanType } from 'queries/types/pricing';
+
+import { Box, Link, Text, Tick } from 'blocks';
+
+export type SelectedPlanViewProps = { selectedPlan: PricingPlanType };
 const SelectedPlanView: FC<SelectedPlanViewProps> = ({ selectedPlan }) => {
   return (
     <Box
@@ -12,7 +15,7 @@ const SelectedPlanView: FC<SelectedPlanViewProps> = ({ selectedPlan }) => {
       padding="spacing-md"
       width="50%"
     >
-      <Text variant="h3-semibold">Push {selectedPlan?.planName}</Text>
+      <Text variant="h3-semibold">Push {selectedPlan?.name}</Text>
       <Link
         to="/pricing"
         isText
@@ -29,14 +32,16 @@ const SelectedPlanView: FC<SelectedPlanViewProps> = ({ selectedPlan }) => {
 
       <Box padding="spacing-md spacing-none spacing-none spacing-none">
         <Text variant="h2-semibold">
-          {selectedPlan?.currency} {selectedPlan?.price}
+          {selectedPlan?.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
         </Text>
-        <Text
-          color="text-tertiary"
-          variant="bs-semibold"
-        >
-          {selectedPlan?.billingCriteria}
-        </Text>
+        {selectedPlan?.value > 0 && (
+          <Text
+            color="text-tertiary"
+            variant="bs-semibold"
+          >
+            per month billed yearly
+          </Text>
+        )}
       </Box>
 
       {/* Render the Plan benefit list */}
@@ -46,7 +51,7 @@ const SelectedPlanView: FC<SelectedPlanViewProps> = ({ selectedPlan }) => {
         gap="spacing-sm"
         padding="spacing-lg spacing-none spacing-none spacing-none"
       >
-        {selectedPlan?.planBenefits.map((benefit, benefitIndex) => (
+        {parseStringToArray(selectedPlan?.description)?.map((benefit, benefitIndex) => (
           <Box
             flexDirection="row"
             display="flex"
@@ -62,19 +67,11 @@ const SelectedPlanView: FC<SelectedPlanViewProps> = ({ selectedPlan }) => {
               display="flex"
               gap="spacing-xxxs"
             >
-              {benefit?.limit && (
-                <Text
-                  color="text-primary"
-                  variant="bs-bold"
-                >
-                  {benefit?.limit}
-                </Text>
-              )}
               <Text
                 color="text-primary"
                 variant="bs-regular"
               >
-                {benefit?.benefitName}
+                {formatSentenceWithBoldNumbers(benefit)}
               </Text>
             </Box>
           </Box>

@@ -1,12 +1,13 @@
 import { FC, useState } from 'react';
 import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput, Tick } from 'blocks';
-import { PricingPlan, PricingPlanTabsType } from 'modules/pricing/Pricing.types';
+import { PricingPlanTabsType } from 'modules/pricing/Pricing.types';
 import { ConfirmPurchaseModal } from './ConfirmPurchaseModal';
 import { PurchasePlanModalTypes } from '../PusrchasePlan.types';
 import { PlanPurchasedModal } from './PlanPurchasedModal';
 import { useDisclosure } from 'common';
+import { PricingPlanType } from 'queries/types/pricing';
 
-export type PurchaseSummeryProps = { selectedPlan: PricingPlan };
+export type PurchaseSummeryProps = { selectedPlan: PricingPlanType };
 const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   const pricingPlanTabs: TabItem[] = [
     {
@@ -22,14 +23,15 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   ];
 
   const [selectedPricingPlanTab, setSelectedPricingPlanTab] = useState<PricingPlanTabsType>(
-    pricingPlanTabs[0].key as PricingPlanTabsType
+    pricingPlanTabs[0].key as PricingPlanTabsType,
   );
   const [email, setEmail] = useState('');
   const [isApproved, setIsApproved] = useState(false);
   const [modalType, setShowModalType] = useState<PurchasePlanModalTypes>(null);
   const modalControl = useDisclosure();
 
-  const totalAmount = selectedPlan?.price ? selectedPlan?.price * (selectedPricingPlanTab === 'yearly' ? 12 : 1) : 0;
+  const totalAmount = selectedPlan?.value ? selectedPlan?.value * (selectedPricingPlanTab === 'yearly' ? 12 : 1) : 0;
+  const usdcBalance = 0;
 
   const handleOnCloseModal = () => {
     if (modalType === 'confirmPurchase') {
@@ -100,7 +102,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
               color="text-secondary"
               variant="bl-bold"
             >
-              Push {selectedPlan?.planName}
+              Push {selectedPlan?.name}
             </Text>
           </Box>
 
@@ -148,32 +150,34 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
               variant="bs-regular"
               textAlign="right"
             >
-              Balance: 0
+              Balance: {usdcBalance}
             </Text>
           </Box>
 
-          <Link
-            style={{ alignSelf: 'center' }}
-            to="#"
-          >
-            <Box
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              gap="spacing-xxxs"
+          {usdcBalance < 1 && (
+            <Link
+              style={{ alignSelf: 'center' }}
+              to="#"
             >
-              <Text
-                color="text-brand-medium"
-                variant="bm-semibold"
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                gap="spacing-xxxs"
               >
-                Get more USDC
-              </Text>
-              <ExternalLink
-                size={16}
-                color="icon-brand-medium"
-              />
-            </Box>
-          </Link>
+                <Text
+                  color="text-brand-medium"
+                  variant="bm-semibold"
+                >
+                  Get more USDC
+                </Text>
+                <ExternalLink
+                  size={16}
+                  color="icon-brand-medium"
+                />
+              </Box>
+            </Link>
+          )}
         </Box>
 
         {/* Render bottom buttons */}

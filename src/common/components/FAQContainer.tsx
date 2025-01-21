@@ -84,19 +84,25 @@ const FAQContainer: FC<FAQContainerProps> = ({}) => {
                   {faqItem?.question}
                 </Text>
 
-                {expandedQid === faqItem?.id ? (
-                  <Dash
-                    color="icon-primary"
-                    onClick={() => setExpandedQid(null)}
-                    size={28}
-                  />
-                ) : (
-                  <Add
-                    color="icon-primary"
-                    onClick={() => setExpandedQid(faqItem?.id)}
-                    size={28}
-                  />
-                )}
+                <Box
+                  css={css`
+                    cursor: pointer;
+                  `}
+                >
+                  {expandedQid === faqItem?.id ? (
+                    <Dash
+                      color="icon-primary"
+                      onClick={() => setExpandedQid(null)}
+                      size={28}
+                    />
+                  ) : (
+                    <Add
+                      color="icon-primary"
+                      onClick={() => setExpandedQid(faqItem?.id)}
+                      size={28}
+                    />
+                  )}
+                </Box>
               </Box>
               {expandedQid && expandedQid === faqItem?.id && faqItem.answer}
             </Box>

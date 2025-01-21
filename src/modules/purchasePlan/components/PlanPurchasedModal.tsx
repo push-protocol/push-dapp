@@ -1,11 +1,14 @@
 import { FC } from 'react';
-import { Box, Modal, PushLogo, PushLogoWithNameDark, PushLogoWithNameLight, Text, Tick } from 'blocks';
-import { PricingPlan } from 'modules/pricing/Pricing.types';
+
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModalResponse } from 'common';
+import { PricingPlanType } from 'queries/types/pricing';
+
+import { Box, Modal, PushLogoWithNameDark, PushLogoWithNameLight, Text, Tick } from 'blocks';
+import { formatSentenceWithBoldNumbers, parseStringToArray } from 'modules/pricing/utils';
 
 export type PlanPurchasedModalProps = {
-  plan: PricingPlan;
+  plan: PricingPlanType;
   modalControl: ModalResponse;
   onClose: () => void;
 };
@@ -38,7 +41,7 @@ const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, o
             textAlign="center"
             variant="h3-semibold"
           >
-            Your {plan?.planName} plan is now active
+            Your {plan?.name} plan is now active
           </Text>
         </Box>
         <Box
@@ -59,7 +62,7 @@ const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, o
             flexDirection="column"
             gap="spacing-sm"
           >
-            {plan?.planBenefits.map((benefit, benefitIndex) => (
+            {parseStringToArray(plan?.description)?.map((benefit, benefitIndex) => (
               <Box
                 flexDirection="row"
                 display="flex"
@@ -75,19 +78,11 @@ const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, o
                   display="flex"
                   gap="spacing-xxxs"
                 >
-                  {benefit?.limit && (
-                    <Text
-                      color="text-primary"
-                      variant="bs-bold"
-                    >
-                      {benefit?.limit}
-                    </Text>
-                  )}
                   <Text
                     color="text-primary"
                     variant="bs-regular"
                   >
-                    {benefit?.benefitName}
+                    {formatSentenceWithBoldNumbers(benefit)}
                   </Text>
                 </Box>
               </Box>
