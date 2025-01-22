@@ -28,6 +28,7 @@ export const pointsVaultUserLoginKey = 'pointsVaultUserLogin';
 export const pushPreviousStakeEpoch = 'pushPreviousStakeEpoch';
 export const pushStakeEpoch = 'pushStakeEpoch';
 export const pricingInfo = 'pricingInfo';
+export const pricingStatus = 'pricingStatus';
 export const reactivatingChannel = 'reactivatingChannel';
 export const rejectVaultUser = 'rejectVaultUser';
 export const removeDelegate = 'removeDelegate';

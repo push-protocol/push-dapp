@@ -21,6 +21,9 @@ import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
 import UserPlanAndBillings from 'components/userPlanAndBillings/UserPlanAndBillings';
 import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { useGetPricingPlanStatus } from 'queries';
+import { calculateExpirationDetails } from './utils';
 
 interface ChannelListItem {
   channel: string;
@@ -34,6 +37,7 @@ function UserSettings() {
   const isMobile = useDeviceWidthCheck(800);
 
   const { account, chainId } = useAccount();
+  const walletAddress = convertAddressToAddrCaip(account, chainId);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -50,6 +54,16 @@ function UserSettings() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const { data: pricingPlanStatus } = useGetPricingPlanStatus({
+    channelId: walletAddress,
+  });
+
+  const expirationDetails = calculateExpirationDetails(pricingPlanStatus ?? null);
+
+  const navigateToPricing = () => {
+    navigate('/pricing');
+  };
 
   const fetchChannelDetails = async (channel: string) => {
     const details = await userPushSDKInstance.channel.info(channel);
@@ -71,7 +85,7 @@ function UserSettings() {
       Object.keys(details).map(async (channel) => {
         const channelData = await fetchChannelDetails(channel);
         if (channelData) data.push(channelData);
-      })
+      }),
     );
     setChannelList(data);
   };
@@ -194,12 +208,20 @@ function UserSettings() {
             </>
           )}
 
-          {selectedOption === 3 && (
+          {selectedOption === 3 && pricingPlanStatus == null && (
             <Alert
               showIcon={false}
               heading="Go Pro for $14.99/mo and unlock access to more features"
-              onAction={() => console.log('idea')}
+              onAction={() => navigateToPricing()}
               actionText="Upgrade Plan"
+              variant="basic"
+            />
+          )}
+
+          {selectedOption === 3 && pricingPlanStatus != null && !expirationDetails?.isExpired && (
+            <Alert
+              showIcon={true}
+              heading={`Your Pro plan is active until ${expirationDetails?.expirationDate}`}
               variant="basic"
             />
           )}
