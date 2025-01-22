@@ -34,3 +34,4 @@ export const getCustomDeliveryURL = () => {
 };
 
 export const analyticsBaseURL = 'https://backend.epns.io/apis/v1';
+export const pushsupportBaseURL = 'https://tooling.push.org/apis';
