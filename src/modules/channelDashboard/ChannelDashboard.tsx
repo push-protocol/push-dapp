@@ -14,6 +14,7 @@ import { DashboardActiveState } from './ChannelDashboard.types';
 import { EditChannelV2 } from 'modules/editChannel/EditChannelV2';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 import { useGetChannelCategories } from 'queries';
+import { PurchasePlanAlert } from 'common';
 
 const ChannelDashboard = () => {
   const [activeState, setActiveState] = useState<DashboardActiveState>('dashboard');
@@ -21,7 +22,18 @@ const ChannelDashboard = () => {
   const { channelDetails, loadingChannelDetails, refetchChannelDetails } = useFetchChannelDetails();
   useGetChannelCategories();
   return (
-    <Box>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap="spacing-sm"
+    >
+      <Box>
+        <PurchasePlanAlert
+          variant="success"
+          purchasedPlan={{ planName: 'Pro' }}
+        />
+      </Box>
+
       {activeState === 'dashboard' && (
         <UserChannelDashboard
           setActiveState={setActiveState}

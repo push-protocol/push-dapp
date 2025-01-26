@@ -102,7 +102,7 @@ const CreateChannel = () => {
           setProgressState(progressInitialState);
           return false;
         },
-      }
+      },
     );
   };
 
@@ -134,7 +134,7 @@ const CreateChannel = () => {
               handleProgressBar(
                 90,
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
-                'Redirecting... Please do not refresh'
+                'Redirecting... Please do not refresh',
               );
             }, 2000);
 
@@ -142,7 +142,7 @@ const CreateChannel = () => {
               handleProgressBar(
                 100,
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
-                'Redirecting... Please do not refresh'
+                'Redirecting... Please do not refresh',
               );
               navigate(`${APP_PATHS.ChannelDashboard(account)}`);
             }, 3000);
@@ -162,11 +162,11 @@ const CreateChannel = () => {
             handleProgressBar(
               0,
               'There was an error in creating the Channel',
-              'Kindly Contact support@epns.io to resolve the issue.'
+              'Kindly Contact support@epns.io to resolve the issue.',
             );
           }
         },
-      }
+      },
     );
   };
 
@@ -214,12 +214,12 @@ const CreateChannel = () => {
   return (
     <CreateChannelFormProvider onSubmit={(values: ChannelInfoFormValues) => handleCreateNewChannel(values)}>
       {/* Use this wrapper to display the Alert of purchased plan status */}
-      {/* <Box width={{ initial: '712px', ml: '385px' }}>
+      <Box width={{ initial: '712px', ml: '385px' }}>
         <PurchasePlanAlert
           variant="success"
           purchasedPlan={{ planName: 'Pro' }}
         />
-      </Box> */}
+      </Box>
 
       <Box
         padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
