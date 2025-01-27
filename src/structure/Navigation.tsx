@@ -29,6 +29,7 @@ import APP_PATHS from 'config/AppPaths';
 import { ChannelDetails } from 'queries';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { UpgradePlanNavigationItem } from 'components/userPlanAndBillings/UpgradePlanNavigationItem';
 
 type AddNewChainNavigationProps = {
   channelDetails: ChannelDetails;
@@ -209,15 +210,15 @@ function Navigation() {
     const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
     const notificationList = returnTransformedList(
       navigationList.secondary.Notifications,
-      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION,
     );
     const messagingList = returnTransformedList(
       navigationList.secondary.Messsaging,
-      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING,
     );
     const developersList = returnTransformedList(
       navigationList.secondary.Developers,
-      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS,
     );
     const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD);
 
@@ -226,7 +227,7 @@ function Navigation() {
     let navList = returnNavList(navigationList.primary, count);
     navList = Object.assign(
       navList,
-      returnNavList(navigationList.secondary.Notifications, Object.keys(navList).length)
+      returnNavList(navigationList.secondary.Notifications, Object.keys(navList).length),
     );
     navList = Object.assign(navList, returnNavList(navigationList.secondary.Messsaging, Object.keys(navList).length));
     navList = Object.assign(navList, returnNavList(navigationList.secondary.Developers, Object.keys(navList).length));
@@ -678,10 +679,10 @@ function Navigation() {
                 )}
               </SectionInnerGroupContainer>
 
-              {/* { 
-                      section.hasItems 
+              {/* {
+                      section.hasItems
                         ? renderChildItems(
-                            data.drilldown, 
+                            data.drilldown,
                             section.opened,
                             GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                           )
@@ -812,6 +813,12 @@ function Navigation() {
             justify="flex-end"
             align="stretch"
           >
+            {!sidebarCollapsed && (
+              <Box padding="spacing-none spacing-none spacing-xxs spacing-sm">
+                <UpgradePlanNavigationItem />
+              </Box>
+            )}
+
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
           </Footer>
         </>
@@ -923,6 +930,9 @@ const Footer = styled(Item)`
   align-items: stretch;
   flex-wrap: nowrap;
   padding: 0 6px 10px 0;
+  overflow: hidden;
+  display: flex;
+  box-sizing: border-box;
 `;
 
 const Secondary = styled(Item)`
