@@ -1,7 +1,12 @@
 import { Box, Button, ProgressBar, Sale, Text } from 'blocks';
+import { useNavigate } from 'react-router-dom';
 import { css } from 'styled-components';
 
 export const UpgradePlanNavigationItem = () => {
+  const navigate = useNavigate();
+  const handleGoToPricing = () => {
+    navigate('/pricing');
+  };
   return (
     <Box
       width="100%"
@@ -31,6 +36,7 @@ export const UpgradePlanNavigationItem = () => {
           leadingIcon={<Sale />}
           size="extraSmall"
           variant="secondary"
+          onClick={handleGoToPricing}
         >
           Upgrade
         </Button>
