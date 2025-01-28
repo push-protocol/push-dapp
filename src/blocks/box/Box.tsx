@@ -27,6 +27,17 @@ const StyledBox = styled.div.withConfig({
   border: ${(props) => getBlocksBorder(props.border)};
   position: ${(props) => props.position};
 
+  ${(props) => {
+    if (props.width === '-webkit-fill-available') {
+      return `
+        width: 100%; /* Fallback for all browsers */
+        width: -moz-available; /* Firefox */
+        width: -webkit-fill-available; /* Chrome, Safari */
+      `;
+    }
+    return `width: ${props.width};`;
+  }}
+
   // push custom scroll
   ${(props) =>
     props.customScrollbar &&
