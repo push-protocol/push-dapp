@@ -38,10 +38,12 @@ const PricingView: FC<PricingViewProps> = () => {
       </Box>
 
       {/* Render plans tab and list */}
-      <PricingPlanTabs />
+      <Box>
+        <PricingPlanTabs />
+      </Box>
 
       <Box
-        display="flex"
+        display="inline"
         flexDirection="row"
         alignSelf="center"
         gap="spacing-xxxs"
@@ -50,6 +52,7 @@ const PricingView: FC<PricingViewProps> = () => {
         <Text
           color="text-primary"
           variant="bl-regular"
+          as="span"
         >
           Have more questions? Get in touch with our
         </Text>
@@ -58,11 +61,13 @@ const PricingView: FC<PricingViewProps> = () => {
           to={'#'}
           textProps={{
             variant: 'bl-bold',
+            as: 'span',
             css: css`
               text-decoration-line: underline;
             `,
           }}
         >
+          {' '}
           sales team.
         </Link>
       </Box>

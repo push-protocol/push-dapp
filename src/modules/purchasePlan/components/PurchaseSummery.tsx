@@ -6,6 +6,7 @@ import { PurchasePlanModalTypes } from '../PusrchasePlan.types';
 import { PlanPurchasedModal } from './PlanPurchasedModal';
 import { useDisclosure } from 'common';
 import { PricingPlanType } from 'queries/types/pricing';
+import { css } from 'styled-components';
 
 export type PurchaseSummeryProps = { selectedPlan: PricingPlanType };
 const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
@@ -46,8 +47,12 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
     <Box
       display="flex"
       flexDirection="column"
-      width="50%"
+      width={{ initial: '50%', ml: '100%' }}
       gap="spacing-md"
+      margin={{ ml: 'spacing-none spacing-none spacing-sm spacing-none' }}
+      css={css`
+        box-sizing: border-box;
+      `}
     >
       {/* Render Plan Purchase confirmation modal */}
       {modalType === 'confirmPurchase' && (
@@ -186,7 +191,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
           flexDirection="row"
           gap="spacing-md"
         >
-          <Box width="250px">
+          <Box width={{ initial: '250px', ml: '100%' }}>
             <Button
               onClick={() => setIsApproved(true)}
               disabled={isApproved}
@@ -196,7 +201,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
               Approve
             </Button>
           </Box>
-          <Box width="250px">
+          <Box width={{ initial: '250px', ml: '100%' }}>
             <Button
               onClick={() => {
                 setShowModalType('confirmPurchase');

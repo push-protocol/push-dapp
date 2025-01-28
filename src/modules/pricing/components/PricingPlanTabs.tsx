@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { TabItem, Tabs } from 'blocks';
+import { Box, TabItem, Tabs } from 'blocks';
 
 import { PricingPlanTabsType } from '../Pricing.types';
 import { PricingPlansContainer } from './PricingPlansContainer';
@@ -19,17 +19,19 @@ const PricingPlanTabs = () => {
     },
   ];
   const [selectedPricingPlanTab, setSelectedPricingPlanTab] = useState<PricingPlanTabsType>(
-    pricingPlanTabs[0].key as PricingPlanTabsType
+    pricingPlanTabs[0].key as PricingPlanTabsType,
   );
 
   return (
-    <Tabs
-      items={pricingPlanTabs}
-      activeKey={selectedPricingPlanTab}
-      variant="fill"
-      onChange={(activeKey) => setSelectedPricingPlanTab(activeKey as PricingPlanTabsType)}
-      alignTabs="center"
-    />
+    <Box width="">
+      <Tabs
+        items={pricingPlanTabs}
+        activeKey={selectedPricingPlanTab}
+        variant="fill"
+        onChange={(activeKey) => setSelectedPricingPlanTab(activeKey as PricingPlanTabsType)}
+        alignTabs="center"
+      />
+    </Box>
   );
 };
 

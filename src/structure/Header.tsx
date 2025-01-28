@@ -4,7 +4,7 @@ import { Suspense, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import { AiOutlineMenu } from 'react-icons/ai';
-import { useLocation } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
@@ -34,6 +34,17 @@ import { walletToCAIP10 } from 'helpers/w2w';
 // hooks
 import { useGetUserRewardsDetails } from 'queries';
 
+const themePricing = {
+  light: {
+    bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+    fg: themeLight.headerTagFg,
+  },
+  dark: {
+    bg: themeDark.headerTagBg,
+    fg: themeDark.headerTagFg,
+  },
+};
+
 // header tags for pages that are not there in navigationList (Sidebar)
 const REWARDS_HEADER_TAG = {
   title: 'Reward Points',
@@ -44,6 +55,31 @@ const REWARDS_HEADER_TAG = {
   dark: {
     bg: themeDark.headerTagBg,
     fg: themeDark.headerTagFg,
+  },
+};
+
+const PRICING_HEADER_TAGS = {
+  [APP_PATHS.Pricing]: {
+    title: 'Pricing',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  },
+  [APP_PATHS.PurchasePlan]: {
+    title: 'Purchase Plan',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
   },
 };
 
@@ -154,6 +190,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   // Get Location
   const location = useLocation();
   const isSnapPage = location?.pathname === '/snap';
+  const isPricingPage = location?.pathname.startsWith('/pricing');
 
   useEffect(() => {
     // runs when navigation setup is updated, will run on init
@@ -169,6 +206,17 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   // handle header tag update
   const updateHeaderTag = (location) => {
+    if (isPricingPage) {
+      // match path for nested pricing routes -/pricing/1, pricing/2 to for the header tag
+      const match = matchPath(APP_PATHS.PurchasePlan, location?.pathname);
+      if (match && PRICING_HEADER_TAGS[APP_PATHS.PurchasePlan]) {
+        setHeaderTag(PRICING_HEADER_TAGS[APP_PATHS.PurchasePlan]);
+        return;
+      }
+      if (PRICING_HEADER_TAGS[location.pathname]) setHeaderTag(PRICING_HEADER_TAGS[location.pathname]);
+      return;
+    }
+
     if (navigationSetup) {
       Object.entries(navigationSetup.navigation).forEach(([key, value]) => {
         const item = navigationSetup.navigation[key];

@@ -299,7 +299,7 @@ function MasterInterfacePage() {
               element={<PricingPage />}
             />
             <Route
-              path={`${APP_PATHS.Pricing}/:index`}
+              path={APP_PATHS.PurchasePlan}
               element={<PurchasePlanPage />}
             />
           </Routes>

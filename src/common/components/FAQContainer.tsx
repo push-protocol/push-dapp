@@ -18,18 +18,19 @@ const FAQContainer: FC<FAQContainerProps> = ({}) => {
 
   return (
     <Box
-      flexDirection="row"
+      flexDirection={{ tb: 'column', initial: 'row', ml: 'column' }}
       display="flex"
       width="100%"
-      gap="spacing-md"
+      gap={{ ml: 'spacing-lg', initial: 'spacing-md' }}
     >
       {/* Render FAQ left side container */}
       <Box
         flexDirection="column"
         display="flex"
         gap="spacing-md"
-        alignItems="flex-start"
-        width="30%"
+        alignItems={{ initial: 'flex-start', tb: 'center', ml: 'center' }}
+        width={{ initial: '30%', tb: '100%', ml: '100%' }}
+        textAlign={{ ml: 'center' }}
       >
         <Text
           color="text-primary"
@@ -54,7 +55,7 @@ const FAQContainer: FC<FAQContainerProps> = ({}) => {
       <Box
         display="flex"
         flexDirection="column"
-        width="70%"
+        width={{ initial: '70%', tb: '100%' }}
         gap="spacing-md"
       >
         {/* Render list of questions with answers */}

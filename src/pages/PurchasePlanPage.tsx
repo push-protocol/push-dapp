@@ -5,11 +5,11 @@ import { useParams } from 'react-router-dom';
 // Other Information section
 const PurchasePlanPage = () => {
   // update spaceid in global space context
-  let { index } = useParams();
+  let { id } = useParams();
   // RENDER
   return (
     <ContentLayout>
-      <PurchasePlan index={index} />
+      <PurchasePlan index={id} />
     </ContentLayout>
   );
 };

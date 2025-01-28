@@ -14,18 +14,38 @@ export type PricingPlansListProps = {
 
 const PricingPlansList: FC<PricingPlansListProps> = () => {
   const { data: pricingInfoList, isLoading: isPricingInfoListLoading } = useGetPricingInfo();
+  const pricingList = isPricingInfoListLoading ? Array(4).fill(0) : pricingInfoList;
+
   return (
     <Box
-      flexDirection="row"
+      flexDirection={{ initial: 'row', ml: 'column' }}
       display="flex"
       justifyContent="space-between"
-      width={{ initial: 'auto', ml: '357px' }}
+      width="100%"
       gap="spacing-xs"
+      css={css`
+        @media (max-width: 1220px) {
+          display: grid;
+          gap: var(--spacing-xs);
+          grid-template-columns: repeat(3, minmax(0px, 1fr));
+        }
+
+        @media (max-width: 768px) {
+          display: grid;
+          gap: var(--spacing-xs);
+          grid-template-columns: repeat(2, minmax(0px, 1fr));
+        }
+
+        @media (max-width: 425px) {
+          grid-template-columns: repeat(1, minmax(0px, 1fr));
+        }
+      `}
     >
-      {pricingInfoList?.map((planItem, planIndex) => (
+      {pricingList?.map((planItem, planIndex) => (
         <Skeleton
           isLoading={isPricingInfoListLoading}
           borderRadius="radius-lg"
+          height="542px"
         >
           <Box
             display="flex"
@@ -35,8 +55,14 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
             key={`${planIndex}-pricing-plan-key`}
             border="border-sm solid stroke-tertiary"
             borderRadius="radius-lg"
-            width="296px"
+            width={{ initial: '296px', ml: '100%' }}
             backgroundColor={planItem?.name === 'Pro' ? 'surface-primary' : 'surface-transparent'}
+            css={css`
+              box-sizing: border-box;
+              @media (max-width: 1220px) {
+                width: 100%;
+              }
+            `}
           >
             <Box
               display="flex"

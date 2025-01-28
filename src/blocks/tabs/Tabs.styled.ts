@@ -2,7 +2,6 @@ import { Tabs as ReachTabs, TabList, Tab } from '@reach/tabs';
 import { textVariants } from '../text';
 import styled, { CSSProperties } from 'styled-components';
 import { ResponsiveProp } from 'blocks';
-import { deviceMediaQ } from '../theme';
 
 export type TabListProps = {
   /* Used to align tabs */
@@ -19,9 +18,6 @@ export const StyledFillTabList = styled(TabList)<TabListProps>`
   overflow: auto hidden;
   display: flex;
   width: fit-content;
-  @media${deviceMediaQ.mobileL} {
-    width: -webkit-fill-available;
-  }
   padding: var(--spacing-xxxs);
   background-color: var(--surface-tertiary);
   border-radius: var(--radius-sm);
@@ -41,7 +37,9 @@ export const StyledFillTab = styled(Tab)`
   color: var(--text-secondary);
   background-color: var(--surface-transparent);
   border-radius: var(--radius-xs);
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   border-bottom: none;
 
   &[data-selected] {
@@ -100,7 +98,9 @@ export const StyledLineTab = styled(Tab)`
   margin-bottom: -1px;
   background-color: var(--surface-transparent);
   color: var(--text-secondary);
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   border-bottom: var(--border-md) solid var(--surface-transparent);
 
   &[data-selected] {

@@ -54,12 +54,13 @@ const PurchasePlan: FC<PurchasePlanProps> = ({ index }) => {
 
   return (
     <Box
-      flexDirection="row"
+      flexDirection={{ initial: 'row', ml: 'column' }}
       display="flex"
       gap={{ ml: 'spacing-md' }}
       width="100%"
       css={css`
         padding: 85px 0px 0px 0px;
+        box-sizing: border-box;
       `}
     >
       {/* Render selected plan */}
