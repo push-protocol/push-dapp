@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ChannelDetailsCard } from 'common';
+import { ChannelDetailsCard, ProfileModalVisibilityType } from 'common';
 import { UserSetting } from 'helpers/channel/types';
 
 import { ChannelDetails, useGetUserSubscriptions } from 'queries';
@@ -7,9 +7,16 @@ import { ChannelDetails, useGetUserSubscriptions } from 'queries';
 export type AllChannelsListItemProps = {
   channelDetails: ChannelDetails | undefined;
   isLoading: boolean;
+  onChangeProfileModalVisibility?: (value: ProfileModalVisibilityType) => void; // Function prop to control modal visibility
+  profileModalVisibility?: ProfileModalVisibilityType;
 };
 
-const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isLoading }) => {
+const AllChannelsListItem: FC<AllChannelsListItemProps> = ({
+  channelDetails,
+  isLoading,
+  onChangeProfileModalVisibility,
+  profileModalVisibility,
+}) => {
   /* Fetching User Subscribed Channel Details along with user settings */
   const {
     data: userSubscription,
@@ -31,6 +38,8 @@ const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isL
 
   return (
     <ChannelDetailsCard
+      onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+      profileModalVisibility={profileModalVisibility}
       channelDetails={channelDetails}
       isLoading={isLoading}
       isSubscribed={!!channelSubscriptionData}

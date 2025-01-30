@@ -15,12 +15,19 @@ import { useFeaturedChannelsCarouselButtons } from '../hooks/useFeaturedChannels
 
 // Internal Configs
 import { FeaturedChannelDetailsProps } from '../configs';
+import { ProfileModalVisibilityType } from 'common';
 
 export type FeaturedChannelsMobileViewListProps = {
   featuredChannelsList: FeaturedChannelDetailsProps[][];
+  onChangeProfileModalVisibility?: (value: ProfileModalVisibilityType) => void; // Function prop to control modal visibility
+  profileModalVisibility?: ProfileModalVisibilityType;
 };
 
-const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = ({ featuredChannelsList }) => {
+const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = ({
+  featuredChannelsList,
+  onChangeProfileModalVisibility,
+  profileModalVisibility,
+}) => {
   const CarouselOptions: EmblaOptionsType = {
     slidesToScroll: 'auto',
     align: 'start',
@@ -115,7 +122,11 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
                 flexDirection="column"
               >
                 {channelListArray.map((channel: FeaturedChannelDetailsProps) => (
-                  <FeaturedChannelsListItem channelAddress={channel.channel} />
+                  <FeaturedChannelsListItem
+                    channelAddress={channel.channel}
+                    onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+                    profileModalVisibility={profileModalVisibility}
+                  />
                 ))}
               </Box>
             );

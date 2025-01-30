@@ -11,7 +11,7 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { retrieveUserPGPKeyFromStorage } from 'helpers/connectWalletHelper';
 
 // Internal Configs
-import { device, size } from 'config/Globals';
+import { size } from 'config/Globals';
 
 // Assets
 import Tooltip from 'components/reusables/tooltip/Tooltip';
@@ -246,7 +246,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       {activeStatus.status === PROFILESTATE.UNLOCK_PROFILE && (
         <>
           {!isLoading ? (
-            <RenderToolTip type={type}>
+            <RenderToolTip>
               <ItemHV2
                 gap="8px"
                 justifyContent={type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end'}
@@ -344,7 +344,7 @@ const SubContainer = styled(ItemVV2)`
   flex-direction: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? 'column' : 'row')};
   justify-content: space-between;
 
-  @media ${device.tablet} {
+  @media ${deviceMediaQ.tablet} {
     align-items: center;
     flex-direction: column;
     gap: 24px;
@@ -383,7 +383,7 @@ const HorizontalBar = styled.div`
       ? `linear-gradient(to right, ${colorBrands['primary-500']}, ${props.theme.btn.disabledBg})`
       : colorBrands['primary-500']};
 
-  @media ${device.tablet} {
+  @media ${deviceMediaQ.tablet} {
     width: 2px;
     height: 40px;
   }

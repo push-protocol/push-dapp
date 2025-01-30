@@ -1,15 +1,17 @@
 import { FC } from 'react';
 import { useAccount } from 'hooks';
-import { ChannelDetailsCard } from 'common';
+import { ChannelDetailsCard, ProfileModalVisibilityType } from 'common';
 import { UserSetting } from 'helpers/channel/types';
 import { useGetChannelDetails, useGetUserSubscriptions } from 'queries';
 
 type FeaturedChannelsListItemProps = {
   channelAddress: string;
+  onChangeProfileModalVisibility?: (value: ProfileModalVisibilityType) => void; // Function prop to control modal visibility
+  profileModalVisibility?: ProfileModalVisibilityType;
 };
 
 const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
-  const { channelAddress } = props;
+  const { channelAddress, onChangeProfileModalVisibility, profileModalVisibility } = props;
 
   const { wallet } = useAccount();
   const isWalletConnected = !!wallet?.accounts?.length;
@@ -38,6 +40,8 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
       isSubscriptionLoading={isSubscriptionLoading}
       handleRefetch={handleRefetch}
       userSettings={JSON.parse(userSubscription?.[0]?.user_settings || '[]') as UserSetting[]}
+      onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+      profileModalVisibility={profileModalVisibility}
     />
   );
 };

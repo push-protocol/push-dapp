@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import InfiniteScroll from 'react-infinite-scroller';
 import { css } from 'styled-components';
@@ -8,6 +8,10 @@ import { ChannelDetails } from 'queries';
 import { AllChannelsListItem } from './AllChannelsListItem';
 import { SuggestedChannelListItem } from './SuggestedChannelListItem';
 import { Box, deviceMediaQ, Spinner } from 'blocks';
+
+import { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfile';
+import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { ProfileModalVisibilityType } from 'common';
 
 export type AllChannelListProps = {
   channels: ChannelDetails[];
@@ -26,6 +30,12 @@ const AllChannelList: FC<AllChannelListProps> = ({
   loadMore,
   suggestedChannels,
 }) => {
+  // State to handle the profile modal
+  const [profileModalVisibility, setProfileModalVisibility] = useState<ProfileModalVisibilityType>({
+    isVisible: false,
+    channel_id: null,
+  });
+
   return (
     <Box
       height="100%"
@@ -64,6 +74,8 @@ const AllChannelList: FC<AllChannelListProps> = ({
         ))}
         {channels.map((channel: ChannelDetails, index: number) => (
           <AllChannelsListItem
+            onChangeProfileModalVisibility={(data) => setProfileModalVisibility(data)}
+            profileModalVisibility={profileModalVisibility}
             key={`${index}`}
             channelDetails={channel}
             isLoading={isLoading}
@@ -79,6 +91,31 @@ const AllChannelList: FC<AllChannelListProps> = ({
           <Spinner
             size="medium"
             variant="primary"
+          />
+        </Box>
+      )}
+
+      {/* Render Unlock profile modal if the profile is not enabled */}
+      {profileModalVisibility?.isVisible && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="-webkit-fill-available"
+          alignItems="center"
+          css={css`
+            z-index: 99999;
+          `}
+        >
+          <UnlockProfileWrapper
+            type={UNLOCK_PROFILE_TYPE.MODAL}
+            showConnectModal={true}
+            onClose={() =>
+              setProfileModalVisibility({
+                isVisible: false,
+                channel_id: null,
+              })
+            }
+            description="Unlock your profile to proceed."
           />
         </Box>
       )}

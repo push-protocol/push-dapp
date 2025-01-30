@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 import { useSelector } from 'react-redux';
@@ -23,6 +23,8 @@ import { useUnsubscribeChannel, useUpdateNotificationSettings } from 'queries';
 // Components
 import { ManageSettingsDropdown } from './ManageSettingsDropdown';
 import { UserStoreType } from 'types';
+import { ProfileModalVisibilityType } from './SubscribeChannelDropdown';
+import { retrieveUserPGPKeyFromStorage } from 'helpers/connectWalletHelper';
 
 export type UnsubscribeChannelDropdownProps = {
   children: ReactNode;
@@ -30,6 +32,8 @@ export type UnsubscribeChannelDropdownProps = {
   centeronMobile?: boolean;
   onSuccess: () => void;
   userSetting?: UserSetting[] | undefined;
+  onChangeProfileModalVisibility?: (show: ProfileModalVisibilityType) => void; // Function prop to control modal visibility
+  profileModalVisibility?: ProfileModalVisibilityType;
 };
 
 const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
@@ -37,11 +41,16 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
   channelDetail,
   onSuccess,
   userSetting,
+  profileModalVisibility,
+  onChangeProfileModalVisibility,
 }) => {
   const { account, chainId, provider, wallet } = useAccount();
 
   const { handleConnectWalletAndEnableProfile } = useAppContext();
 
+  // State to handle the temporary channel setting
+  const [tempSetting, setTempSettings] = useState<UserSetting[] | undefined>(undefined);
+  // Get the userPushSDKInstance from the store
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const channelSetting =
@@ -53,10 +62,35 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
   // This will get changed when new toast is made
   const unsubscribeToast = useToast();
 
+  useEffect(() => {
+    // If the user has account and the profile is unlocked, then run the optInHandler
+    if (
+      profileModalVisibility?.isVisible &&
+      profileModalVisibility?.channel_id === channelDetail.id &&
+      userPushSDKInstance &&
+      !userPushSDKInstance?.readmode()
+    ) {
+      onChangeProfileModalVisibility?.({ isVisible: false, channel_id: null });
+      if (tempSetting) {
+        handleSaveNotificationSettings(tempSetting);
+      } else {
+        handleOptOut();
+      }
+    }
+  }, [profileModalVisibility, userPushSDKInstance]);
+
   const handleSaveNotificationSettings = async (settings: UserSetting[]) => {
+    // If the profile is locked, then show the profile modal and return
+    if (userPushSDKInstance && userPushSDKInstance?.readmode()) {
+      onChangeProfileModalVisibility?.({ isVisible: true, channel_id: channelDetail.id });
+      setTempSettings(settings);
+      return;
+    }
     const onCoreNetwork = chainId === appConfig.coreContractChain;
 
     const channelAddress = !onCoreNetwork ? (channelDetail.alias_address as string) : channelDetail.channel;
+
+    const decryptedPGPKeys = userPushSDKInstance?.decryptedPgpPvtKey ?? retrieveUserPGPKeyFromStorage(account);
 
     const sdkInstance = !userPushSDKInstance.signer
       ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
@@ -103,14 +137,22 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
         },
       }
     );
+    setTempSettings(undefined);
   };
 
   const handleOptOut = async () => {
+    // If the profile is locked, then show the profile modal and return
+    if (userPushSDKInstance && userPushSDKInstance?.readmode()) {
+      onChangeProfileModalVisibility?.({ isVisible: true, channel_id: channelDetail.id });
+      return;
+    }
     const onCoreNetwork = chainId === appConfig.coreContractChain;
 
     const channelAddress = !onCoreNetwork ? (channelDetail.alias_address as string) : channelDetail.channel;
 
     const _signer = await provider.getSigner(account);
+
+    const decryptedPGPKeys = userPushSDKInstance?.decryptedPgpPvtKey ?? retrieveUserPGPKeyFromStorage(account);
 
     unsubscribeChannel(
       {
@@ -118,11 +160,13 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId),
         userAddress: convertAddressToAddrCaip(account, chainId),
         env: appConfig.pushNodesEnv,
+        decryptedPGPKeys,
       },
       {
         onSuccess: (response) => {
+          console.log('Response from the unsubscribe channel', response);
           onSuccess();
-          if (response.status === 'success') {
+          if (response.status === 204) {
             unsubscribeToast.showMessageToast({
               toastTitle: 'Success',
               toastMessage: 'Successfully opted out of channel !',
