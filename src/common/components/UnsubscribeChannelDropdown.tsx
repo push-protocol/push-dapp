@@ -90,8 +90,6 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
 
     const channelAddress = !onCoreNetwork ? (channelDetail.alias_address as string) : channelDetail.channel;
 
-    const decryptedPGPKeys = userPushSDKInstance?.decryptedPgpPvtKey ?? retrieveUserPGPKeyFromStorage(account);
-
     const sdkInstance = !userPushSDKInstance.signer
       ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
       : userPushSDKInstance;
@@ -118,7 +116,6 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
               ),
             });
           } else {
-            console.log('Error in Saving notification settings', response);
             unsubscribeToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: `There was an error in saving the settings`,
@@ -164,7 +161,6 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
       },
       {
         onSuccess: (response) => {
-          console.log('Response from the unsubscribe channel', response);
           onSuccess();
           if (response.status === 204) {
             unsubscribeToast.showMessageToast({

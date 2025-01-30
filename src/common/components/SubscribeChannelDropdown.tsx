@@ -63,7 +63,6 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = memo((option
       userPushSDKInstance &&
       !userPushSDKInstance?.readmode()
     ) {
-      console.log('run optInHandler side effect====>>>>>>>');
       onChangeProfileModalVisibility?.({ isVisible: false, channel_id: null });
       optInHandler(tempChannelSetting);
     }
@@ -107,7 +106,6 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = memo((option
         },
         {
           onSuccess: (response) => {
-            console.log('Response on the channels  apge', response);
             if (response.status == '204') {
               onSuccess();
               subscribeToast.showMessageToast({
@@ -122,7 +120,6 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = memo((option
                 ),
               });
             } else {
-              console.log('Error in the response >>', response);
               subscribeToast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `There was an error opting into channel`,
