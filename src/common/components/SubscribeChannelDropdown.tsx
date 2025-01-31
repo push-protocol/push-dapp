@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, memo, ReactNode, useCallback, useEffect, useState } from 'react';
+import { FC, memo, ReactNode, useEffect, useState } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
@@ -68,90 +68,77 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = memo((option
     }
   }, [profileModalVisibility, userPushSDKInstance]);
 
-  const optInHandler = useCallback(
-    async (channelSetting?: ChannelSetting[]) => {
-      const hasAccount = wallet?.accounts?.length > 0;
+  const optInHandler = async (channelSetting?: ChannelSetting[]) => {
+    const hasAccount = wallet?.accounts?.length > 0;
 
-      const connectedWallet = !hasAccount ? await connectWallet() : null;
+    const connectedWallet = !hasAccount ? await connectWallet() : null;
 
-      // If the user has account or the wallet is connected, and the profile is locked, then show the profile modal and return
-      if ((hasAccount || connectedWallet) && userPushSDKInstance && userPushSDKInstance?.readmode()) {
-        onChangeProfileModalVisibility?.({ isVisible: true, channel_id: channelDetails.id });
-        channelSetting && setTempChannelSettings(channelSetting);
-        return;
-      }
+    // If the user has account or the wallet is connected, and the profile is locked, then show the profile modal and return
+    if ((hasAccount || connectedWallet) && userPushSDKInstance && userPushSDKInstance?.readmode()) {
+      onChangeProfileModalVisibility?.({ isVisible: true, channel_id: channelDetails.id });
+      channelSetting && setTempChannelSettings(channelSetting);
+      return;
+    }
 
-      const walletAddress = hasAccount ? account : connectedWallet.accounts[0].address;
-      const web3Provider = hasAccount ? provider : new ethers.providers.Web3Provider(connectedWallet.provider, 'any');
-      const onCoreNetwork = chainId === appConfig.coreContractChain;
+    const walletAddress = hasAccount ? account : connectedWallet.accounts[0].address;
+    const web3Provider = hasAccount ? provider : new ethers.providers.Web3Provider(connectedWallet.provider, 'any');
+    const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-      const channelAddress = !onCoreNetwork ? (channelDetails.alias_address as string) : channelDetails.channel;
+    const channelAddress = !onCoreNetwork ? (channelDetails.alias_address as string) : channelDetails.channel;
 
-      const _signer = await web3Provider?.getSigner(walletAddress);
+    const _signer = await web3Provider?.getSigner(walletAddress);
 
-      const minimalNotifSettings = channelSetting
-        ? getMinimalUserSetting(notifChannelSettingFormatString({ settings: channelSetting }))
-        : null;
+    const minimalNotifSettings = channelSetting
+      ? getMinimalUserSetting(notifChannelSettingFormatString({ settings: channelSetting }))
+      : null;
 
-      const decryptedPGPKeys = userPushSDKInstance?.decryptedPgpPvtKey ?? retrieveUserPGPKeyFromStorage(account);
+    const decryptedPGPKeys = userPushSDKInstance?.decryptedPgpPvtKey ?? retrieveUserPGPKeyFromStorage(account);
 
-      subscribeChannel(
-        {
-          signer: _signer,
-          channelAddress: convertAddressToAddrCaip(channelAddress, chainId),
-          userAddress: convertAddressToAddrCaip(walletAddress, chainId),
-          settings: minimalNotifSettings,
-          env: appConfig.pushNodesEnv,
-          decryptedPGPKeys,
+    subscribeChannel(
+      {
+        signer: _signer,
+        channelAddress: convertAddressToAddrCaip(channelAddress, chainId),
+        userAddress: convertAddressToAddrCaip(walletAddress, chainId),
+        settings: minimalNotifSettings,
+        env: appConfig.pushNodesEnv,
+        decryptedPGPKeys,
+      },
+      {
+        onSuccess: (response) => {
+          if (response.status == '204') {
+            onSuccess();
+            subscribeToast.showMessageToast({
+              toastTitle: 'Success',
+              toastMessage: 'Successfully opted into channel !',
+              toastType: 'SUCCESS',
+              getToastIcon: (size) => (
+                <MdCheckCircle
+                  size={size}
+                  color="green"
+                />
+              ),
+            });
+          } else {
+            subscribeToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: `There was an error opting into channel`,
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
+          }
         },
-        {
-          onSuccess: (response) => {
-            if (response.status == '204') {
-              onSuccess();
-              subscribeToast.showMessageToast({
-                toastTitle: 'Success',
-                toastMessage: 'Successfully opted into channel !',
-                toastType: 'SUCCESS',
-                getToastIcon: (size) => (
-                  <MdCheckCircle
-                    size={size}
-                    color="green"
-                  />
-                ),
-              });
-            } else {
-              subscribeToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `There was an error opting into channel`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => (
-                  <MdError
-                    size={size}
-                    color="red"
-                  />
-                ),
-              });
-            }
-          },
-          onError: (error) => {
-            console.log('Error in the schnnale', error);
-          },
-        }
-      );
-      tempChannelSetting && setTempChannelSettings(undefined);
-    },
-    [
-      account,
-      chainId,
-      connectWallet,
-      onChangeProfileModalVisibility,
-      provider,
-      subscribeChannel,
-      userPushSDKInstance,
-      wallet,
-      profileModalVisibility,
-    ]
-  );
+        onError: (error) => {
+          console.log('Error in the schnnale', error);
+        },
+      }
+    );
+    tempChannelSetting && setTempChannelSettings(undefined);
+  };
 
   return (
     <Box>
