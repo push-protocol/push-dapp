@@ -51,7 +51,7 @@ const PointsVaultListContainer = () => {
             Ensure the user has at-least 50 Followers and is following
           </Text>
           <Link
-            to="https://x.com/pushprotocol"
+            to="https://x.com/PushChain"
             target="_blank"
             referrerPolicy="no-referrer"
           >
