@@ -13,6 +13,7 @@ export type SubscribeChannelParams = {
   userAddress: string;
   settings?: string | null;
   env: Env;
+  decryptedPGPKeys?: string | null;
 };
 
 export type SubsribeChannelResponse = {
@@ -26,10 +27,11 @@ export type UnsubscribeChannelParams = {
   userAddress: string;
   settings?: string | null;
   env: Env;
+  decryptedPGPKeys?: string | null;
 };
 
 export type UnsubscribeChannelResponse = {
-  status: string;
+  status: number;
   message: string;
 };
 
@@ -63,7 +65,7 @@ export type UserSocialStatusResponse = {
   email: string | null;
   telegram_username: string | null;
   discord_username: string | null;
- };
+};
 
 export type UserProfileDetailsResponse = {
   blockedUsersList: Array<string>;
@@ -72,4 +74,3 @@ export type UserProfileDetailsResponse = {
   picture: string;
   profileVerificationProof: string | null;
 };
-

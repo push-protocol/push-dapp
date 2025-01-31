@@ -1,4 +1,4 @@
-import { device } from 'config/Globals';
+import { deviceMediaQ } from 'blocks';
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -74,7 +74,7 @@ const Wrapper = styled.div`
   height: fit-content;
   display: inline-block;
   position: relative;
-  @media ${device.tablet} {
+  @media ${deviceMediaQ.tablet} {
     width: 100%;
     min-width: 100%;
     max-width: 100%;

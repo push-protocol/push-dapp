@@ -20,7 +20,7 @@ import {
   Tooltip,
 } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
-import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
+import { ProfileModalVisibilityType, SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import { UserSetting } from 'helpers/channel/types';
 import { appConfig } from 'config';
@@ -34,6 +34,8 @@ export type ChannelDetailsCardProps = {
   userSettings: UserSetting[];
   width?: ResponsiveProp<string>;
   subscribeButtonVariant?: ButtonProps['variant'];
+  onChangeProfileModalVisibility?: (show: ProfileModalVisibilityType) => void; // Function prop to control modal visibility
+  profileModalVisibility?: ProfileModalVisibilityType;
 };
 
 const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
@@ -45,6 +47,8 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
   userSettings,
   width,
   subscribeButtonVariant = 'tertiary',
+  onChangeProfileModalVisibility,
+  profileModalVisibility,
 }) => {
   let verifiedAliasChainIds = [
     appConfig.coreContractChain,
@@ -104,6 +108,8 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
             height="40px"
           >
             <SubscribeChannelDropdown
+              onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+              profileModalVisibility={profileModalVisibility}
               channelDetails={channelDetails!}
               onSuccess={handleRefetch}
             >
@@ -125,6 +131,8 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
             height="40px"
           >
             <UnsubscribeChannelDropdown
+              onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+              profileModalVisibility={profileModalVisibility}
               channelDetail={channelDetails!}
               onSuccess={handleRefetch}
               userSetting={userSettings}
