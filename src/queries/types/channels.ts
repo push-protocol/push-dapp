@@ -194,6 +194,7 @@ export type ChannelsSearchListModelledResponse = {
 };
 
 export type ChannelListParams = {
+  userPushSDKInstance: PushAPI;
   order?: ChannelListOrderType;
   pageSize: number;
   page?: number;
@@ -203,6 +204,7 @@ export type ChannelListParams = {
 };
 
 export type ChannelSearchParams = {
+  userPushSDKInstance: PushAPI;
   page: number;
   pageSize: number;
   query: string;
