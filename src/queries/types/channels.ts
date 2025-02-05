@@ -188,10 +188,7 @@ export type ChannelsListModelledResponse = {
   channels: Array<ChannelDetails>;
   itemcount: number;
 };
-export type ChannelsSearchListModelledResponse = {
-  channels: Array<ChannelDetails>;
-  itemCount: number;
-};
+export type ChannelsSearchListModelledResponse = Array<ChannelDetails>;
 
 export type ChannelListParams = {
   userPushSDKInstance: PushAPI;

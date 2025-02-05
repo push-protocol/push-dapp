@@ -56,9 +56,10 @@ const Channels: FC<ChannelsProps> = () => {
   const channels =
     loadingChannels || searchingChannels
       ? Array(9).fill(0)
-      : (filters.search ? searchList : channelList)?.pages
-          .flatMap((page) => page.channels)
-          .filter((channel) => !channelFilterList.includes(channel.channel)) || [];
+      : (filters.search
+          ? searchList?.pages.flatMap((page) => page)
+          : channelList?.pages.flatMap((page) => page.channels)
+        )?.filter((channel) => !channelFilterList.includes(channel.channel)) || [];
 
   const suggestedChannels = getSuggestedChannels(channels, filters);
 

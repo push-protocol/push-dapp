@@ -31,9 +31,8 @@ export const useChannelSearch = ({ pageSize, query, chain, tag }: UseChannelSear
         chain,
         tag,
       }),
-    getNextPageParam: ({ itemCount }, allPages, lastPageParam) => {
-      console.log(itemCount, lastPageParam, pageSize, pageSize * ((lastPageParam as number) + 1) >= itemCount);
-      if (pageSize * ((lastPageParam as number) + 1) >= itemCount) {
+    getNextPageParam: ({}, allPages, lastPageParam) => {
+      if (allPages[(lastPageParam as number) - 1].length < pageSize) {
         return null;
       }
       return (lastPageParam as number) + 1;
