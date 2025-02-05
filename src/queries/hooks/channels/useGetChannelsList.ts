@@ -4,6 +4,8 @@ import { allChannelsList } from '../../queryKeys';
 import { getChannelsList } from '../../services';
 
 import { ChannelsListModelledResponse, ChannelListParams } from '../../types';
+import { useSelector } from 'react-redux';
+import { UserStoreType } from 'types';
 
 export type UseChannelSearchProps = {
   order?: ChannelListParams['order'];
@@ -15,11 +17,15 @@ export type UseChannelSearchProps = {
 
 // TODO make it a sdk call in future
 export const useGetChannelslist = ({ order, pageSize, sort, chain, tag }: UseChannelSearchProps) => {
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
+    return state.user;
+  });
   const reactQuery = useInfiniteQuery<ChannelsListModelledResponse>({
     queryKey: [allChannelsList, chain, tag],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       getChannelsList({
+        userPushSDKInstance,
         order,
         sort,
         pageSize,
