@@ -10,12 +10,11 @@ import { formatSentenceWithBoldNumbers, parseStringToArray } from 'modules/prici
 export type PlanPurchasedModalProps = {
   plan: PricingPlanType;
   modalControl: ModalResponse;
-  onClose: () => void;
 };
 
-const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, onClose }) => {
+const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl }) => {
   const { mode } = useBlocksTheme();
-  const { isOpen } = modalControl;
+  const { isOpen, onClose } = modalControl;
   return (
     <Modal
       size={'medium'}

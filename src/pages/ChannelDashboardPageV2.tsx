@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { ContentLayout } from 'common';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
@@ -13,14 +13,15 @@ import { useAccount } from 'hooks';
 const ChannelDashboardPageV2 = () => {
   const { account } = useAccount();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { channelDetails, loadingChannelDetails, refetchChannelDetails } = useFetchChannelDetails();
 
   useEffect(() => {
     if (!loadingChannelDetails && !channelDetails) {
-      navigate(`${APP_PATHS.CreateChannel}`);
+      navigate(`${APP_PATHS.CreateChannel}${location.search}`);
     } else {
-      navigate(`${APP_PATHS.ChannelDashboard(account)}`);
+      navigate(`${APP_PATHS.ChannelDashboard(account)}${location.search}`);
     }
   }, [channelDetails, loadingChannelDetails]);
 

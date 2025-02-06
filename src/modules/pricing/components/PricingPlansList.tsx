@@ -12,7 +12,7 @@ export type PricingPlansListProps = {
   type: PricingPlanTabsType;
 };
 
-const PricingPlansList: FC<PricingPlansListProps> = () => {
+const PricingPlansList: FC<PricingPlansListProps> = ({ type }) => {
   const { data: pricingInfoList, isLoading: isPricingInfoListLoading } = useGetPricingInfo();
   const pricingList = isPricingInfoListLoading ? Array(4).fill(0) : pricingInfoList;
 
@@ -120,7 +120,10 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
                 >
                   {planItem?.value >= 0
                     ? planItem?.value > 0
-                      ? planItem?.value?.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                      ? (type == 'monthly' ? planItem?.value : planItem?.value * 12)?.toLocaleString('en-US', {
+                          style: 'currency',
+                          currency: 'USD',
+                        })
                       : 'Free'
                     : 'Talk to us!'}
                 </Text>
@@ -134,7 +137,7 @@ const PricingPlansList: FC<PricingPlansListProps> = () => {
                 )}
               </Box>
 
-              <Link to={planItem?.value && planItem?.value > 0 ? `/pricing/${planItem?.id}` : '#'}>
+              <Link to={planItem?.value && planItem?.value > 0 ? `/pricing/${planItem?.id}?type=${type}` : '#'}>
                 <Button
                   block
                   variant={planItem?.value === 0 ? 'outline' : planItem?.name === 'Pro' ? 'primary' : 'tertiary'}

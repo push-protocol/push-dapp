@@ -1,15 +1,17 @@
 import { FC } from 'react';
 import { Box, Modal, Spinner, Text } from 'blocks';
 import { ModalResponse } from 'common';
+import { PricingPlanType } from 'queries/types/pricing';
 
 export type ConfirmPurchaseModalProps = {
-  purchaseAmount: number;
   modalControl: ModalResponse;
-  onClose: () => void;
+  plan: PricingPlanType;
+  selectedPlanType: string;
 };
 
-const ConfirmPurchaseModal: FC<ConfirmPurchaseModalProps> = ({ purchaseAmount, modalControl, onClose }) => {
-  const { isOpen } = modalControl;
+const ConfirmPurchaseModal: FC<ConfirmPurchaseModalProps> = ({ modalControl, plan, selectedPlanType }) => {
+  const { isOpen, onClose } = modalControl;
+
   return (
     <Modal
       size={'small'}
@@ -52,7 +54,7 @@ const ConfirmPurchaseModal: FC<ConfirmPurchaseModalProps> = ({ purchaseAmount, m
             color="text-tertiary"
             variant="bs-regular"
           >
-            Purchase Push Pro plan for {purchaseAmount} USDC
+            Purchase Push Pro plan for {selectedPlanType === '12' ? plan?.value * 12 : plan?.value} USDC
           </Text>
           <Text
             color="text-tertiary"

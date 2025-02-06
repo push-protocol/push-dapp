@@ -148,14 +148,16 @@ export const channelCategoriesMap: Record<string, string> = {
   '0x80375eAD5561e19668eb1Dd2b6A44Fa14D5eB6BF': 'Service',
 };
 
-export const purchasePlanAlertConfig: { [x: string]: (planName?: string) => PurchasePlanAlertObjType } = {
+export const purchasePlanAlertConfig: {
+  [x: string]: (planName?: string, daysRemaining?: number) => PurchasePlanAlertObjType;
+} = {
   success: (planName) => ({
     description: `Purchase Successful. Push ${planName} Plan`,
     actionText: 'View on Explorer',
     variant: 'success',
   }),
-  renewalReminder: (planName) => ({
-    description: `Your Push ${planName} plan ends in 7 days`,
+  renewalReminder: (planName, daysRemaining) => ({
+    description: `Your Push ${planName} plan ends in ${daysRemaining} days`,
     actionText: 'Renew Plan',
     variant: 'warning',
   }),

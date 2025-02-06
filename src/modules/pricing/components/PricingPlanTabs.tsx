@@ -19,7 +19,7 @@ const PricingPlanTabs = () => {
     },
   ];
   const [selectedPricingPlanTab, setSelectedPricingPlanTab] = useState<PricingPlanTabsType>(
-    pricingPlanTabs[0].key as PricingPlanTabsType,
+    pricingPlanTabs[1].key as PricingPlanTabsType,
   );
 
   return (

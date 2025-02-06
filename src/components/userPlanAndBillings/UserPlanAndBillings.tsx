@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDisclosure } from 'common';
 
 import { Box, Button, ProgressBar, Text } from 'blocks';
-import UpgradePlanModal from './UpgradePlanModal';
+import CancelPlanModal from './CancelPlanModal';
 import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 import { useAccount } from 'hooks';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
@@ -20,19 +20,6 @@ const UserPlanAndBillings = () => {
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
-
-  // const pricingPlanStatus = {
-  //   id: 1,
-  //   channel: 'eip155:11155111:0xD8634C39BBFd4033c0d3289C4515275102423681',
-  //   email_quota_used: 0,
-  //   telegram_quota_used: 0,
-  //   discord_quota_used: 0,
-  //   pricing_plan_id: '2',
-  //   email_total_quota: 2000,
-  //   telegram_total_quota: 2000,
-  //   discord_total_quota: 0,
-  //   expirationTimestamp: 1767961517282,
-  // };
 
   const selectedPlan = pricingInfoList?.find(
     (planItem: { id: number }) =>
@@ -254,7 +241,13 @@ const UserPlanAndBillings = () => {
         ))}
       </Box>
 
-      {modalControl.isOpen && <UpgradePlanModal modalControl={modalControl} />}
+      {modalControl.isOpen && (
+        <CancelPlanModal
+          modalControl={modalControl}
+          pricingInfoList={pricingInfoList!}
+          pricingPlanStatus={pricingPlanStatus!}
+        />
+      )}
     </Box>
   );
 };

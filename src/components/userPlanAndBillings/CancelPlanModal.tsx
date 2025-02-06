@@ -1,25 +1,23 @@
-import { Box, Cross, Modal, Text } from 'blocks';
-import { ModalResponse } from 'common';
 import { FC } from 'react';
 
-type UpgradePlanModalProps = {
+import { ModalResponse } from 'common';
+import { PricingInfoResponse, PricingPlanStatusResponse } from 'queries/types/pricing';
+
+import { Box, Cross, Modal, Text } from 'blocks';
+import { parseStringToArray } from 'modules/pricing/utils';
+import { calculateExpirationDetails } from 'components/userSettings/utils';
+
+type CancelPlanModalProps = {
   modalControl: ModalResponse;
+  pricingInfoList: PricingInfoResponse;
+  pricingPlanStatus: PricingPlanStatusResponse;
 };
 
-const UpgradePlanModal: FC<UpgradePlanModalProps> = ({ modalControl }) => {
+const CancelPlanModal: FC<CancelPlanModalProps> = ({ modalControl, pricingInfoList, pricingPlanStatus }) => {
   const { isOpen, onClose } = modalControl;
+  const activeList = pricingInfoList?.filter((item) => item?.id == parseInt(pricingPlanStatus?.pricing_plan_id!))[0];
+  const expiryDetails = calculateExpirationDetails(pricingPlanStatus!);
 
-  const planFeatures = [
-    {
-      text: 'Telegram delivery will reduce to 1,000 from 5,000',
-    },
-    {
-      text: 'Email delivery will reduce to 1,000 from 5,000',
-    },
-    {
-      text: 'Features will reset to Free plan',
-    },
-  ];
   return (
     <Modal
       size="medium"
@@ -28,11 +26,15 @@ const UpgradePlanModal: FC<UpgradePlanModalProps> = ({ modalControl }) => {
       acceptButtonProps={{
         children: 'Go Back',
         onClick: () => {
-          // handleAddSettings(formValues);
+          onClose();
         },
       }}
       cancelButtonProps={{
-        children: 'Cancel',
+        children: 'Cancel Plan',
+        onClick: () => {
+          // cancel plan
+          console.log('cancel plan', activeList);
+        },
       }}
     >
       <Box width="100%">
@@ -48,8 +50,8 @@ const UpgradePlanModal: FC<UpgradePlanModalProps> = ({ modalControl }) => {
           color="text-tertiary"
           textAlign="center"
         >
-          If you cancel you will be able to continue using Pro features until November 20, 2024. Once the billing term
-          ends:
+          If you cancel you will be able to continue using Push {activeList?.name} features until{' '}
+          {expiryDetails?.expirationDate}. Once the billing term ends:
         </Text>
 
         <Box
@@ -58,7 +60,7 @@ const UpgradePlanModal: FC<UpgradePlanModalProps> = ({ modalControl }) => {
           margin="spacing-md spacing-none"
           gap="spacing-sm"
         >
-          {planFeatures.map((item) => (
+          {parseStringToArray(activeList?.description).map((item) => (
             <Box
               display="flex"
               flexDirection="row"
@@ -76,7 +78,7 @@ const UpgradePlanModal: FC<UpgradePlanModalProps> = ({ modalControl }) => {
                 color="text-primary"
                 textAlign="center"
               >
-                {item.text}
+                {item}
               </Text>
             </Box>
           ))}
@@ -86,4 +88,4 @@ const UpgradePlanModal: FC<UpgradePlanModalProps> = ({ modalControl }) => {
   );
 };
 
-export default UpgradePlanModal;
+export default CancelPlanModal;

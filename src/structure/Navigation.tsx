@@ -130,7 +130,7 @@ function Navigation() {
   const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
-  const { account, chainId } = useAccount();
+  const { account, chainId, isWalletConnected } = useAccount();
 
   const { channelDetails } = useFetchChannelDetails();
   const filteredAlias = useMemo(() => {
@@ -813,7 +813,7 @@ function Navigation() {
             justify="flex-end"
             align="stretch"
           >
-            {!sidebarCollapsed && (
+            {!sidebarCollapsed && isWalletConnected && (
               <Box padding="spacing-none spacing-none spacing-xxs spacing-sm">
                 <UpgradePlanNavigationItem />
               </Box>

@@ -17,7 +17,6 @@ export const StyledFillTabs = styled(ReachTabs)`
 export const StyledFillTabList = styled(TabList)<TabListProps>`
   overflow: auto hidden;
   display: flex;
-  width: fit-content;
   padding: var(--spacing-xxxs);
   background-color: var(--surface-tertiary);
   border-radius: var(--radius-sm);
@@ -85,6 +84,7 @@ export const StyledLineTabList = styled(TabList)<TabListProps>`
   justify-content: flex-start;
   border-bottom: var(--border-sm) solid var(--stroke-secondary);
   align-self: ${(props) => props.alignSelf ?? 'flex-start'};
+  width: 100%;
 `;
 
 export const StyledLineTab = styled(Tab)`
