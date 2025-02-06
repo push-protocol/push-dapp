@@ -12,7 +12,7 @@ import { UserChannelDashboard } from './components/UserChannelDashboard';
 
 // Hooks
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
-import { useGetChannelCategories, useGetPaymentDetails, useGetPricingPlanStatus } from 'queries';
+import { useGetChannelCategories, useGetPaymentDetails, useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 import { PurchasePlanAlert } from 'common';
 import { useAccount } from 'hooks';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
@@ -31,10 +31,15 @@ const ChannelDashboard = () => {
   const walletAddress = convertAddressToAddrCaip(account, chainId);
   const navigate = useNavigate();
 
+  const { data: pricingInfoList } = useGetPricingInfo();
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
 
+  const selectedPlan = pricingInfoList?.find(
+    (planItem: { id: number }) =>
+      planItem?.id == parseInt(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
+  );
   const { data: paymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
   // const pricingPlanStatus = {
   //   id: 1,
@@ -82,8 +87,6 @@ const ChannelDashboard = () => {
     (pricingPlanStatus?.discord_quota_used ?? 0) +
     (pricingPlanStatus?.telegram_quota_used ?? 0);
 
-  console.log(expiryDetails, pricingPlanStatus);
-
   return (
     <Box
       display="flex"
@@ -95,7 +98,7 @@ const ChannelDashboard = () => {
         {paymentDetails?.payment_status == 'SUCCESS' && (
           <PurchasePlanAlert
             variant="success"
-            purchasedPlan={{ planName: 'Pro' }}
+            purchasedPlan={{ planName: selectedPlan?.name! }}
             onAction={() => {
               window.open(`https://sepolia.etherscan.io/tx/${paymentDetails?.transaction_hash}`, '_blank');
             }}
@@ -106,7 +109,7 @@ const ChannelDashboard = () => {
         {pricingPlanStatus && expiryDetails?.isExpired && (
           <PurchasePlanAlert
             variant="expired"
-            purchasedPlan={{ planName: 'Pro' }}
+            purchasedPlan={{ planName: selectedPlan?.name! }}
             onAction={() => {
               navigate('/pricing');
             }}
@@ -117,7 +120,7 @@ const ChannelDashboard = () => {
         {pricingPlanStatus && parseInt(expiryDetails?.timeRemaining!) < 7 && (
           <PurchasePlanAlert
             variant="renewalReminder"
-            purchasedPlan={{ planName: 'Pro', daysRemaining: parseInt(expiryDetails?.timeRemaining!) }}
+            purchasedPlan={{ planName: selectedPlan?.name!, daysRemaining: parseInt(expiryDetails?.timeRemaining!) }}
             onAction={() => {
               navigate('/pricing');
             }}

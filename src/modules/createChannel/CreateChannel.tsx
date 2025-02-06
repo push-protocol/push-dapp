@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Alert, Box } from 'blocks';
 import { appConfig } from 'config';
@@ -9,7 +9,13 @@ import { PurchasePlanAlert, Stepper } from 'common';
 import { useAccount } from 'hooks';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import { useApprovePUSHToken, useCreateChannel } from 'queries';
+import {
+  useApprovePUSHToken,
+  useCreateChannel,
+  useGetPaymentDetails,
+  useGetPricingInfo,
+  useGetPricingPlanStatus,
+} from 'queries';
 
 import { ChannelInfo } from './components/ChannelInfo';
 import {
@@ -32,13 +38,17 @@ import {
   ChannelInfoFormValues,
   CreateChannelProgressType,
 } from './CreateChannel.types';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
 
 const CreateChannel = () => {
   const { account, provider, isWalletConnected, chainId, connect } = useAccount();
+  const walletAddress = convertAddressToAddrCaip(account, chainId);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const paymentId = searchParams.get('paymentId');
 
   const onCoreNetwork = appConfig.coreContractChain === chainId;
 
@@ -58,6 +68,17 @@ const CreateChannel = () => {
   const [progressState, setProgressState] = useState<CreateChannelProgressType>(progressInitialState);
 
   const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
+
+  const { data: pricingInfoList } = useGetPricingInfo();
+  const { data: pricingPlanStatus } = useGetPricingPlanStatus({
+    channelId: walletAddress,
+  });
+
+  const selectedPlan = pricingInfoList?.find(
+    (planItem: { id: number }) =>
+      planItem?.id == parseInt(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
+  );
+  const { data: paymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 
   const handleProgressBar = (progress: number, progressInfo: string, processingInfo: string) => {
     setProgressState((prevState) => ({
@@ -211,15 +232,20 @@ const CreateChannel = () => {
     }
   };
 
+  console.log(paymentId);
+
   return (
     <CreateChannelFormProvider onSubmit={(values: ChannelInfoFormValues) => handleCreateNewChannel(values)}>
-      {/* Use this wrapper to display the Alert of purchased plan status */}
-      <Box width={{ initial: '712px', ml: '385px' }}>
+      {/* Payment success alert after redirecting from purchase plan page */}
+      {paymentDetails?.payment_status == 'SUCCESS' && (
         <PurchasePlanAlert
           variant="success"
-          purchasedPlan={{ planName: 'Pro' }}
+          purchasedPlan={{ planName: selectedPlan?.name! }}
+          onAction={() => {
+            window.open(`https://sepolia.etherscan.io/tx/${paymentDetails?.transaction_hash}`, '_blank');
+          }}
         />
-      </Box>
+      )}
 
       <Box
         padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}

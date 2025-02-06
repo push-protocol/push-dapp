@@ -50,3 +50,11 @@ export const sendUSDC = async (amount: number, recipient: string, provider: ethe
     throw error;
   }
 };
+
+// EIP191 signature
+export const getEip191Signature = async (message: string, account: string, provider: ethers.providers.Web3Provider) => {
+  let signer = provider.getSigner(account);
+
+  const signature = await signer.signMessage(message);
+  return signature;
+};

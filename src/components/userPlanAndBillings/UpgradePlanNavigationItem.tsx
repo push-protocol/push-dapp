@@ -36,6 +36,7 @@ export const UpgradePlanNavigationItem = () => {
   const handleGoToPricing = () => {
     navigate('/pricing');
   };
+
   return (
     <Skeleton isLoading={isPricingPlanStatusLoading}>
       <Box
@@ -60,7 +61,7 @@ export const UpgradePlanNavigationItem = () => {
             color="text-primary"
             variant="h6-bold"
           >
-            Push {(pricingPlanStatus && selectedPlan?.name) || 'Free Plan'}
+            {(pricingPlanStatus && `Push ${selectedPlan?.name}`) || 'Free Plan'}
           </Text>
           {pricingPlanStatus?.pricing_plan_id !== '3' && (
             <Button

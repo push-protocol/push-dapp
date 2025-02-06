@@ -1,24 +1,24 @@
 import { FC, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { css } from 'styled-components';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { useAccount } from 'hooks';
 import { getRequiredFieldMessage, useDisclosure } from 'common';
-import { useInitiatePaymentInfo } from 'queries';
+import { useGetPaymentDetails, useInitiatePaymentInfo } from 'queries';
 import { PlanPurchasedModal } from './PlanPurchasedModal';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { getUSDCBalance, sendUSDC } from '../utils/handleUSDCutils';
+import { getEip191Signature, getUSDCBalance, sendUSDC } from '../utils/handleUSDCutils';
 import { addresses } from 'config';
 
 import { PricingPlanTabsType } from 'modules/pricing/Pricing.types';
-import { PurchasePlanModalTypes } from '../PusrchasePlan.types';
 import { PricingPlanType } from 'queries/types/pricing';
 
-import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput, Tick } from 'blocks';
+import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput } from 'blocks';
 import { ConfirmPurchaseModal } from './ConfirmPurchaseModal';
+import { useSelector } from 'react-redux';
 
 export type PurchaseSummeryProps = { selectedPlan: PricingPlanType };
 const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
@@ -31,7 +31,6 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   const successModalControl = useDisclosure();
   const { account, isWalletConnected, connect, chainId } = useAccount();
   const walletAddress = convertAddressToAddrCaip(account, chainId);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const planType = searchParams.get('type');
 
@@ -42,14 +41,17 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
     isValidPricingPlan(planType) ? planType : 'monthly',
   );
   const [isLoading, setIsLoading] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
-  const [modalType, setShowModalType] = useState<PurchasePlanModalTypes>(null);
   const [balance, setBalance] = useState<string | null | undefined>(null);
-
+  const [paymentId, setPaymentId] = useState<string | null | undefined>(null);
+  const [channelStatus, setChannelStatus] = useState<boolean>(false);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
   const totalAmount = selectedPlan?.value ? selectedPlan?.value * (selectedPricingPlanTab === 'yearly' ? 12 : 1) : 0;
   const usdcBalance = 0;
 
   const { mutate: handleInitatePayment } = useInitiatePaymentInfo();
+  const { data: paymentDetails, refetch: refetchFetchPaymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -66,31 +68,60 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
       }
     };
     fetchBalance();
+    getChannelDetails();
   }, [account, isWalletConnected]);
 
-  // const handleOnCloseModal = () => {
-  //   if (modalType === 'confirmPurchase') {
-  //     setShowModalType('planPurchased');
-  //   } else {
-  //     modalControl.onClose();
-  //     setShowModalType(null);
-  //   }
-  // };
+  useEffect(() => {
+    if (!paymentId) return;
+
+    const interval = setInterval(() => {
+      refetchFetchPaymentDetails();
+      console.log('retry fetching details');
+    }, 5000);
+
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+      console.log('Stopped polling after 1 minute');
+      setIsLoading(false);
+    }, 60000);
+
+    if (paymentDetails?.payment_status === 'SUCCESS' || paymentDetails?.payment_status === 'FAILED') {
+      clearInterval(interval);
+      clearTimeout(timeout);
+      if (paymentDetails?.payment_status === 'SUCCESS') {
+        modalControl.onClose();
+        successModalControl.open();
+        setIsLoading(false);
+      }
+    }
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [paymentId, paymentDetails?.payment_status]);
 
   const handleOpenFaucetLink = () => {
     window.open('https://faucet.circle.com/', '_blank');
   };
 
-  // EIP191 signature
-  const getEip191Signature = async (message: string) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    let signer = provider.getSigner(account);
+  const handleApproveAndPurchase = async () => {
+    if (!isWalletConnected) {
+      await connect();
+    }
 
-    const signature = await signer.signMessage(message);
-    return signature;
+    setIsLoading(true);
+    modalControl.open();
+
+    const paymentAmount = selectedPricingPlanTab === 'yearly' ? selectedPlan?.value * 12 : selectedPlan?.value;
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send('eth_requestAccounts', []);
+    await sendUSDC(paymentAmount, addresses?.usdcRecipient, provider);
+    handlePurchase();
   };
 
   const handlePurchase = async () => {
+    // generate verification proof with wallet address and pricing plan id
     const req = {
       body: {
         channel: walletAddress,
@@ -104,9 +135,8 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
         content: req.body.pricingPlanId,
       }),
     );
-
-    const verificationProof = await getEip191Signature(messageHash);
-
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const verificationProof = await getEip191Signature(messageHash, account, provider);
     console.log('Message Hash:', messageHash, 'verificationProof:', verificationProof);
 
     handleInitatePayment(
@@ -122,8 +152,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
       {
         onSuccess: (response) => {
           console.log('Response on the channels page', response);
-          navigate(`/channel/${account}?paymentId=${response?.paymentId}`);
-          setIsLoading(false);
+          setPaymentId(response?.paymentId);
         },
         onError: (error) => {
           console.log('Error in the channels', error);
@@ -131,25 +160,12 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
         },
       },
     );
-
-    // modalControl?.close
   };
 
-  const handleApproveAndPurchase = async () => {
-    if (!isWalletConnected) {
-      await connect();
-    }
-    setIsApproved(true);
-    setIsLoading(true);
+  const getChannelDetails = async () => {
+    const channelDetails = await userPushSDKInstance.channel.info(account);
 
-    modalControl.open();
-    const paymentAmount = selectedPricingPlanTab === 'yearly' ? selectedPlan?.value * 12 : selectedPlan?.value;
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send('eth_requestAccounts', []);
-    console.log(paymentAmount, 'there there');
-    await sendUSDC(paymentAmount, addresses?.usdcRecipient, provider);
-
-    // handlePurchase();
+    if (channelDetails) setChannelStatus(true);
   };
 
   const formik = useFormik({
@@ -181,8 +197,11 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
 
       {successModalControl.isOpen && (
         <PlanPurchasedModal
-          modalControl={modalControl}
+          modalControl={successModalControl}
           plan={selectedPlan}
+          paymentId={paymentId!}
+          account={account!}
+          channelStatus={channelStatus}
         />
       )}
 
@@ -310,15 +329,6 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
             flexDirection="row"
             gap="spacing-md"
           >
-            {/* <Box width={{ initial: '250px', ml: '100%' }}>
-            <Button
-              onClick={handleApprove}
-              leadingIcon={isApproved ? <Tick /> : null}
-              block
-            >
-              Approve
-            </Button>
-          </Box> */}
             <Box width={'100%'}>
               <Button
                 loading={isLoading}

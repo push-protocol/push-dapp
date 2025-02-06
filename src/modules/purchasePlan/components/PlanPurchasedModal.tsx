@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModalResponse } from 'common';
@@ -10,17 +11,29 @@ import { formatSentenceWithBoldNumbers, parseStringToArray } from 'modules/prici
 export type PlanPurchasedModalProps = {
   plan: PricingPlanType;
   modalControl: ModalResponse;
+  paymentId: string;
+  account: string;
+  channelStatus: boolean;
 };
 
-const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl }) => {
+const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, paymentId, account, channelStatus }) => {
   const { mode } = useBlocksTheme();
   const { isOpen, onClose } = modalControl;
+  const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    if (channelStatus) {
+      navigate(`/channel/${account}?paymentId=${paymentId}`);
+    } else {
+      navigate(`/create/channel?paymentId=${paymentId}`);
+    }
+  };
   return (
     <Modal
       size={'medium'}
       isOpen={isOpen}
       onClose={onClose}
-      acceptButtonProps={{ children: 'Get Started' }}
+      acceptButtonProps={{ children: 'Get Started', onClick: () => handleRedirect() }}
       cancelButtonProps={null}
     >
       <Box
