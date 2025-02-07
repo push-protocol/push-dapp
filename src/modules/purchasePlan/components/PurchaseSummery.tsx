@@ -16,7 +16,7 @@ import { addresses, appConfig } from 'config';
 import { PricingPlanTabsType } from 'modules/pricing/Pricing.types';
 import { PricingPlanType } from 'queries/types/pricing';
 
-import { Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput } from 'blocks';
+import { Alert, Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput } from 'blocks';
 import { ConfirmPurchaseModal } from './ConfirmPurchaseModal';
 import { useSelector } from 'react-redux';
 
@@ -42,6 +42,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [balance, setBalance] = useState<string | null | undefined>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null | undefined>(null);
   const [paymentId, setPaymentId] = useState<string | null | undefined>(null);
   const [channelStatus, setChannelStatus] = useState<boolean>(false);
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -122,13 +123,17 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
       handlePurchase();
     } catch (error: any) {
       console.error('Transaction failed:', error);
+
       // Show error message based on error type
       if (error?.message.includes('User denied transaction')) {
         console.log('User rejected the transaction');
+        setErrorMessage('Something went wrong while processing the payment');
       } else if (error?.message.includes('transfer amount exceeds balance')) {
-        console.log('Not enough balance');
+        console.log('Insufficient balance');
+        setErrorMessage('Insufficient balance');
       } else {
         console.log('Something went wrong while processing the payment');
+        setErrorMessage('Something went wrong while processing the payment');
       }
 
       setIsLoading(false);
@@ -313,7 +318,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
               )}
             </Box>
 
-            {usdcBalance < 1 && appConfig?.appEnv != 'prod' && (
+            {balance && parseInt(balance) < totalAmount && appConfig?.appEnv != 'prod' && (
               <Link
                 style={{ alignSelf: 'center' }}
                 to="#"
@@ -342,9 +347,16 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
 
           <Box
             display="flex"
-            flexDirection="row"
+            flexDirection="column"
             gap="spacing-md"
           >
+            {errorMessage && (
+              <Alert
+                variant="error"
+                heading={errorMessage}
+              />
+            )}
+
             <Box width={'100%'}>
               <Button
                 loading={isLoading}

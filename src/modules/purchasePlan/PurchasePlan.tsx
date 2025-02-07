@@ -56,10 +56,10 @@ const PurchasePlan: FC<PurchasePlanProps> = ({ index }) => {
     <Box
       flexDirection={{ initial: 'row', ml: 'column' }}
       display="flex"
-      gap={{ ml: 'spacing-md' }}
+      gap={{ ml: 'spacing-md', initial: 'spacing-xxxl' }}
       width="100%"
       css={css`
-        padding: 85px 0px 0px 0px;
+        padding: 45px 0px 0px 0px;
         box-sizing: border-box;
       `}
     >

@@ -12,7 +12,7 @@ const SelectedPlanView: FC<SelectedPlanViewProps> = ({ selectedPlan }) => {
     <Box
       display="flex"
       flexDirection="column"
-      padding="spacing-md"
+      padding="spacing-none"
       width="50%"
     >
       <Text variant="h3-semibold">Push {selectedPlan?.name}</Text>
