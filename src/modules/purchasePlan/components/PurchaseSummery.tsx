@@ -11,7 +11,7 @@ import { useGetPaymentDetails, useInitiatePaymentInfo } from 'queries';
 import { PlanPurchasedModal } from './PlanPurchasedModal';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { getEip191Signature, getUSDCBalance, sendUSDC } from '../utils/handleUSDCutils';
-import { addresses } from 'config';
+import { addresses, appConfig } from 'config';
 
 import { PricingPlanTabsType } from 'modules/pricing/Pricing.types';
 import { PricingPlanType } from 'queries/types/pricing';
@@ -115,9 +115,25 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
 
     const paymentAmount = selectedPricingPlanTab === 'yearly' ? selectedPlan?.value * 12 : selectedPlan?.value;
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send('eth_requestAccounts', []);
-    await sendUSDC(paymentAmount, addresses?.usdcRecipient, provider);
-    handlePurchase();
+
+    try {
+      await provider.send('eth_requestAccounts', []);
+      await sendUSDC(paymentAmount, addresses?.usdcRecipient, provider);
+      handlePurchase();
+    } catch (error: any) {
+      console.error('Transaction failed:', error);
+      // Show error message based on error type
+      if (error?.message.includes('User denied transaction')) {
+        console.log('User rejected the transaction');
+      } else if (error?.message.includes('transfer amount exceeds balance')) {
+        console.log('Not enough balance');
+      } else {
+        console.log('Something went wrong while processing the payment');
+      }
+
+      setIsLoading(false);
+      modalControl.onClose();
+    }
   };
 
   const handlePurchase = async () => {
@@ -297,7 +313,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
               )}
             </Box>
 
-            {usdcBalance < 1 && (
+            {usdcBalance < 1 && appConfig?.appEnv != 'prod' && (
               <Link
                 style={{ alignSelf: 'center' }}
                 to="#"
