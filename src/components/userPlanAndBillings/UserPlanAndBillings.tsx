@@ -207,7 +207,7 @@ const UserPlanAndBillings = () => {
       <Box
         margin="spacing-lg spacing-none spacing-none spacing-none"
         display="flex"
-        flexDirection="row"
+        flexDirection={{ initial: 'row', ml: 'column' }}
         width="100%"
         justifyContent="space-between"
         gap="spacing-md"
