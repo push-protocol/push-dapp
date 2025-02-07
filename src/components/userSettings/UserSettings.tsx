@@ -25,6 +25,7 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useGetPricingPlanStatus } from 'queries';
 import { calculateExpirationDetails } from './utils';
 
+
 interface ChannelListItem {
   channel: string;
   icon: string;
@@ -122,6 +123,7 @@ function UserSettings() {
       label: 'My Profile',
       title: 'Your Profile',
       section: 'top',
+
     },
     {
       value: 1,
@@ -232,6 +234,7 @@ function UserSettings() {
                 <SectionTitle bottomSpacing={selectedOption == 2 ? false : true}>
                   {selectOptions[selectedOption]?.title}
                 </SectionTitle>
+
               )}
 
               {selectedOption === 0 && (
@@ -245,6 +248,7 @@ function UserSettings() {
               {selectedOption === 1 && <ChannelListSettings />}
               {selectedOption === 2 && <PushSnapSettings />}
               {selectedOption === 3 && <UserPlanAndBillings />}
+
             </ChannelContainer>
           </ChannelWrapper>
 
@@ -382,12 +386,14 @@ const ChannelBlock = styled.div`
     position: absolute;
     right: 10px;
   }
+
   &::-webkit-scrollbar {
     background-color: transparent;
     width: 4px;
     position: absolute;
     right: 10px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: #d53a94;
     border-radius: 99px;
@@ -395,6 +401,7 @@ const ChannelBlock = styled.div`
     position: absolute;
     right: 10px;
   }
+
   // Adding margin-bottom to the last child
   & > *:last-child {
     margin-bottom: 100px;
@@ -404,6 +411,7 @@ const ChannelBlock = styled.div`
 const ChannelContainer = styled.div<{ selectedOption: number }>`
   overflow-y: ${(props) => (props.selectedOption === 3 ? 'none' : 'auto')};
   height: ${(props) => (props.selectedOption === 0 || props.selectedOption === 3 ? 'auto' : '55vh')};
+
   padding: 12px;
 
   &::-webkit-scrollbar-track {

@@ -1,19 +1,24 @@
 // React and other libraries
+import { useState } from 'react';
+import { css } from 'styled-components';
 
 //Hooks
 // import { useGetTrendingChannels } from 'queries/hooks';
 
-// //Constants
+
+//Constants
 // import { firstEndDate, secondEndDate, startDate, trendingSource } from '../Dashboard.constants';
 // import { appConfig } from 'config';
 
-// //Utility functions
+//Utility functions
 // import { getTrendingChannelsData } from '../Dashboard.utils';
+import { ProfileModalVisibilityType } from 'common';
 
-// // Component
+// Component
 // import { EmptyChannelList } from './EmptyChannelList';
 import { Box, Separator } from 'blocks';
 import { ChannelListItem } from './ChannelListItem';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 //Types
 // import { EnvKeys } from '../Dashboard.types';
@@ -71,6 +76,13 @@ const TrendingChannelsList = () => {
   // If there are channels then render them else render 5 skeletons
   // const channelList = isLoadingTrendingChannels ? Array(5).fill(0) : trendingChannels;
 
+
+  // State to handle the profile modal
+  const [profileModalVisibility, setProfileModalVisibility] = useState<ProfileModalVisibilityType>({
+    isVisible: false,
+    channel_id: null,
+  });
+
   return (
     <>
       {/* {isSuccess && !isLoadingTrendingChannels && !trendingChannels?.length && (
@@ -88,11 +100,38 @@ const TrendingChannelsList = () => {
             isLoading={false}
             // refetchChannels={handleRefetch}
             refetchChannels={() => {}}
+            onChangeProfileModalVisibility={(data) => setProfileModalVisibility(data)}
+            profileModalVisibility={profileModalVisibility}
           />
           {/* {index != trendingChannels.length - 1 && <Separator />} */}
           {index != channelList.length - 1 && <Separator />}
         </Box>
       ))}
+
+      {/* Render Unlock profile modal if the profile is not enabled */}
+      {profileModalVisibility?.isVisible && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="-webkit-fill-available"
+          alignItems="center"
+          css={css`
+            z-index: 99999;
+          `}
+        >
+          <UnlockProfileWrapper
+            type={UNLOCK_PROFILE_TYPE.MODAL}
+            showConnectModal={true}
+            onClose={() =>
+              setProfileModalVisibility({
+                isVisible: false,
+                channel_id: null,
+              })
+            }
+            description="Unlock your profile to proceed."
+          />
+        </Box>
+      )}
     </>
   );
 };

@@ -57,3 +57,4 @@ export const userSubscription = 'userSubscription';
 export const userTwitterDetails = 'userTwitterDetails';
 export const userProfileDetails = 'userProfileDetails';
 export const verifyAliasChain = 'verifyAliasChain';
+export const sendSupportMessageKey = 'sendSupportMessage';

@@ -188,12 +188,10 @@ export type ChannelsListModelledResponse = {
   channels: Array<ChannelDetails>;
   itemcount: number;
 };
-export type ChannelsSearchListModelledResponse = {
-  channels: Array<ChannelDetails>;
-  itemCount: number;
-};
+export type ChannelsSearchListModelledResponse = Array<ChannelDetails>;
 
 export type ChannelListParams = {
+  userPushSDKInstance: PushAPI;
   order?: ChannelListOrderType;
   pageSize: number;
   page?: number;
@@ -203,6 +201,7 @@ export type ChannelListParams = {
 };
 
 export type ChannelSearchParams = {
+  userPushSDKInstance: PushAPI;
   page: number;
   pageSize: number;
   query: string;

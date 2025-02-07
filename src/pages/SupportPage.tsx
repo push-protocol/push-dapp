@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import { SupportModule } from 'modules/support/SupportModule';
+import { Support } from 'modules/support';
 
 // Other Information section
 const SupportPage = () => {
   // RENDER
   return (
     <Container>
-      <SupportModule />
+      <Support />
     </Container>
   );
 };

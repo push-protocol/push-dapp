@@ -7,3 +7,4 @@ export * from './analytics';
 export * from './notificationSettings';
 export * from './chat';
 export * from './pricing';
+export * from './support';

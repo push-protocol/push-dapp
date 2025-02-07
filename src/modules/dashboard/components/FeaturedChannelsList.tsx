@@ -14,12 +14,19 @@ import { Box, HoverableSVG, Text, Link, NextIconSlider, PrevIconSlider, deviceSi
 import { FeaturedChannelDetailsProps } from '../configs';
 import { useFeaturedChannelsCarouselButtons } from '../hooks/useFeaturedChannelsCarouselButtons';
 import { useDeviceWidthCheck } from 'hooks';
+import { ProfileModalVisibilityType } from 'common';
 
 export type FeaturedChannelsListProps = {
   featuredChannelsList: FeaturedChannelDetailsProps[];
+  onChangeProfileModalVisibility?: (value: ProfileModalVisibilityType) => void; // Function prop to control modal visibility
+  profileModalVisibility?: ProfileModalVisibilityType;
 };
 
-const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsList }) => {
+const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({
+  featuredChannelsList,
+  onChangeProfileModalVisibility,
+  profileModalVisibility,
+}) => {
   const isTablet = useDeviceWidthCheck(parseInt(deviceSizes.tablet));
   const isXsLaptop = useDeviceWidthCheck(parseInt(deviceSizes.laptop));
 
@@ -104,7 +111,11 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
             `}
           >
             {featuredChannelsList.map((channel) => (
-              <FeaturedChannelsListItem channelAddress={channel.channel} />
+              <FeaturedChannelsListItem
+                channelAddress={channel.channel}
+                onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+                profileModalVisibility={profileModalVisibility}
+              />
             ))}
           </Box>
         </Box>

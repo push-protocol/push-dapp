@@ -28,7 +28,7 @@ import {
 
 import { UserSetting } from 'helpers/channel/types';
 import { useAccount } from 'hooks';
-import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
+import { ProfileModalVisibilityType, SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 
 export type ChannelListItemProps = {
@@ -39,12 +39,17 @@ export type ChannelListItemProps = {
   refetchChannels?:
     | (() => void)
     | ((options?: RefetchOptions | undefined) => Promise<QueryObserverResult<UserSubscriptionsResponse, Error>>);
+
+  onChangeProfileModalVisibility?: (value: ProfileModalVisibilityType) => void; // Function prop to control modal visibility
+  profileModalVisibility?: ProfileModalVisibilityType;
 };
 const ChannelListItem: FC<ChannelListItemProps> = ({
   allowSubscribe = true,
   channelAddress,
   refetchChannels,
   isLoading,
+  onChangeProfileModalVisibility,
+  profileModalVisibility,
 }) => {
   const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
 
@@ -152,6 +157,8 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
         <Skeleton isLoading={isSubscriptionLoading}>
           {allowSubscribe && channelDetails && !isSubscribed && (
             <SubscribeChannelDropdown
+              onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+              profileModalVisibility={profileModalVisibility}
               channelDetails={channelDetails}
               onSuccess={handleRefetch}
             >
@@ -165,6 +172,8 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
 
           {allowSubscribe && channelDetails && !!isSubscribed && (
             <UnsubscribeChannelDropdown
+              onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+              profileModalVisibility={profileModalVisibility}
               channelDetail={channelDetails}
               onSuccess={handleRefetch}
               userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
