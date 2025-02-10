@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { analyticsBaseURL } from 'queries/baseURL';
+import { analyticsBaseURLV2 } from 'queries/baseURL';
 import { getNotificationCountModelCreator } from 'queries/models/analytics';
 
 export const getSentNotificationCount = () =>
   axios({
     method: 'GET',
-    url: `${analyticsBaseURL}/analytics/notification`,
+    url: `${analyticsBaseURLV2}/analytics/notification`,
     params: {
       startDate: new Date('2022-01-01'),
       endDate: new Date(),
