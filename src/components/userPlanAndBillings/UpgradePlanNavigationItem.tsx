@@ -6,7 +6,7 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useAccount } from 'hooks';
 import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 
-import { Box, Button, ProgressBar, Sale, Skeleton, Text } from 'blocks';
+import { Box, Button, Info, ProgressBar, Sale, Skeleton, Text } from 'blocks';
 
 export const UpgradePlanNavigationItem = () => {
   const navigate = useNavigate();
@@ -32,6 +32,9 @@ export const UpgradePlanNavigationItem = () => {
     (pricingPlanStatus?.email_quota_used ?? 0) +
     (pricingPlanStatus?.discord_quota_used ?? 0) +
     (pricingPlanStatus?.telegram_quota_used ?? 0);
+
+  const totalQuotaRemaining = totalQuota - totalQuotaUsed;
+  const isUserOnFreePlan = selectedPlan?.id == 1;
 
   const handleGoToPricing = () => {
     navigate('/pricing');
@@ -81,24 +84,56 @@ export const UpgradePlanNavigationItem = () => {
           gap="spacing-xxs"
           width="100%"
         >
-          <Text
-            color="text-secondary"
-            variant="c-regular"
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            width="100%"
+            gap="spacing-xxxs"
           >
-            Monthly Web2 Notifications
-          </Text>
+            {!isUserOnFreePlan && totalQuotaRemaining == 0 && <Info color="icon-state-danger-bold" />}
+            <Text
+              color="text-secondary"
+              variant="c-bold"
+            >
+              Monthly Web2 Notifications
+            </Text>
+          </Box>
 
           <ProgressBar
-            progress={totalQuota - totalQuotaUsed}
+            progress={totalQuotaUsed}
             max={totalQuota}
           />
 
-          <Text
-            color="text-secondary"
-            variant="c-regular"
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            width="100%"
           >
-            {totalQuota - totalQuotaUsed} remaining
-          </Text>
+            <Text
+              color="text-secondary"
+              variant="c-regular"
+            >
+              {!isUserOnFreePlan && totalQuotaRemaining == 0 ? 'Limit reached' : `${totalQuotaRemaining} Remaining`}
+            </Text>
+
+            {!isUserOnFreePlan && totalQuotaRemaining == 0 && (
+              <Text
+                color="text-secondary"
+                variant="c-bold"
+                onClick={handleGoToPricing}
+                css={css`
+                  &: hover {
+                    text-decoration: underline;
+                    cursor: pointer;
+                  }
+                `}
+              >
+                Upgrade Plan
+              </Text>
+            )}
+          </Box>
         </Box>
       </Box>
     </Skeleton>

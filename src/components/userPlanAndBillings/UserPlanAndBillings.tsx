@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useDisclosure } from 'common';
 
-import { Box, Button, ProgressBar, Text } from 'blocks';
+import { Box, Button, Info, ProgressBar, Text } from 'blocks';
 import CancelPlanModal from './CancelPlanModal';
 import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 import { useAccount } from 'hooks';
@@ -47,6 +47,7 @@ const UserPlanAndBillings = () => {
     },
   ];
 
+  const isUserOnFreePlan = selectedPlan?.id == 1;
   const navigateToPricing = () => {
     navigate('/pricing');
   };
@@ -219,24 +220,56 @@ const UserPlanAndBillings = () => {
             gap="spacing-xxs"
             width="100%"
           >
-            <Text
-              color="text-secondary"
-              variant="c-bold"
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              width="100%"
+              gap="spacing-xxxs"
             >
-              {item.title}
-            </Text>
+              {!isUserOnFreePlan && item?.progress - item?.max == 0 && <Info color="icon-state-danger-bold" />}
+              <Text
+                color="text-secondary"
+                variant="c-bold"
+              >
+                {item.title}
+              </Text>
+            </Box>
 
             <ProgressBar
               progress={item?.progress}
               max={item?.max}
             />
 
-            <Text
-              color="text-secondary"
-              variant="c-regular"
+            <Box
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+              width="100%"
             >
-              {item.subtitle}
-            </Text>
+              <Text
+                color="text-secondary"
+                variant="c-regular"
+              >
+                {!isUserOnFreePlan && item?.progress - item?.max == 0 ? 'Limit reached' : item.subtitle}
+              </Text>
+
+              {!isUserOnFreePlan && item?.progress - item?.max == 0 && (
+                <Text
+                  color="text-secondary"
+                  variant="c-bold"
+                  onClick={navigateToPricing}
+                  css={css`
+                    &: hover {
+                      text-decoration: underline;
+                      cursor: pointer;
+                    }
+                  `}
+                >
+                  Upgrade Plan
+                </Text>
+              )}
+            </Box>
           </Box>
         ))}
       </Box>
