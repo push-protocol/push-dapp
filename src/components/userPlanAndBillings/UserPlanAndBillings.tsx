@@ -2,16 +2,13 @@ import { css } from 'styled-components';
 import { toNumber } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-import { useDisclosure } from 'common';
-
-import { Box, Button, Info, ProgressBar, Text } from 'blocks';
-import CancelPlanModal from './CancelPlanModal';
 import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 import { useAccount } from 'hooks';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
+import { Box, Button, Info, ProgressBar, Text } from 'blocks';
+
 const UserPlanAndBillings = () => {
-  const modalControl = useDisclosure();
   const { account, chainId } = useAccount();
   const navigate = useNavigate();
   const walletAddress = convertAddressToAddrCaip(account, chainId);
@@ -123,17 +120,6 @@ const UserPlanAndBillings = () => {
             >
               Upgrade Plan
             </Button>
-
-            <Text
-              variant="bs-semibold"
-              color="text-primary"
-              css={css`
-                cursor: pointer;
-              `}
-              onClick={() => modalControl.open()}
-            >
-              Cancel Plan
-            </Text>
           </Box>
         </Box>
       ) : (
@@ -273,14 +259,6 @@ const UserPlanAndBillings = () => {
           </Box>
         ))}
       </Box>
-
-      {modalControl.isOpen && (
-        <CancelPlanModal
-          modalControl={modalControl}
-          pricingInfoList={pricingInfoList!}
-          pricingPlanStatus={pricingPlanStatus!}
-        />
-      )}
     </Box>
   );
 };
