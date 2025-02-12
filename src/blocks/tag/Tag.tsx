@@ -3,7 +3,7 @@ import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 import { sizeMapping } from './Tag.constants';
 
-export type TagVariant = 'default' | 'success' | 'danger' | 'warning' | 'info' | 'disabled';
+export type TagVariant = 'default' | 'success' | 'danger' | 'warning' | 'info' | 'disabled' | 'brand';
 export type SizeVariant = 'small' | 'medium';
 
 export type TagProps = {
