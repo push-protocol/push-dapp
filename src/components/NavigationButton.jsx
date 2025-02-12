@@ -19,6 +19,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 
 // Assets
 import { navigationIcons } from 'assets/navigation';
+import { Text } from 'blocks';
 
 // Interface
 
@@ -257,16 +258,13 @@ const NewTag2 = styled(SpanV2)`
   display: flex;
   max-width: 20px;
   height: 16px;
-  padding: 0px 8px;
-  flex-direction: column;
+  padding: 1px 8px 0px 8px;
   justify-content: center;
   align-items: center;
-  gap: 7.778px;
-  flex-shrink: 0;
   border-radius: 22px;
   background: #E20880;
   font-weight: 500;
-  line-height: 16px;
+  line-height: 1;
   font-size: 12px;
 `;
 
