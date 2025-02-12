@@ -56,6 +56,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     title: null,
   });
   const [displayQR, setDisplayQR] = useState<boolean>(false);
+  const [newChatsCount, setNewChatsCount] = useState<number>(0);
+  const [newNotifsCount, setNewNotifsCount] = useState<number>(0);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -554,6 +556,10 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         storePGPKeyForUser,
         isUserProfileUnlocked,
         setUserProfileUnlocked,
+        newChatsCount,
+        setNewChatsCount,
+        newNotifsCount,
+        setNewNotifsCount,
       }}
     >
       {children}

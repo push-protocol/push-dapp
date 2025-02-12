@@ -153,6 +153,8 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
                 {data.name}
               </Span>
 
+              {!!data?.count && <NewTag2>{data?.count}</NewTag2>}
+
               {data?.showNewTag && <NewTag>New</NewTag>}
 
               {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
@@ -224,6 +226,23 @@ const NewTag = styled(SpanV2)`
   border-radius: 6px;
   height: 17px;
   width: fit-content;
+`;
+
+const NewTag2 = styled(SpanV2)`
+  display: flex;
+  max-width: 20px;
+  height: 16px;
+  padding: 0px 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 7.778px;
+  flex-shrink: 0;
+  border-radius: 22px;
+  background: #E20880;
+  font-weight: 500;
+  line-height: 16px;
+  font-size: 12px;
 `;
 
 // Export Default

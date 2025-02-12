@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // External Packages
@@ -20,6 +20,7 @@ import { device } from 'config/Globals';
 import Back from 'assets/chat/backchat.svg?react';
 import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
+import { AppContext } from 'contexts/AppContext';
 
 // Interface
 interface IntroContainerProps {
@@ -38,6 +39,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
+  const { setNewChatsCount, newChatsCount } = useContext(AppContext);
 
   // Get Theme
   const theme = useTheme();
@@ -47,6 +49,10 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
   // State to control the visibility of the unlock profile modal
   const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    setNewChatsCount(0);
+  }, [newChatsCount]);
 
   // RENDER
   return (
@@ -138,7 +144,7 @@ const ChatViewContainer = styled(ItemVV2)`
   overflow: hidden;
 `;
 
-const IntroContainer = styled(ItemVV2) <IntroContainerProps>`
+const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
   flex: 1;
   height: inherit;
   background: ${(props) => props.bg || 'transparent'};

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { CONSTANTS, NotificationEvent } from '@pushprotocol/restapi';
@@ -7,6 +7,7 @@ import { deviceSizes, notification } from 'blocks';
 import { InAppChannelNotifications, InAppChatNotifications } from 'common';
 
 import { useDeviceWidthCheck } from 'hooks';
+import { AppContext } from 'contexts/AppContext';
 
 export const useInAppNotifications = () => {
   const [isStreamConnected, setIsStreamConnected] = useState<boolean>(false);
@@ -15,6 +16,8 @@ export const useInAppNotifications = () => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
+  const { setNewChatsCount, setNewNotifsCount } = useContext(AppContext);
+
   const attachListeners = async () => {
     userPushSDKInstance?.stream?.on(CONSTANTS.STREAM.CONNECT, (err: Error) => {
       console.debug(
@@ -43,7 +46,8 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.stream?.uid,
         userPushSDKInstance?.stream
       );
-      if (data.source != 'PUSH_CHAT')
+      if (data.source != 'PUSH_CHAT') {
+        setNewNotifsCount((prev: any) => prev + 1);
         notification.show({
           overlay: <InAppChannelNotifications notificationDetails={data} />,
           position: isMobile ? 'top-center' : 'bottom-right',
@@ -52,6 +56,7 @@ export const useInAppNotifications = () => {
             notification.hide();
           },
         });
+      }
     });
     userPushSDKInstance?.stream?.on(CONSTANTS.STREAM.CHAT, (data: any) => {
       console.debug(
@@ -75,6 +80,7 @@ export const useInAppNotifications = () => {
           updatedMessages[data.chatId].push(data);
         }
         setNewMessages(updatedMessages);
+        setNewChatsCount((prev: any) => prev + 1);
         notification.show(
           {
             overlay: (

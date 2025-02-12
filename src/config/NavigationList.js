@@ -49,6 +49,7 @@ const NavigationList = {
         hasMenuLogic: true,
         loading: false,
         hidden: false,
+        count: 0,
         headerTag: {
           title: 'Inbox',
           light: {
@@ -103,6 +104,7 @@ const NavigationList = {
         hasMenuLogic: true,
         hidden: false,
         // allowReadOnly: false,
+        count: 0,
         headerTag: {
           title: 'Chat',
           light: {

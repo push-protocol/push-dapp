@@ -24,6 +24,7 @@ import { appConfig } from 'config/index.js';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import APP_PATHS from 'config/AppPaths';
+import { AppContext } from 'contexts/AppContext';
 
 // Create Header
 function MobileNavigation({ showNavBar, setShowNavBar }) {
@@ -35,6 +36,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
   const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
+  const { newChatsCount, newNotifsCount } = useContext(AppContext);
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
@@ -639,6 +641,28 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
 
     return rendered;
   };
+
+  useEffect(() => {
+    if (navigationSetup) {
+      setNavigationSetup((prev: any) => ({
+        ...prev,
+        notificationList: prev.notificationList.map((item: any) =>
+          item.id === '2_inbox' ? { ...item, data: { ...item.data, count: newNotifsCount } } : item
+        ),
+      }));
+    }
+  }, [newNotifsCount]);
+
+  useEffect(() => {
+    if (navigationSetup) {
+      setNavigationSetup((prev: any) => ({
+        ...prev,
+        messagingList: prev.messagingList.map((item: any) =>
+          item.id === '3_chat' ? { ...item, data: { ...item.data, count: newChatsCount } } : item
+        ),
+      }));
+    }
+  }, [newChatsCount]);
 
   return (
     <Item
