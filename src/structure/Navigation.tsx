@@ -24,11 +24,12 @@ import navigationList from 'config/NavigationList';
 import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Box, Link, PlusCircle, Text } from 'blocks';
-import { LOGO_ALIAS_CHAIN } from 'common';
+import { LOGO_ALIAS_CHAIN, updateNotifCount } from 'common';
 import APP_PATHS from 'config/AppPaths';
 import { ChannelDetails } from 'queries';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { AppContext } from 'contexts/AppContext';
 
 type AddNewChainNavigationProps = {
   channelDetails: ChannelDetails;
@@ -124,9 +125,10 @@ function Navigation() {
   const { delegatees } = useSelector((state: any) => state.admin);
   const [refresh, setRefresh] = useState(false);
   const { processingState } = useSelector((state: any) => state.channelCreation);
-  const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
+  const { run, stepIndex } = useSelector((state: any) => state.userJourney);
   const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
   const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
+  const { newChatsCount, newNotifsCount } = useContext(AppContext);
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
@@ -677,7 +679,6 @@ function Navigation() {
                   />
                 )}
               </SectionInnerGroupContainer>
-
               {/* { 
                       section.hasItems 
                         ? renderChildItems(
@@ -769,6 +770,18 @@ function Navigation() {
 
     return rendered;
   };
+
+  useEffect(() => {
+    if (navigationSetup) {
+      updateNotifCount(setNavigationSetup, 'notificationList', '2_inbox', newNotifsCount);
+    }
+  }, [newNotifsCount]);
+
+  useEffect(() => {
+    if (navigationSetup) {
+      updateNotifCount(setNavigationSetup, 'messagingList', '3_chat', newChatsCount);
+    }
+  }, [newChatsCount]);
 
   return (
     <Container

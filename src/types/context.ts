@@ -70,4 +70,8 @@ export interface AppContextType {
   initializePushSdkReadMode: () => Promise<void>;
   isUserProfileUnlocked: boolean;
   setUserProfileUnlocked: (isUserProfileUnlocked: boolean) => void;
+  newChatsCount: number;
+  setNewChatsCount: React.Dispatch<React.SetStateAction<number>>;
+  newNotifsCount: number;
+  setNewNotifsCount: React.Dispatch<React.SetStateAction<number>>;
 }
