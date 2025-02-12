@@ -18,7 +18,12 @@ import { PricingPlanType } from 'queries/types/pricing';
 
 import { Alert, Box, Button, ExternalLink, Link, TabItem, Tabs, Text, TextInput } from 'blocks';
 import { ConfirmPurchaseModal } from './ConfirmPurchaseModal';
-import { useSelector } from 'react-redux';
+
+interface PurchaseResponse {
+  success: boolean;
+  data?: any;
+  error?: any;
+}
 
 export type PurchaseSummeryProps = { selectedPlan: PricingPlanType };
 const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
@@ -44,17 +49,17 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   const [balance, setBalance] = useState<string | null | undefined>(null);
   const [errorMessage, setErrorMessage] = useState<string | null | undefined>(null);
   const [paymentId, setPaymentId] = useState<string | null | undefined>(null);
-  const [channelStatus, setChannelStatus] = useState<boolean>(false);
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
+
   const totalAmount = selectedPlan?.value ? selectedPlan?.value * (selectedPricingPlanTab === 'yearly' ? 12 : 1) : 0;
-  const usdcBalance = 0;
 
   const { mutate: handleInitatePayment } = useInitiatePaymentInfo();
   const { data: paymentDetails, refetch: refetchFetchPaymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 
   useEffect(() => {
+    // reset payment id and error message
+    setPaymentId(null);
+    setErrorMessage(null);
+
     const fetchBalance = async () => {
       if (window.ethereum && account) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -69,7 +74,6 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
       }
     };
     fetchBalance();
-    getChannelDetails();
   }, [account, isWalletConnected]);
 
   useEffect(() => {
@@ -118,10 +122,23 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
 
     try {
+      // Call initiate payment first
+      const purchaseResponse = await handlePurchase();
+
+      if (!purchaseResponse?.success) {
+        console.error('Purchase failed:', purchaseResponse?.error);
+        setErrorMessage('Something went wrong while processing the purchase');
+        setPaymentId(null);
+        setIsLoading(false);
+        modalControl.onClose();
+        return;
+      }
+
+      // If handlePurchase is successful, proceed with transfer
       await provider.send('eth_requestAccounts', []);
       await sendUSDC(paymentAmount, addresses?.usdcRecipient, provider);
-      handlePurchase();
     } catch (error: any) {
+      setPaymentId(null);
       console.error('Transaction failed:', error);
 
       // Show error message based on error type
@@ -141,52 +158,52 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
     }
   };
 
-  const handlePurchase = async () => {
-    // generate verification proof with wallet address and pricing plan id
-    const req = {
-      body: {
-        channel: walletAddress,
-        pricingPlanId: selectedPlan?.id?.toString(),
-      },
-    };
-
-    const messageHash = ethers.utils.hashMessage(
-      JSON.stringify({
-        channel: req.body.channel,
-        content: req.body.pricingPlanId,
-      }),
-    );
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const verificationProof = await getEip191Signature(messageHash, account, provider);
-    console.log('Message Hash:', messageHash, 'verificationProof:', verificationProof);
-
-    handleInitatePayment(
-      {
-        channel: walletAddress,
-        pricingPlanId: selectedPlan?.id?.toString(),
-        currency: 'USDC',
-        network: chainId,
-        verificationProof: verificationProof!,
-        email: formik.values.email,
-        duration: selectedPricingPlanTab === 'yearly' ? '12' : '1',
-      },
-      {
-        onSuccess: (response) => {
-          console.log('Response on the channels page', response);
-          setPaymentId(response?.paymentId);
+  const handlePurchase = async (): Promise<PurchaseResponse> => {
+    try {
+      // generate verification proof with wallet address and pricing plan id
+      const req = {
+        body: {
+          channel: walletAddress,
+          pricingPlanId: selectedPlan?.id?.toString(),
         },
-        onError: (error) => {
-          console.log('Error in the channels', error);
-          setIsLoading(false);
-        },
-      },
-    );
-  };
+      };
 
-  const getChannelDetails = async () => {
-    const channelDetails = await userPushSDKInstance.channel.info(account);
+      const messageHash = ethers.utils.hashMessage(
+        JSON.stringify({
+          channel: req.body.channel,
+          content: req.body.pricingPlanId,
+        }),
+      );
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const verificationProof = await getEip191Signature(messageHash, account, provider);
 
-    if (channelDetails) setChannelStatus(true);
+      return new Promise((resolve) => {
+        handleInitatePayment(
+          {
+            channel: walletAddress,
+            pricingPlanId: selectedPlan?.id?.toString(),
+            currency: 'USDC',
+            network: chainId,
+            verificationProof: verificationProof!,
+            email: formik.values.email,
+            duration: selectedPricingPlanTab === 'yearly' ? '12' : '1',
+          },
+          {
+            onSuccess: (response) => {
+              setPaymentId(response?.paymentId);
+              resolve({ success: true, data: response });
+            },
+            onError: (error) => {
+              setIsLoading(false);
+              resolve({ success: false, error });
+            },
+          },
+        );
+      });
+    } catch (error) {
+      console.error('Error in handlePurchase:', error);
+      return { success: false, error };
+    }
   };
 
   const formik = useFormik({
@@ -222,7 +239,6 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
           plan={selectedPlan}
           paymentId={paymentId!}
           account={account!}
-          channelStatus={channelStatus}
         />
       )}
 

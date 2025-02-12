@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
@@ -7,22 +7,39 @@ import { PricingPlanType } from 'queries/types/pricing';
 
 import { Box, Modal, PushLogoWithNameDark, PushLogoWithNameLight, Text, Tick } from 'blocks';
 import { formatSentenceWithBoldNumbers, parseStringToArray } from 'modules/pricing/utils';
+import { useSelector } from 'react-redux';
 
 export type PlanPurchasedModalProps = {
   plan: PricingPlanType;
   modalControl: ModalResponse;
   paymentId: string;
   account: string;
-  channelStatus: boolean;
 };
 
-const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, paymentId, account, channelStatus }) => {
+const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, paymentId, account }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { mode } = useBlocksTheme();
   const { isOpen, onClose } = modalControl;
   const navigate = useNavigate();
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
-  const handleRedirect = () => {
-    if (channelStatus) {
+  const getChannelDetails = async () => {
+    setIsLoading(true);
+    try {
+      const channelDetails = await userPushSDKInstance.channel.info(account);
+      return channelDetails || null;
+    } catch (error) {
+      console.error('Error fetching channel details:', error);
+      return null;
+    }
+  };
+
+  const handleRedirect = async () => {
+    const isChannelCreated = await getChannelDetails();
+    setIsLoading(false);
+    if (isChannelCreated) {
       navigate(`/channel/${account}?paymentId=${paymentId}`);
     } else {
       navigate(`/create/channel?paymentId=${paymentId}`);
@@ -33,7 +50,12 @@ const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, p
       size={'medium'}
       isOpen={isOpen}
       onClose={onClose}
-      acceptButtonProps={{ children: 'Get Started', onClick: () => handleRedirect() }}
+      acceptButtonProps={{
+        children: 'Get Started',
+        onClick: () => handleRedirect(),
+        loading: isLoading,
+        disabled: isLoading,
+      }}
       cancelButtonProps={null}
     >
       <Box
