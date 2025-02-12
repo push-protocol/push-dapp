@@ -70,3 +70,17 @@ export function convertTimeStamp(timestamp: string) {
     return date.format('hh:mm A');
   }
 }
+
+export const updateNotifCount = (
+  setNavigationSetup: (value: any) => void,
+  listName: string,
+  itemId: string,
+  newCount: number
+) => {
+  setNavigationSetup((prev: any) => ({
+    ...prev,
+    [listName]: prev[listName].map((item: any) =>
+      item.id === itemId ? { ...item, data: { ...item.data, count: newCount } } : item
+    ),
+  }));
+};

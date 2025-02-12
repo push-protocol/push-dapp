@@ -47,7 +47,7 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.stream
       );
       if (data.source != 'PUSH_CHAT') {
-        setNewNotifsCount((prev: any) => prev + 1);
+        setNewNotifsCount((prev: number) => prev + 1);
         notification.show({
           overlay: <InAppChannelNotifications notificationDetails={data} />,
           position: isMobile ? 'top-center' : 'bottom-right',
@@ -80,7 +80,7 @@ export const useInAppNotifications = () => {
           updatedMessages[data.chatId].push(data);
         }
         setNewMessages(updatedMessages);
-        setNewChatsCount((prev: any) => prev + 1);
+        setNewChatsCount((prev: number) => prev + 1);
         notification.show(
           {
             overlay: (

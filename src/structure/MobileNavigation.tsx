@@ -25,6 +25,7 @@ import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
+import { updateNotifCount } from 'common';
 
 // Create Header
 function MobileNavigation({ showNavBar, setShowNavBar }) {
@@ -644,23 +645,13 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
 
   useEffect(() => {
     if (navigationSetup) {
-      setNavigationSetup((prev: any) => ({
-        ...prev,
-        notificationList: prev.notificationList.map((item: any) =>
-          item.id === '2_inbox' ? { ...item, data: { ...item.data, count: newNotifsCount } } : item
-        ),
-      }));
+      updateNotifCount(setNavigationSetup, 'notificationList', '2_inbox', newNotifsCount);
     }
   }, [newNotifsCount]);
 
   useEffect(() => {
     if (navigationSetup) {
-      setNavigationSetup((prev: any) => ({
-        ...prev,
-        messagingList: prev.messagingList.map((item: any) =>
-          item.id === '3_chat' ? { ...item, data: { ...item.data, count: newChatsCount } } : item
-        ),
-      }));
+      updateNotifCount(setNavigationSetup, 'messagingList', '3_chat', newChatsCount);
     }
   }, [newChatsCount]);
 
