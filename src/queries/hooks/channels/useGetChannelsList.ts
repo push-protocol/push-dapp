@@ -13,15 +13,16 @@ export type UseChannelSearchProps = {
   chain?: ChannelListParams['chain'];
   tag?: ChannelListParams['tag'];
   sort?: ChannelListParams['sort'];
+  subscribed: ChannelListParams['subscribed'];
 };
 
 // TODO make it a sdk call in future
-export const useGetChannelslist = ({ order, pageSize, sort, chain, tag }: UseChannelSearchProps) => {
+export const useGetChannelslist = ({ order, pageSize, sort, chain, tag, subscribed }: UseChannelSearchProps) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
   const reactQuery = useInfiniteQuery<ChannelsListModelledResponse>({
-    queryKey: [allChannelsList, chain, tag],
+    queryKey: [allChannelsList, chain, tag, subscribed],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       getChannelsList({
@@ -32,6 +33,7 @@ export const useGetChannelslist = ({ order, pageSize, sort, chain, tag }: UseCha
         page: pageParam as number,
         chain,
         tag,
+        subscribed,
       }),
     getNextPageParam: ({ itemcount }, allPages, lastPageParam) => {
       if (pageSize * ((lastPageParam as number) + 1) >= itemcount) {
