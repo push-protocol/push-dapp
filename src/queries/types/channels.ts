@@ -198,6 +198,7 @@ export type ChannelListParams = {
   sort?: ChannelListSortType;
   chain?: string;
   tag?: string;
+  subscribed?: string;
 };
 
 export type ChannelSearchParams = {
@@ -207,6 +208,7 @@ export type ChannelSearchParams = {
   query: string;
   chain?: string;
   tag?: string;
+  subscribed?: string;
 };
 
 export type ChannelCategoriesResponse = {

@@ -5,7 +5,7 @@ import { Box, Search, Select, TextInput } from 'blocks';
 import { getSelectChains } from 'common';
 import { appConfig } from 'config';
 import { Filters } from '../hooks/useChannelsFilters';
-import { AllCategories } from '../Channels.constants';
+import { AllCategories, subscribedCategory } from '../Channels.constants';
 
 export type ChannelSearchAndChainSelectionProps = {
   filters: Filters;
@@ -19,7 +19,11 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
 
   const getSearchResults = useCallback(
     debounce((value) => {
-      if (value !== '') setFilter({ search: value, category: AllCategories });
+      if (value !== '')
+        setFilter({
+          search: value,
+          category: filters.category === subscribedCategory ? filters.category : AllCategories,
+        });
     }, 800),
     [setFilter]
   );
@@ -55,7 +59,12 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
         <Select
           options={getSelectChains(appConfig.allowedNetworks)}
           value={filters.chain}
-          onSelect={(value) => setFilter({ chain: value, category: AllCategories })}
+          onSelect={(value) =>
+            setFilter({
+              chain: value,
+              category: filters.category === subscribedCategory ? filters.category : AllCategories,
+            })
+          }
         />
       </Box>
     </Box>
