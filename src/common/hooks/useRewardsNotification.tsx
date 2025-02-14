@@ -16,8 +16,9 @@ export const useRewardsNotification = () => {
 
   const showNotification = () =>
     notification.show({
-      title: 'Push Points are Live',
-      description: 'Earn Push Points to unlock exclusive rewards on completing exciting activities',
+      title: 'Points S1 Ends on Feb 28!',
+      description:
+        'Claim all tasks and prepare for the end of S1 of Push Reward Points. Leaderboards snapshot on Mar 1, 2025.',
       image: <RewardPoints />,
       position: 'bottom-left',
       onClick: () => {

@@ -46,15 +46,15 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
               variant="h4-semibold"
               color="text-on-light-bg"
             >
-              Earn Rewards for Exploring!
+              Push Points S1 Ends on Feb 28!
             </Text>
-            <Box maxWidth={{ tb: 'auto', initial: '567px' }}>
+            <Box maxWidth={{ tb: 'auto', initial: '607px' }}>
               <Text
                 variant="bl-regular"
                 color="text-on-light-bg"
               >
-                Push Points are the new way to prove that you belong to the Push community and access to some cool
-                surprises in the future.
+                Claim all tasks and prepare for the end of S1 of Push Reward Points. Prizes will be announced on Feb
+                25th. Leaderboards snapshot on Mar 1, 2025.
               </Text>
             </Box>
           </Box>
