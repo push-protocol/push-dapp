@@ -7,6 +7,7 @@ import { useAccount } from 'hooks';
 import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 
 import { Box, Button, Info, ProgressBar, Sale, Skeleton, Text } from 'blocks';
+import { useMigrateToFreePlan } from './hooks/useMigrateToFreePlan';
 
 export const UpgradePlanNavigationItem = () => {
   const navigate = useNavigate();
@@ -14,8 +15,18 @@ export const UpgradePlanNavigationItem = () => {
   const walletAddress = convertAddressToAddrCaip(account, chainId);
 
   const { data: pricingInfoList } = useGetPricingInfo();
-  const { data: pricingPlanStatus, isLoading: isPricingPlanStatusLoading } = useGetPricingPlanStatus({
+  const {
+    data: pricingPlanStatus,
+    isLoading: isPricingPlanStatusLoading,
+    refetch: refetchPricingPlanStatus,
+  } = useGetPricingPlanStatus({
     channelId: walletAddress,
+  });
+
+  useMigrateToFreePlan({
+    pricingPlanStatus,
+    isLoading: isPricingPlanStatusLoading,
+    refetch: refetchPricingPlanStatus,
   });
 
   const selectedPlan = pricingInfoList?.find(
