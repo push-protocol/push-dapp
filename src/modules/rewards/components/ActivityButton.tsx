@@ -6,6 +6,7 @@ import { ActvityType, useGetPushStakeEpoch, useGetUniV2StakeEpoch, UsersActivity
 import { Button } from 'blocks';
 import { ActivityVerificationButton } from './ActivityVerificationButton';
 import { useRewardsContext } from 'contexts/RewardsContext';
+import { useDateExpiry } from '../hooks/useDateExpiry';
 
 type ActivityButtonProps = {
   userId: string;
@@ -45,6 +46,20 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   const isEpochRelated =
     usersSingleActivity?.data?.currentEpoch == pushStakeData?.currentEpoch ||
     usersSingleActivity?.data?.currentEpoch == uniV2StakeData?.currentEpoch;
+
+  const hasRewardsExpired = useDateExpiry('2025-02-28T23:59:59');
+
+  if (hasRewardsExpired) {
+    return (
+      <Button
+        variant="tertiary"
+        size="small"
+        disabled
+      >
+        Ended
+      </Button>
+    );
+  }
 
   // claimed status for the same epoch
   if (usersSingleActivity?.status === 'COMPLETED' && (isPushEpochRelated || isUniV2EpochRelated) && isEpochRelated) {
