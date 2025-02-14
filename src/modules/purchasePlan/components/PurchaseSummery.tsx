@@ -50,7 +50,10 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
   const [errorMessage, setErrorMessage] = useState<string | null | undefined>(null);
   const [paymentId, setPaymentId] = useState<string | null | undefined>(null);
 
-  const totalAmount = selectedPlan?.value ? selectedPlan?.value * (selectedPricingPlanTab === 'yearly' ? 12 : 1) : 0;
+  // multiply by 0.85(85%) because we are applying a discount of 15% for yearly plan
+  const totalAmount = selectedPlan?.value
+    ? selectedPlan?.value * (selectedPricingPlanTab === 'yearly' ? 12 * 0.85 : 1)
+    : 0;
 
   const { mutate: handleInitatePayment } = useInitiatePaymentInfo();
   const { data: paymentDetails, refetch: refetchFetchPaymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
@@ -118,7 +121,8 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
     setIsLoading(true);
     modalControl.open();
 
-    const paymentAmount = selectedPricingPlanTab === 'yearly' ? selectedPlan?.value * 12 : selectedPlan?.value;
+    // multiply by 0.85(85%) because we are applying a discount of 15% for yearly plan
+    const paymentAmount = selectedPricingPlanTab === 'yearly' ? selectedPlan?.value * 12 * 0.85 : selectedPlan?.value;
     const provider = new ethers.providers.Web3Provider(window.ethereum);
 
     try {
@@ -322,7 +326,7 @@ const PurchaseSummery: FC<PurchaseSummeryProps> = ({ selectedPlan }) => {
               padding="spacing-xs spacing-sm"
             >
               <Text variant="h5-semibold">Total Price</Text>
-              <Text variant="h3-bold">{totalAmount} USDC</Text>
+              <Text variant="h3-bold">{totalAmount.toFixed(2)} USDC</Text>
               {balance && isWalletConnected && (
                 <Text
                   color="text-tertiary"

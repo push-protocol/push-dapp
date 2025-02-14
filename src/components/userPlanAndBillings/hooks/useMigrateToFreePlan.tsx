@@ -23,7 +23,6 @@ export const useMigrateToFreePlan = ({ pricingPlanStatus, isLoading, refetch }: 
         currency: 'USDC',
         network: chainId,
         verificationProof: 'test',
-        email: '',
         duration: '1',
       },
       {

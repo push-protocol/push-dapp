@@ -51,6 +51,8 @@ export const UpgradePlanNavigationItem = () => {
     navigate('/pricing');
   };
 
+  console.log(pricingPlanStatus, 'plan status');
+
   return (
     <Skeleton isLoading={isPricingPlanStatusLoading}>
       <Box
