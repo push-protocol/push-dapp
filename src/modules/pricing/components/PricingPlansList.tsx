@@ -16,6 +16,25 @@ const PricingPlansList: FC<PricingPlansListProps> = ({ type }) => {
   const { data: pricingInfoList, isLoading: isPricingInfoListLoading } = useGetPricingInfo();
   const pricingList = isPricingInfoListLoading ? Array(4).fill(0) : pricingInfoList;
 
+  const pricingListDescriptions = [
+    {
+      id: 1,
+      description: 'For casual degens',
+    },
+    {
+      id: 2,
+      description: 'For individuals',
+    },
+    {
+      id: 3,
+      description: 'For growing apps',
+    },
+    {
+      id: 4,
+      description: 'For advanced solutions',
+    },
+  ];
+
   return (
     <Box
       flexDirection={{ initial: 'row', ml: 'column' }}
@@ -93,7 +112,7 @@ const PricingPlansList: FC<PricingPlansListProps> = ({ type }) => {
                 color="text-secondary"
                 variant="bm-regular"
               >
-                {/* {planItem?.planFor} */}
+                {pricingListDescriptions?.find((desc) => desc.id === planItem?.id)?.description}
               </Text>
             </Box>
 
@@ -103,36 +122,36 @@ const PricingPlansList: FC<PricingPlansListProps> = ({ type }) => {
               width="auto"
               gap="spacing-lg"
             >
-              <Box
-                css={
-                  planItem?.value > 0
-                    ? css`
-                        margin: var(--spacing-none);
-                      `
-                    : css`
-                        margin: var(--spacing-none) var(--spacing-none) 20px var(--spacing-none);
-                      `
-                }
-              >
+              <Box>
                 <Text
                   color="text-primary"
                   variant="h2-semibold"
                 >
                   {planItem?.value >= 0
                     ? planItem?.value > 0
-                      ? (type == 'monthly' ? planItem?.value : planItem?.value * 12)?.toLocaleString('en-US', {
+                      ? (type == 'monthly' ? planItem?.value : planItem?.value * 0.85)?.toLocaleString('en-US', {
                           style: 'currency',
                           currency: 'USD',
                         })
                       : 'Free'
                     : 'Talk to us!'}
                 </Text>
+
                 {planItem?.value > 0 && (
                   <Text
                     color="text-tertiary"
                     variant="bs-semibold"
                   >
-                    per month billed yearly
+                    {(planItem.id == '2' || planItem.id == '3') && `per month`} {type == 'yearly' && `billed yearly`}
+                  </Text>
+                )}
+
+                {planItem?.id == '4' && (
+                  <Text
+                    color="text-tertiary"
+                    variant="bs-semibold"
+                  >
+                    Custom pricing available
                   </Text>
                 )}
               </Box>
@@ -142,7 +161,7 @@ const PricingPlansList: FC<PricingPlansListProps> = ({ type }) => {
                   block
                   variant={planItem?.value === 0 ? 'outline' : planItem?.name === 'Pro' ? 'primary' : 'tertiary'}
                 >
-                  Get Started
+                  {planItem.id == '4' ? `Contact Sales` : `Get Started`}
                 </Button>
               </Link>
             </Box>
