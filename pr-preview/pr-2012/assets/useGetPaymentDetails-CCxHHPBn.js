@@ -1,0 +1,1 @@
+import{f3 as n,fs as y,fe as m,ft as e,__tla as _}from"./index-DZCEXmT_.js";let r,o=Promise.all([(()=>{try{return _}catch{}})()]).then(async()=>{let t,s;t=a=>a,s=a=>n({method:"GET",url:`${y()}/apis/v1/payments/${a==null?void 0:a.paymentId}`}).then(l=>t(l.data)),r=a=>m({queryKey:[e,a==null?void 0:a.paymentId],queryFn:()=>s(a)})});export{o as __tla,r as u};

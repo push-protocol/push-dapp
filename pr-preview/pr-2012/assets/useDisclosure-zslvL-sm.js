@@ -1,0 +1,1 @@
+import{e7 as e,__tla as o}from"./index-DZCEXmT_.js";let a,n=Promise.all([(()=>{try{return o}catch{}})()]).then(async()=>{a=()=>{const[l,t]=e.useState(!1),s=e.useCallback(()=>t(!0),[]),r=e.useCallback(()=>t(!1),[]);return{isOpen:l,onClose:r,open:s}}});export{n as __tla,a as u};
