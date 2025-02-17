@@ -1,9 +1,8 @@
 import { css } from 'styled-components';
-import { toNumber } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
-import { useAccount } from 'hooks';
+import { useGetPricingPlanStatus } from 'queries';
+import { useAccount, useGetPricingPlanDetails } from 'hooks';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { Box, Button, Info, ProgressBar, Text } from 'blocks';
@@ -12,16 +11,11 @@ const UserPlanAndBillings = () => {
   const { account, chainId } = useAccount();
   const navigate = useNavigate();
   const walletAddress = convertAddressToAddrCaip(account, chainId);
-
-  const { data: pricingInfoList } = useGetPricingInfo();
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
 
-  const selectedPlan = pricingInfoList?.find(
-    (planItem: { id: number }) =>
-      planItem?.id == toNumber(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
-  );
+  const { selectedPlan, isUserOnFreePlan, pricingListDescriptions } = useGetPricingPlanDetails(pricingPlanStatus);
 
   const planNotifications = [
     {
@@ -44,31 +38,9 @@ const UserPlanAndBillings = () => {
     },
   ];
 
-  const isUserOnFreePlan = selectedPlan?.id == 1;
   const navigateToPricing = () => {
     navigate('/pricing');
   };
-
-  const pricingListDescriptions = [
-    {
-      id: 1,
-      description: 'For casual degens',
-    },
-    {
-      id: 2,
-      description: 'For individuals',
-    },
-    {
-      id: 3,
-      description: 'For growing apps',
-    },
-    {
-      id: 4,
-      description: 'For advanced solutions',
-    },
-  ];
-
-  // console.log(selectedPlan, 'check check');
 
   return (
     <Box width="100%">

@@ -12,7 +12,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { ChannelDetails, useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 
 import APP_PATHS from 'config/AppPaths';
-import { useAccount } from 'hooks';
+import { useAccount, useGetPricingPlanDetails } from 'hooks';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 type ChannelDashboardInfoProps = {
@@ -32,15 +32,11 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
   const { account, chainId } = useAccount();
   const walletAddress = convertAddressToAddrCaip(account, chainId);
 
-  const { data: pricingInfoList } = useGetPricingInfo();
   const { data: pricingPlanStatus, isLoading: isPricingPlanStatusLoading } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
 
-  const selectedPlan = pricingInfoList?.find(
-    (planItem: { id: number }) =>
-      planItem?.id == parseInt(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
-  );
+  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus);
 
   let verifiedAliasChainIds =
     channelDetails?.aliases

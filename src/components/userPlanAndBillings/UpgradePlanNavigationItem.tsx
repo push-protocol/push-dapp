@@ -1,10 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { css } from 'styled-components';
-import { toNumber } from 'lodash';
 
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { useAccount } from 'hooks';
-import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
+import { useAccount, useGetPricingPlanDetails } from 'hooks';
+import { useGetPricingPlanStatus } from 'queries';
 
 import { Box, Button, Info, ProgressBar, Sale, Skeleton, Text } from 'blocks';
 import { useMigrateToFreePlan } from './hooks/useMigrateToFreePlan';
@@ -14,7 +13,6 @@ export const UpgradePlanNavigationItem = () => {
   const { account, chainId } = useAccount();
   const walletAddress = convertAddressToAddrCaip(account, chainId);
 
-  const { data: pricingInfoList } = useGetPricingInfo();
   const {
     data: pricingPlanStatus,
     isLoading: isPricingPlanStatusLoading,
@@ -22,17 +20,13 @@ export const UpgradePlanNavigationItem = () => {
   } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
+  const { selectedPlan, isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus);
 
   useMigrateToFreePlan({
     pricingPlanStatus,
     isLoading: isPricingPlanStatusLoading,
     refetch: refetchPricingPlanStatus,
   });
-
-  const selectedPlan = pricingInfoList?.find(
-    (planItem: { id: number }) =>
-      planItem?.id == toNumber(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
-  );
 
   const totalQuota =
     (pricingPlanStatus?.email_total_quota ?? 0) +
@@ -45,7 +39,6 @@ export const UpgradePlanNavigationItem = () => {
     (pricingPlanStatus?.telegram_quota_used ?? 0);
 
   const totalQuotaRemaining = totalQuota - totalQuotaUsed;
-  const isUserOnFreePlan = selectedPlan?.id == 1;
 
   const handleGoToPricing = () => {
     navigate('/pricing');

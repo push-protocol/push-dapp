@@ -14,7 +14,7 @@ import { UserChannelDashboard } from './components/UserChannelDashboard';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 import { useGetChannelCategories, useGetPaymentDetails, useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 import { PurchasePlanAlert } from 'common';
-import { useAccount } from 'hooks';
+import { useAccount, useGetPricingPlanDetails } from 'hooks';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 // Types
@@ -31,17 +31,10 @@ const ChannelDashboard = () => {
   const walletAddress = convertAddressToAddrCaip(account, chainId);
   const navigate = useNavigate();
 
-  const { data: pricingInfoList } = useGetPricingInfo();
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
-
-  const selectedPlan = pricingInfoList?.find(
-    (planItem: { id: number }) =>
-      planItem?.id == parseInt(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
-  );
-
-  const isUserOnFreePlan = selectedPlan?.id == 1;
+  const { selectedPlan, isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus);
 
   const { data: paymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 

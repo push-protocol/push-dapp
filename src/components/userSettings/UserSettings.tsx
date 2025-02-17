@@ -9,7 +9,7 @@ import { AiOutlineMore } from 'react-icons/ai';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import { useAccount, useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck, useGetPricingPlanDetails } from 'hooks';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 
 // Internal Components
@@ -22,9 +22,8 @@ import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
 import UserPlanAndBillings from 'components/userPlanAndBillings/UserPlanAndBillings';
 import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
+import { useGetPricingPlanStatus } from 'queries';
 import { calculateExpirationDetails } from './utils';
-import { toNumber } from 'lodash';
 
 interface ChannelListItem {
   channel: string;
@@ -56,17 +55,11 @@ function UserSettings() {
 
   const dispatch = useDispatch();
 
-  const { data: pricingInfoList } = useGetPricingInfo();
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
 
-  const selectedPlan = pricingInfoList?.find(
-    (planItem: { id: number }) =>
-      planItem?.id == toNumber(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
-  );
-
-  const isUserOnFreePlan = selectedPlan?.id == 1;
+  const { isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus);
 
   const expirationDetails = calculateExpirationDetails(pricingPlanStatus ?? null);
 

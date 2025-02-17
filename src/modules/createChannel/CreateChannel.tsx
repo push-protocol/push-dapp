@@ -6,16 +6,10 @@ import { Alert, Box } from 'blocks';
 import { appConfig } from 'config';
 import APP_PATHS from 'config/AppPaths';
 import { PurchasePlanAlert, Stepper } from 'common';
-import { useAccount } from 'hooks';
+import { useAccount, useGetPricingPlanDetails } from 'hooks';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import {
-  useApprovePUSHToken,
-  useCreateChannel,
-  useGetPaymentDetails,
-  useGetPricingInfo,
-  useGetPricingPlanStatus,
-} from 'queries';
+import { useApprovePUSHToken, useCreateChannel, useGetPaymentDetails, useGetPricingPlanStatus } from 'queries';
 
 import { ChannelInfo } from './components/ChannelInfo';
 import {
@@ -69,15 +63,12 @@ const CreateChannel = () => {
 
   const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
 
-  const { data: pricingInfoList } = useGetPricingInfo();
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
 
-  const selectedPlan = pricingInfoList?.find(
-    (planItem: { id: number }) =>
-      planItem?.id == parseInt(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
-  );
+  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus);
+
   const { data: paymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 
   const handleProgressBar = (progress: number, progressInfo: string, processingInfo: string) => {
