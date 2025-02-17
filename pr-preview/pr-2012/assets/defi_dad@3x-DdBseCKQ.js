@@ -1,1 +1,4 @@
-const p="/push-dapp/pr-preview/pr-2012/assets/defi_dad@3x-CP97fjJ9.jpg";export{p as default};
+const d = "/push-dapp/pr-preview/pr-2012/assets/defi_dad@3x-CP97fjJ9.jpg";
+export {
+  d as default
+};

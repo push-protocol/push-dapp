@@ -1,4 +1,4 @@
-const t=`
+const t = `
 <svg width="39" height="43" viewBox="0 0 39 43" fill="none"
     xmlns="http://www.w3.org/2000/svg" exponent="92384" class="mt-4 h-auto w-[180px]">
     <path d="M0.710815 6.67346L19.4317 0.606445V42.6064C6.05944 37.0059 0.710815 26.2727 0.710815 20.207V6.67346Z" fill="#0500FF"></path>
@@ -14,4 +14,7 @@ const t=`
         </linearGradient>
     </defs>
 </svg>
-`;export{t as default};
+`;
+export {
+  t as default
+};

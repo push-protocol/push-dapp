@@ -1,4 +1,4 @@
-const C=`<svg width="100%" height="100%" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+const C = `<svg width="100%" height="100%" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <title>Icons/Illustrations/Logo_40x40_white_background</title>
 <defs>
     <polygon id="path-1" points="0 0.00969654897 22.1768096 0.00969654897 22.1768096 22.5628733 0 22.5628733"></polygon>
@@ -20,4 +20,7 @@ const C=`<svg width="100%" height="100%" viewBox="0 0 40 40" version="1.1" xmlns
         <path d="M23.4685844,10.517303 C23.4685844,11.7630036 22.4581892,12.7733509 21.2124886,12.7733509 C19.966788,12.7733509 18.9569677,11.7630036 18.9569677,10.517303 C18.9569677,9.2716503 19.966788,8.26125509 21.2124886,8.26125509 C22.4581892,8.26125509 23.4685844,9.2716503 23.4685844,10.517303" id="Fill-1" fill="#FFD400"></path>
     </g>
 </g>
-</svg>`;export{C as default};
+</svg>`;
+export {
+  C as default
+};

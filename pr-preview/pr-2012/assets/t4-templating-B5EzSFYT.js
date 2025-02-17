@@ -1,1 +1,21 @@
-var r,l;function c(){if(l)return r;l=1,r=i,i.displayName="t4Templating",i.aliases=[];function i(u){(function(s){function n(t,e,a){return{pattern:RegExp("<#"+t+"[\\s\\S]*?#>"),alias:"block",inside:{delimiter:{pattern:RegExp("^<#"+t+"|#>$"),alias:"important"},content:{pattern:/[\s\S]+/,inside:e,alias:a}}}}function p(t){var e=s.languages[t],a="language-"+t;return{block:{pattern:/<#[\s\S]+?#>/,inside:{directive:n("@",{"attr-value":{pattern:/=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+)/,inside:{punctuation:/^=|^["']|["']$/}},keyword:/\b\w+(?=\s)/,"attr-name":/\b\w+/}),expression:n("=",e,a),"class-feature":n("\\+",e,a),standard:n("",e,a)}}}}s.languages["t4-templating"]=Object.defineProperty({},"createT4",{value:p})})(u)}return r}export{c as r};
+var i, l;
+function c() {
+  if (l) return i;
+  l = 1, i = r, r.displayName = "t4Templating", r.aliases = [];
+  function r(u) {
+    (function(s) {
+      function n(e, a, t) {
+        return { pattern: RegExp("<#" + e + "[\\s\\S]*?#>"), alias: "block", inside: { delimiter: { pattern: RegExp("^<#" + e + "|#>$"), alias: "important" }, content: { pattern: /[\s\S]+/, inside: a, alias: t } } };
+      }
+      function p(e) {
+        var a = s.languages[e], t = "language-" + e;
+        return { block: { pattern: /<#[\s\S]+?#>/, inside: { directive: n("@", { "attr-value": { pattern: /=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+)/, inside: { punctuation: /^=|^["']|["']$/ } }, keyword: /\b\w+(?=\s)/, "attr-name": /\b\w+/ }), expression: n("=", a, t), "class-feature": n("\\+", a, t), standard: n("", a, t) } } };
+      }
+      s.languages["t4-templating"] = Object.defineProperty({}, "createT4", { value: p });
+    })(u);
+  }
+  return i;
+}
+export {
+  c as r
+};

@@ -1,4 +1,4 @@
-const e=`
+const e = `
 <svg width="100%" height="100%" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_8241_140154)">
 <circle cx="64" cy="64" r="64" fill="url(#paint0_linear_8241_140154)"/>
@@ -29,4 +29,7 @@ const e=`
 </clipPath>
 </defs>
 </svg>
-`;export{e as default};
+`;
+export {
+  e as default
+};

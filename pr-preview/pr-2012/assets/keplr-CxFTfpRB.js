@@ -1,4 +1,4 @@
-const t=`
+const t = `
 <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
     xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#clip0_425_5107)">
@@ -30,4 +30,7 @@ const t=`
         </clipPath>
     </defs>
 </svg>
-`;export{t as default};
+`;
+export {
+  t as default
+};

@@ -1,1 +1,4 @@
-const p="/push-dapp/pr-preview/pr-2012/assets/jude@2x-BhauWijp.jpg";export{p as default};
+const p = "/push-dapp/pr-preview/pr-2012/assets/jude@2x-BhauWijp.jpg";
+export {
+  p as default
+};

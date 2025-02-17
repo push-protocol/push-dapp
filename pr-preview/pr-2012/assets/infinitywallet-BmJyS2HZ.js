@@ -1,4 +1,4 @@
-const a=`
+const a = `
 <svg id="6a72fcd0-0d44-4dab-90c9-9f00f3cee507" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1025 1025">
   <defs>
     <linearGradient id="45475672-49df-4566-9864-e059953e0489" x1="512.5" y1="822.1848" x2="512.5" y2="83.02989" gradientTransform="matrix(1, 0, 0, -1, 0, 1026)" gradientUnits="userSpaceOnUse">
@@ -36,4 +36,7 @@ const a=`
     </g>
   </g>
 </svg>
-`;export{a as default};
+`;
+export {
+  a as default
+};

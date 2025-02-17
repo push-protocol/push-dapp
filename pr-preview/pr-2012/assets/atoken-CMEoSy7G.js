@@ -1,4 +1,4 @@
-const t=`<svg width="100%" height="100%" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+const t = `<svg width="100%" height="100%" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0)">
 <path d="M12.8862 509.82H83.3388C86.3489 509.82 89.1018 508.123 90.454 505.434L298.671 91.3397C299.832 89.0308 299.8 86.3022 298.586 84.0208L260.211 11.9014C257.779 7.33195 251.202 7.41537 248.887 12.045L5.76289 498.294C3.11521 503.589 6.96582 509.82 12.8862 509.82Z" fill="url(#paint0_linear)"/>
 <path d="M321.91 510.615H254.41H188.853C182.869 510.615 179.023 504.263 181.795 498.961L250.319 367.9C253.34 362.123 261.642 362.224 264.522 368.072L329.054 499.133C331.66 504.425 327.809 510.615 321.91 510.615Z" fill="url(#paint1_linear)"/>
@@ -21,4 +21,7 @@ const t=`<svg width="100%" height="100%" viewBox="0 0 512 512" fill="none" xmlns
 <rect width="512" height="512" fill="white"/>
 </clipPath>
 </defs>
-</svg>`;export{t as default};
+</svg>`;
+export {
+  t as default
+};

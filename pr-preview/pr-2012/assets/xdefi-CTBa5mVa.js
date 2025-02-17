@@ -1,4 +1,4 @@
-const C=`<svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+const C = `<svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path
   d="M0 6.39161C0 2.86162 2.86162 0 6.39161 0H25.6084C29.1384 0 32 2.86162 32 6.39161V25.6084C32 29.1384 29.1384 32 25.6084 32H6.39161C2.86162 32 0 29.1384 0 25.6084V6.39161Z"
   fill="url(#paint0_linear_5147_39366)"
@@ -32,4 +32,7 @@ const C=`<svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="
     <stop offset="1" stop-color="#2041E0" />
   </linearGradient>
 </defs>
-</svg>`;export{C as default};
+</svg>`;
+export {
+  C as default
+};

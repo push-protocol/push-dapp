@@ -1,4 +1,4 @@
-const c=`
+const c = `
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -14,4 +14,7 @@ const c=`
 <path class="st0" d="M20.8,16c-1.7,0.4-3.2,1.8-3.7,3.5c-0.4,1.1-0.4,2.8,0,3.9c0.5,1.5,1.8,2.8,3.4,3.3l0.6,0.2h7c7,0,7,0,7.7-0.2
 	c1.8-0.6,3.3-2.1,3.7-3.9c0.2-1,0.2-2.5-0.1-3.4c-0.6-1.7-2.1-3-3.8-3.5C34.7,15.8,21.5,15.8,20.8,16z"/>
 </svg>
-`;export{c as default};
+`;
+export {
+  c as default
+};

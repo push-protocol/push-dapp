@@ -1,4 +1,4 @@
-const t=`<?xml version="1.0" encoding="utf-8"?>
+const t = `<?xml version="1.0" encoding="utf-8"?>
 <svg width="100%" height="100%" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g>
         <path d="M1041.52 0H-27V1024H1041.52V0Z" fill="#2980FE"/>
@@ -22,4 +22,7 @@ const t=`<?xml version="1.0" encoding="utf-8"?>
         </clipPath>
     </defs>
 </svg>
-`;export{t as default};
+`;
+export {
+  t as default
+};

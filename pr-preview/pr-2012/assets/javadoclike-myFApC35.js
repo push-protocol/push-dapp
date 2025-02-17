@@ -1,1 +1,34 @@
-var f,d;function v(){if(d)return f;d=1,f=o,o.displayName="javadoclike",o.aliases=[];function o(u){(function(s){var p=s.languages.javadoclike={parameter:{pattern:/(^[\t ]*(?:\/{3}|\*|\/\*\*)\s*@(?:arg|arguments|param)\s+)\w+/m,lookbehind:!0},keyword:{pattern:/(^[\t ]*(?:\/{3}|\*|\/\*\*)\s*|\{)@[a-z][a-zA-Z-]+\b/m,lookbehind:!0},punctuation:/[{}]/};function l(t,r){var e="doc-comment",n=s.languages[t];if(n){var a=n[e];if(!a){var c={};c[e]={pattern:/(^|[^\\])\/\*\*[^/][\s\S]*?(?:\*\/|$)/,lookbehind:!0,alias:"comment"},n=s.languages.insertBefore(t,"comment",c),a=n[e]}if(a instanceof RegExp&&(a=n[e]={pattern:a}),Array.isArray(a))for(var i=0,g=a.length;i<g;i++)a[i]instanceof RegExp&&(a[i]={pattern:a[i]}),r(a[i]);else r(a)}}function m(t,r){typeof t=="string"&&(t=[t]),t.forEach(function(e){l(e,function(n){n.inside||(n.inside={}),n.inside.rest=r})})}Object.defineProperty(p,"addSupport",{value:m}),p.addSupport(["java","javascript","php"],p)})(u)}return f}export{v as r};
+var p, f;
+function l() {
+  if (f) return p;
+  f = 1, p = i, i.displayName = "javadoclike", i.aliases = [];
+  function i(s) {
+    (function(c) {
+      var d = c.languages.javadoclike = { parameter: { pattern: /(^[\t ]*(?:\/{3}|\*|\/\*\*)\s*@(?:arg|arguments|param)\s+)\w+/m, lookbehind: true }, keyword: { pattern: /(^[\t ]*(?:\/{3}|\*|\/\*\*)\s*|\{)@[a-z][a-zA-Z-]+\b/m, lookbehind: true }, punctuation: /[{}]/ };
+      function v(r, n) {
+        var t = "doc-comment", a = c.languages[r];
+        if (a) {
+          var e = a[t];
+          if (!e) {
+            var u = {};
+            u[t] = { pattern: /(^|[^\\])\/\*\*[^/][\s\S]*?(?:\*\/|$)/, lookbehind: true, alias: "comment" }, a = c.languages.insertBefore(r, "comment", u), e = a[t];
+          }
+          if (e instanceof RegExp && (e = a[t] = { pattern: e }), Array.isArray(e)) for (var o = 0, k = e.length; o < k; o++) e[o] instanceof RegExp && (e[o] = { pattern: e[o] }), n(e[o]);
+          else n(e);
+        }
+      }
+      function m(r, n) {
+        typeof r == "string" && (r = [r]), r.forEach(function(t) {
+          v(t, function(a) {
+            a.inside || (a.inside = {}), a.inside.rest = n;
+          });
+        });
+      }
+      Object.defineProperty(d, "addSupport", { value: m }), d.addSupport(["java", "javascript", "php"], d);
+    })(s);
+  }
+  return p;
+}
+export {
+  l as r
+};

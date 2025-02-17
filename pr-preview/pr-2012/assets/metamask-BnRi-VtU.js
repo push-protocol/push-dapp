@@ -1,4 +1,4 @@
-const s=`<?xml version="1.0" encoding="utf-8"?>
+const s = `<?xml version="1.0" encoding="utf-8"?>
 <svg width="100%" height="100%" version="1.1" id="Layer_1" xmlns:ev="http://www.w3.org/2001/xml-events"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 318.6 318.6"
 	 style="enable-background:new 0 0 318.6 318.6;" xml:space="preserve">
@@ -58,4 +58,7 @@ const s=`<?xml version="1.0" encoding="utf-8"?>
 <polygon class="st6" points="174.6,164.6 177.9,106.9 193.1,65.8 125.6,65.8 140.6,106.9 144.1,164.6 145.3,182.8 145.4,227.6 
 	173.1,227.6 173.3,182.8 "/>
 </svg>
-`;export{s as default};
+`;
+export {
+  s as default
+};

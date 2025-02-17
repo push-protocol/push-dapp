@@ -1,4 +1,4 @@
-const e=`<svg width="130" height="130" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+const e = `<svg width="130" height="130" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_10_486" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="130" height="130">
 <path d="M0 50.7713C0 32.8124 0 23.833 3.55042 16.9982C6.54231 11.2385 11.2385 6.54231 16.9982 3.55042C23.833 0 32.8124 0 50.7713 0H79.2287C97.1876 0 106.167 0 113.002 3.55042C118.761 6.54231 123.458 11.2385 126.45 16.9982C130 23.833 130 32.8124 130 50.7713V79.2287C130 97.1876 130 106.167 126.45 113.002C123.458 118.761 118.761 123.458 113.002 126.45C106.167 130 97.1876 130 79.2287 130H50.7713C32.8124 130 23.833 130 16.9982 126.45C11.2385 123.458 6.54231 118.761 3.55042 113.002C0 106.167 0 97.1876 0 79.2287V50.7713Z" fill="#C4C4C4"/>
 </mask>
@@ -44,4 +44,7 @@ const e=`<svg width="130" height="130" viewBox="0 0 130 130" fill="none" xmlns="
 </radialGradient>
 </defs>
 </svg>
-`;export{e as default};
+`;
+export {
+  e as default
+};

@@ -1,1 +1,4 @@
-const p="/push-dapp/pr-preview/pr-2012/assets/jaf@3x-BZSw_A3C.jpg";export{p as default};
+const p = "/push-dapp/pr-preview/pr-2012/assets/jaf@3x-BZSw_A3C.jpg";
+export {
+  p as default
+};

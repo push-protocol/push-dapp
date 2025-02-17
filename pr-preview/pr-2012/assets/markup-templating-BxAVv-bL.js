@@ -1,1 +1,45 @@
-var f,_;function O(){if(_)return f;_=1,f=p,p.displayName="markupTemplating",p.aliases=[];function p(b){(function(c){function k(e,t){return"___"+e.toUpperCase()+t+"___"}Object.defineProperties(c.languages["markup-templating"]={},{buildPlaceholders:{value:function(e,t,i,s){if(e.language===t){var r=e.tokenStack=[];e.code=e.code.replace(i,function(o){if(typeof s=="function"&&!s(o))return o;for(var a=r.length,n;e.code.indexOf(n=k(t,a))!==-1;)++a;return r[a]=o,n}),e.grammar=c.languages.markup}}},tokenizePlaceholders:{value:function(e,t){if(e.language!==t||!e.tokenStack)return;e.grammar=c.languages[t];var i=0,s=Object.keys(e.tokenStack);function r(o){for(var a=0;a<o.length&&!(i>=s.length);a++){var n=o[a];if(typeof n=="string"||n.content&&typeof n.content=="string"){var m=s[i],d=e.tokenStack[m],g=typeof n=="string"?n:n.content,v=k(t,m),l=g.indexOf(v);if(l>-1){++i;var y=g.substring(0,l),S=new c.Token(t,c.tokenize(d,e.grammar),"language-"+t,d),h=g.substring(l+v.length),u=[];y&&u.push.apply(u,r([y])),u.push(S),h&&u.push.apply(u,r([h])),typeof n=="string"?o.splice.apply(o,[a,1].concat(u)):n.content=u}}else n.content&&r(n.content)}return o}r(e.tokens)}}})})(b)}return f}export{O as r};
+var s, _;
+function S() {
+  if (_) return s;
+  _ = 1, s = c, c.displayName = "markupTemplating", c.aliases = [];
+  function c(m) {
+    (function(f) {
+      function k(a, t) {
+        return "___" + a.toUpperCase() + t + "___";
+      }
+      Object.defineProperties(f.languages["markup-templating"] = {}, { buildPlaceholders: { value: function(a, t, o, p) {
+        if (a.language === t) {
+          var u = a.tokenStack = [];
+          a.code = a.code.replace(o, function(n) {
+            if (typeof p == "function" && !p(n)) return n;
+            for (var i = u.length, r; a.code.indexOf(r = k(t, i)) !== -1; ) ++i;
+            return u[i] = n, r;
+          }), a.grammar = f.languages.markup;
+        }
+      } }, tokenizePlaceholders: { value: function(a, t) {
+        if (a.language !== t || !a.tokenStack) return;
+        a.grammar = f.languages[t];
+        var o = 0, p = Object.keys(a.tokenStack);
+        function u(n) {
+          for (var i = 0; i < n.length && !(o >= p.length); i++) {
+            var r = n[i];
+            if (typeof r == "string" || r.content && typeof r.content == "string") {
+              var y = p[o], d = a.tokenStack[y], l = typeof r == "string" ? r : r.content, h = k(t, y), g = l.indexOf(h);
+              if (g > -1) {
+                ++o;
+                var v = l.substring(0, g), b = new f.Token(t, f.tokenize(d, a.grammar), "language-" + t, d), T = l.substring(g + h.length), e = [];
+                v && e.push.apply(e, u([v])), e.push(b), T && e.push.apply(e, u([T])), typeof r == "string" ? n.splice.apply(n, [i, 1].concat(e)) : r.content = e;
+              }
+            } else r.content && u(r.content);
+          }
+          return n;
+        }
+        u(a.tokens);
+      } } });
+    })(m);
+  }
+  return s;
+}
+export {
+  S as r
+};

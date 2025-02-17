@@ -1,1 +1,39 @@
-var u,d;function S(){if(d)return u;d=1,u=c,c.displayName="jsx",c.aliases=[];function c(x){(function(a){var p=a.util.clone(a.languages.javascript),j=/(?:\s|\/\/.*(?!.)|\/\*(?:[^*]|\*(?!\/))\*\/)/.source,h=/(?:\{(?:\{(?:\{[^{}]*\}|[^{}])*\}|[^{}])*\})/.source,i=/(?:\{<S>*\.{3}(?:[^{}]|<BRACES>)*\})/.source;function r(t,n){return t=t.replace(/<S>/g,function(){return j}).replace(/<BRACES>/g,function(){return h}).replace(/<SPREAD>/g,function(){return i}),RegExp(t,n)}i=r(i).source,a.languages.jsx=a.languages.extend("markup",p),a.languages.jsx.tag.pattern=r(/<\/?(?:[\w.:-]+(?:<S>+(?:[\w.:$-]+(?:=(?:"(?:\\[\s\S]|[^\\"])*"|'(?:\\[\s\S]|[^\\'])*'|[^\s{'"/>=]+|<BRACES>))?|<SPREAD>))*<S>*\/?)?>/.source),a.languages.jsx.tag.inside.tag.pattern=/^<\/?[^\s>\/]*/,a.languages.jsx.tag.inside["attr-value"].pattern=/=(?!\{)(?:"(?:\\[\s\S]|[^\\"])*"|'(?:\\[\s\S]|[^\\'])*'|[^\s'">]+)/,a.languages.jsx.tag.inside.tag.inside["class-name"]=/^[A-Z]\w*(?:\.[A-Z]\w*)*$/,a.languages.jsx.tag.inside.comment=p.comment,a.languages.insertBefore("inside","attr-name",{spread:{pattern:r(/<SPREAD>/.source),inside:a.languages.jsx}},a.languages.jsx.tag),a.languages.insertBefore("inside","special-attr",{script:{pattern:r(/=<BRACES>/.source),alias:"language-javascript",inside:{"script-punctuation":{pattern:/^=(?=\{)/,alias:"punctuation"},rest:a.languages.jsx}}},a.languages.jsx.tag);var s=function(t){return t?typeof t=="string"?t:typeof t.content=="string"?t.content:t.content.map(s).join(""):""},l=function(t){for(var n=[],g=0;g<t.length;g++){var e=t[g],f=!1;if(typeof e!="string"&&(e.type==="tag"&&e.content[0]&&e.content[0].type==="tag"?e.content[0].content[0].content==="</"?n.length>0&&n[n.length-1].tagName===s(e.content[0].content[1])&&n.pop():e.content[e.content.length-1].content==="/>"||n.push({tagName:s(e.content[0].content[1]),openedBraces:0}):n.length>0&&e.type==="punctuation"&&e.content==="{"?n[n.length-1].openedBraces++:n.length>0&&n[n.length-1].openedBraces>0&&e.type==="punctuation"&&e.content==="}"?n[n.length-1].openedBraces--:f=!0),(f||typeof e=="string")&&n.length>0&&n[n.length-1].openedBraces===0){var o=s(e);g<t.length-1&&(typeof t[g+1]=="string"||t[g+1].type==="plain-text")&&(o+=s(t[g+1]),t.splice(g+1,1)),g>0&&(typeof t[g-1]=="string"||t[g-1].type==="plain-text")&&(o=s(t[g-1])+o,t.splice(g-1,1),g--),t[g]=new a.Token("plain-text",o,null,o)}e.content&&typeof e.content!="string"&&l(e.content)}};a.hooks.add("after-tokenize",function(t){t.language!=="jsx"&&t.language!=="tsx"||l(t.tokens)})})(x)}return u}export{S as r};
+var p, d;
+function v() {
+  if (d) return p;
+  d = 1, p = u, u.displayName = "jsx", u.aliases = [];
+  function u(x) {
+    (function(a) {
+      var i = a.util.clone(a.languages.javascript), j = /(?:\s|\/\/.*(?!.)|\/\*(?:[^*]|\*(?!\/))\*\/)/.source, h = /(?:\{(?:\{(?:\{[^{}]*\}|[^{}])*\}|[^{}])*\})/.source, l = /(?:\{<S>*\.{3}(?:[^{}]|<BRACES>)*\})/.source;
+      function c(e, t) {
+        return e = e.replace(/<S>/g, function() {
+          return j;
+        }).replace(/<BRACES>/g, function() {
+          return h;
+        }).replace(/<SPREAD>/g, function() {
+          return l;
+        }), RegExp(e, t);
+      }
+      l = c(l).source, a.languages.jsx = a.languages.extend("markup", i), a.languages.jsx.tag.pattern = c(/<\/?(?:[\w.:-]+(?:<S>+(?:[\w.:$-]+(?:=(?:"(?:\\[\s\S]|[^\\"])*"|'(?:\\[\s\S]|[^\\'])*'|[^\s{'"/>=]+|<BRACES>))?|<SPREAD>))*<S>*\/?)?>/.source), a.languages.jsx.tag.inside.tag.pattern = /^<\/?[^\s>\/]*/, a.languages.jsx.tag.inside["attr-value"].pattern = /=(?!\{)(?:"(?:\\[\s\S]|[^\\"])*"|'(?:\\[\s\S]|[^\\'])*'|[^\s'">]+)/, a.languages.jsx.tag.inside.tag.inside["class-name"] = /^[A-Z]\w*(?:\.[A-Z]\w*)*$/, a.languages.jsx.tag.inside.comment = i.comment, a.languages.insertBefore("inside", "attr-name", { spread: { pattern: c(/<SPREAD>/.source), inside: a.languages.jsx } }, a.languages.jsx.tag), a.languages.insertBefore("inside", "special-attr", { script: { pattern: c(/=<BRACES>/.source), alias: "language-javascript", inside: { "script-punctuation": { pattern: /^=(?=\{)/, alias: "punctuation" }, rest: a.languages.jsx } } }, a.languages.jsx.tag);
+      var g = function(e) {
+        return e ? typeof e == "string" ? e : typeof e.content == "string" ? e.content : e.content.map(g).join("") : "";
+      }, f = function(e) {
+        for (var t = [], s = 0; s < e.length; s++) {
+          var n = e[s], o = false;
+          if (typeof n != "string" && (n.type === "tag" && n.content[0] && n.content[0].type === "tag" ? n.content[0].content[0].content === "</" ? t.length > 0 && t[t.length - 1].tagName === g(n.content[0].content[1]) && t.pop() : n.content[n.content.length - 1].content === "/>" || t.push({ tagName: g(n.content[0].content[1]), openedBraces: 0 }) : t.length > 0 && n.type === "punctuation" && n.content === "{" ? t[t.length - 1].openedBraces++ : t.length > 0 && t[t.length - 1].openedBraces > 0 && n.type === "punctuation" && n.content === "}" ? t[t.length - 1].openedBraces-- : o = true), (o || typeof n == "string") && t.length > 0 && t[t.length - 1].openedBraces === 0) {
+            var r = g(n);
+            s < e.length - 1 && (typeof e[s + 1] == "string" || e[s + 1].type === "plain-text") && (r += g(e[s + 1]), e.splice(s + 1, 1)), s > 0 && (typeof e[s - 1] == "string" || e[s - 1].type === "plain-text") && (r = g(e[s - 1]) + r, e.splice(s - 1, 1), s--), e[s] = new a.Token("plain-text", r, null, r);
+          }
+          n.content && typeof n.content != "string" && f(n.content);
+        }
+      };
+      a.hooks.add("after-tokenize", function(e) {
+        e.language !== "jsx" && e.language !== "tsx" || f(e.tokens);
+      });
+    })(x);
+  }
+  return p;
+}
+export {
+  v as r
+};

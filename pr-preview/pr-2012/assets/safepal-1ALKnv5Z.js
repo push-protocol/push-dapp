@@ -1,4 +1,4 @@
-const A=`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="128px" height="128px" viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">  <image id="image0" width="128" height="128" x="0" y="0"
+const A = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="128px" height="128px" viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">  <image id="image0" width="128" height="128" x="0" y="0"
 href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
 AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAV
 HUlEQVR42u2deZRcVZ3HP7/73quupbuzohyQRceZM47DzHgUQQYUVJaADi4DzoiiDPsiECQkhBCi
@@ -99,4 +99,7 @@ CvsIlBq7b3oGoQW2Ye0F0BFUNoA8a0V/Y6z3s6qJnn7qmVlbm59Y6cFJuqvEJ/h/wDFwS11zQ3QA
 AAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDEtMDhUMTY6NDk6NDcrMDA6MDCh3oIyAAAAJXRFWHRk
 YXRlOm1vZGlmeQAyMDIzLTAxLTA4VDE2OjQ5OjQ3KzAwOjAw0IM6jgAAACh0RVh0ZGF0ZTp0aW1l
 c3RhbXAAMjAyMy0wMS0wOFQxNjo0OTo0NyswMDowMIeWG1EAAAAASUVORK5CYII=" />
-</svg>`;export{A as default};
+</svg>`;
+export {
+  A as default
+};

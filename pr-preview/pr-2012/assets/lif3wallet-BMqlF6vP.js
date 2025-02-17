@@ -1,4 +1,4 @@
-const e=`<svg width="112" height="112" viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+const e = `<svg width="112" height="112" viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_10010_9926)">
 <mask id="mask0_10010_9926" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="112" height="112">
 <path d="M112 0H0V112H112V0Z" fill="white"/>
@@ -35,4 +35,7 @@ const e=`<svg width="112" height="112" viewBox="0 0 112 112" fill="none" xmlns="
 </clipPath>
 </defs>
 </svg>
-`;export{e as default};
+`;
+export {
+  e as default
+};
