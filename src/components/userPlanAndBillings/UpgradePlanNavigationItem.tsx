@@ -20,7 +20,7 @@ export const UpgradePlanNavigationItem = () => {
   } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
-  const { selectedPlan, isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus);
+  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan } = useGetPricingPlanDetails(pricingPlanStatus);
 
   useMigrateToFreePlan({
     pricingPlanStatus,
@@ -70,14 +70,16 @@ export const UpgradePlanNavigationItem = () => {
           >
             {(pricingPlanStatus && !isUserOnFreePlan && `Push ${selectedPlan?.name}`) || 'Free Plan'}
           </Text>
-          <Button
-            leadingIcon={<Sale />}
-            size="extraSmall"
-            variant="secondary"
-            onClick={handleGoToPricing}
-          >
-            Upgrade
-          </Button>
+          {!isUserOnEnterprisePlan && (
+            <Button
+              leadingIcon={<Sale />}
+              size="extraSmall"
+              variant="secondary"
+              onClick={handleGoToPricing}
+            >
+              Upgrade
+            </Button>
+          )}
         </Box>
 
         <Box

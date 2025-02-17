@@ -15,7 +15,8 @@ const UserPlanAndBillings = () => {
     channelId: walletAddress,
   });
 
-  const { selectedPlan, isUserOnFreePlan, pricingListDescriptions } = useGetPricingPlanDetails(pricingPlanStatus);
+  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan, pricingListDescriptions } =
+    useGetPricingPlanDetails(pricingPlanStatus);
 
   const planNotifications = [
     {
@@ -109,13 +110,15 @@ const UserPlanAndBillings = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Button
-            variant={!isUserOnFreePlan ? 'tertiary' : 'primary'}
-            size="small"
-            onClick={navigateToPricing}
-          >
-            Upgrade Plan
-          </Button>
+          {!isUserOnEnterprisePlan && (
+            <Button
+              variant={!isUserOnFreePlan ? 'tertiary' : 'primary'}
+              size="small"
+              onClick={navigateToPricing}
+            >
+              Upgrade Plan
+            </Button>
+          )}
         </Box>
       </Box>
 

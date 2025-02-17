@@ -27,6 +27,7 @@ export const useGetPricingPlanDetails = (pricingPlanStatus: any) => {
   );
 
   const isUserOnFreePlan = selectedPlan?.id == 1;
+  const isUserOnEnterprisePlan = selectedPlan?.id == 4;
 
-  return { selectedPlan, isUserOnFreePlan, pricingListDescriptions };
+  return { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan, pricingListDescriptions };
 };
