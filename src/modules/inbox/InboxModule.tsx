@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
@@ -22,6 +22,7 @@ import UsersDataStore from 'singletons/UsersDataStore';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { CHAIN_DETAILS, abis, addresses, appConfig } from 'config/index.js';
+import { AppContext } from 'contexts/AppContext';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -34,6 +35,7 @@ const InboxModule = ({ isSpam }) => {
   const dispatch = useDispatch();
   const { account, chainId, provider } = useAccount();
   const { epnsReadProvider, epnsCommReadProvider } = useSelector((state) => state.contracts);
+  const { setNewNotifsCount, newNotifsCount } = useContext(AppContext);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -43,6 +45,10 @@ const InboxModule = ({ isSpam }) => {
 
   const themes = useTheme();
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
+
+  useEffect(() => {
+    setNewNotifsCount(0);
+  }, [newNotifsCount]);
 
   //clear toast variable after it is shown
   React.useEffect(() => {
