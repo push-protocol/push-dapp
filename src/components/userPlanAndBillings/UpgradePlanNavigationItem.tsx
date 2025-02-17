@@ -23,11 +23,11 @@ export const UpgradePlanNavigationItem = () => {
     channelId: walletAddress,
   });
 
-  useMigrateToFreePlan({
-    pricingPlanStatus,
-    isLoading: isPricingPlanStatusLoading,
-    refetch: refetchPricingPlanStatus,
-  });
+  // useMigrateToFreePlan({
+  //   pricingPlanStatus,
+  //   isLoading: isPricingPlanStatusLoading,
+  //   refetch: refetchPricingPlanStatus,
+  // });
 
   const selectedPlan = pricingInfoList?.find(
     (planItem: { id: number }) =>
@@ -50,8 +50,6 @@ export const UpgradePlanNavigationItem = () => {
   const handleGoToPricing = () => {
     navigate('/pricing');
   };
-
-  console.log(pricingPlanStatus, 'plan status');
 
   return (
     <Skeleton isLoading={isPricingPlanStatusLoading}>
@@ -77,7 +75,7 @@ export const UpgradePlanNavigationItem = () => {
             color="text-primary"
             variant="h6-bold"
           >
-            {(pricingPlanStatus && `Push ${selectedPlan?.name}`) || 'Free Plan'}
+            {(pricingPlanStatus && !isUserOnFreePlan && `Push ${selectedPlan?.name}`) || 'Free Plan'}
           </Text>
           {pricingPlanStatus?.pricing_plan_id !== '3' && (
             <Button

@@ -49,6 +49,27 @@ const UserPlanAndBillings = () => {
     navigate('/pricing');
   };
 
+  const pricingListDescriptions = [
+    {
+      id: 1,
+      description: 'For casual degens',
+    },
+    {
+      id: 2,
+      description: 'For individuals',
+    },
+    {
+      id: 3,
+      description: 'For growing apps',
+    },
+    {
+      id: 4,
+      description: 'For advanced solutions',
+    },
+  ];
+
+  // console.log(selectedPlan, 'check check');
+
   return (
     <Box width="100%">
       <Text
@@ -58,123 +79,73 @@ const UserPlanAndBillings = () => {
         Take full control of your Push Notification plan, manage and stay up to date with your plan usage
       </Text>
 
-      {pricingPlanStatus?.pricing_plan_id ? (
+      <Box
+        backgroundColor="surface-secondary"
+        margin="spacing-lg spacing-none spacing-none spacing-none"
+        padding="spacing-md"
+        borderRadius="radius-md"
+      >
         <Box
-          backgroundColor="surface-secondary"
-          margin="spacing-lg spacing-none spacing-none spacing-none"
-          padding="spacing-md"
-          borderRadius="radius-md"
+          display="flex"
+          width="100%"
+          flexDirection="row"
+          justifyContent="space-between"
         >
-          <Box
-            display="flex"
-            width="100%"
-            flexDirection="row"
-            justifyContent="space-between"
+          <Text
+            variant="h2-semibold"
+            color="text-primary"
           >
-            <Text
-              variant="h2-semibold"
-              color="text-primary"
-            >
-              {selectedPlan?.name} Plan
-            </Text>
+            {(pricingPlanStatus && !isUserOnFreePlan && `Push ${selectedPlan?.name}`) || 'Free Plan'}
+          </Text>
+          {!isUserOnFreePlan && (
             <Text
               variant="h2-semibold"
               color="text-primary"
             >
               ${selectedPlan?.value}/mo
             </Text>
-          </Box>
+          )}
+        </Box>
 
-          <Box
-            display="flex"
-            width="100%"
-            flexDirection="row"
-            justifyContent="space-between"
+        <Box
+          display="flex"
+          width="100%"
+          flexDirection="row"
+          justifyContent="space-between"
+        >
+          <Text
+            variant="bm-regular"
+            color="text-tertiary"
           >
-            <Text
-              variant="bm-regular"
-              color="text-tertiary"
-            >
-              For individuals
-            </Text>
+            {pricingListDescriptions?.find((desc) => desc.id === selectedPlan?.id)?.description}
+          </Text>
+          {!isUserOnFreePlan && (
             <Text
               variant="bm-regular"
               color="text-tertiary"
             >
               billed yearly
             </Text>
-          </Box>
-
-          <Box
-            margin="spacing-lg spacing-none spacing-none spacing-none"
-            display="flex"
-            width="100%"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button
-              variant="tertiary"
-              size="small"
-              onClick={navigateToPricing}
-            >
-              Upgrade Plan
-            </Button>
-          </Box>
+          )}
         </Box>
-      ) : (
+
         <Box
-          backgroundColor="surface-secondary"
           margin="spacing-lg spacing-none spacing-none spacing-none"
-          padding="spacing-md"
-          borderRadius="radius-md"
+          display="flex"
+          width="100%"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          <Box
-            display="flex"
-            width="100%"
-            flexDirection="row"
-            justifyContent="space-between"
+          <Button
+            variant={!isUserOnFreePlan ? 'tertiary' : 'primary'}
+            size="small"
+            onClick={navigateToPricing}
           >
-            <Text
-              variant="h2-semibold"
-              color="text-primary"
-            >
-              Free Plan
-            </Text>
-          </Box>
-
-          <Box
-            display="flex"
-            width="100%"
-            flexDirection="row"
-            justifyContent="space-between"
-          >
-            <Text
-              variant="bm-regular"
-              color="text-tertiary"
-            >
-              For individuals
-            </Text>
-          </Box>
-
-          <Box
-            margin="spacing-lg spacing-none spacing-none spacing-none"
-            display="flex"
-            width="100%"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button
-              variant="primary"
-              size="small"
-              onClick={navigateToPricing}
-            >
-              Upgrade Plan
-            </Button>
-          </Box>
+            Upgrade Plan
+          </Button>
         </Box>
-      )}
+      </Box>
 
       <Box margin="spacing-xl spacing-none spacing-none spacing-none">
         <Text

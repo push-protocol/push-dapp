@@ -22,9 +22,9 @@ import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
 import UserPlanAndBillings from 'components/userPlanAndBillings/UserPlanAndBillings';
 import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { useGetPricingPlanStatus } from 'queries';
+import { useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 import { calculateExpirationDetails } from './utils';
-
+import { toNumber } from 'lodash';
 
 interface ChannelListItem {
   channel: string;
@@ -56,9 +56,17 @@ function UserSettings() {
 
   const dispatch = useDispatch();
 
+  const { data: pricingInfoList } = useGetPricingInfo();
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
+
+  const selectedPlan = pricingInfoList?.find(
+    (planItem: { id: number }) =>
+      planItem?.id == toNumber(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
+  );
+
+  const isUserOnFreePlan = selectedPlan?.id == 1;
 
   const expirationDetails = calculateExpirationDetails(pricingPlanStatus ?? null);
 
@@ -123,7 +131,6 @@ function UserSettings() {
       label: 'My Profile',
       title: 'Your Profile',
       section: 'top',
-
     },
     {
       value: 1,
@@ -210,7 +217,7 @@ function UserSettings() {
             </>
           )}
 
-          {selectedOption === 3 && pricingPlanStatus == null && (
+          {selectedOption === 3 && isUserOnFreePlan && (
             <Alert
               showIcon={false}
               heading="Go Pro for $11.99/mo and unlock access to more features"
@@ -220,7 +227,7 @@ function UserSettings() {
             />
           )}
 
-          {selectedOption === 3 && pricingPlanStatus != null && !expirationDetails?.isExpired && (
+          {selectedOption === 3 && !isUserOnFreePlan && !expirationDetails?.isExpired && (
             <Alert
               showIcon={true}
               heading={`Your Pro plan is active until ${expirationDetails?.expirationDate}`}
@@ -234,7 +241,6 @@ function UserSettings() {
                 <SectionTitle bottomSpacing={selectedOption == 2 ? false : true}>
                   {selectOptions[selectedOption]?.title}
                 </SectionTitle>
-
               )}
 
               {selectedOption === 0 && (
@@ -248,7 +254,6 @@ function UserSettings() {
               {selectedOption === 1 && <ChannelListSettings />}
               {selectedOption === 2 && <PushSnapSettings />}
               {selectedOption === 3 && <UserPlanAndBillings />}
-
             </ChannelContainer>
           </ChannelWrapper>
 

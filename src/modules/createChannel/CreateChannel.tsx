@@ -238,13 +238,15 @@ const CreateChannel = () => {
     <CreateChannelFormProvider onSubmit={(values: ChannelInfoFormValues) => handleCreateNewChannel(values)}>
       {/* Payment success alert after redirecting from purchase plan page */}
       {paymentDetails?.payment_status == 'SUCCESS' && (
-        <PurchasePlanAlert
-          variant="success"
-          purchasedPlan={{ planName: selectedPlan?.name! }}
-          onAction={() => {
-            window.open(`https://sepolia.etherscan.io/tx/${paymentDetails?.transaction_hash}`, '_blank');
-          }}
-        />
+        <Box width={{ initial: '712px', ml: '389px' }}>
+          <PurchasePlanAlert
+            variant="success"
+            purchasedPlan={{ planName: selectedPlan?.name! }}
+            onAction={() => {
+              window.open(`https://sepolia.etherscan.io/tx/${paymentDetails?.transaction_hash}`, '_blank');
+            }}
+          />
+        </Box>
       )}
 
       <Box

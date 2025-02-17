@@ -42,7 +42,7 @@ const PlanPurchasedModal: FC<PlanPurchasedModalProps> = ({ plan, modalControl, p
     if (isChannelCreated) {
       navigate(`/channel/${account}?paymentId=${paymentId}`);
     } else {
-      navigate(`/create/channel?paymentId=${paymentId}`);
+      navigate(`/channel/create?paymentId=${paymentId}`);
     }
   };
   return (
