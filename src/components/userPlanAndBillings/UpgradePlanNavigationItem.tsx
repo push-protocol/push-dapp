@@ -23,11 +23,11 @@ export const UpgradePlanNavigationItem = () => {
     channelId: walletAddress,
   });
 
-  // useMigrateToFreePlan({
-  //   pricingPlanStatus,
-  //   isLoading: isPricingPlanStatusLoading,
-  //   refetch: refetchPricingPlanStatus,
-  // });
+  useMigrateToFreePlan({
+    pricingPlanStatus,
+    isLoading: isPricingPlanStatusLoading,
+    refetch: refetchPricingPlanStatus,
+  });
 
   const selectedPlan = pricingInfoList?.find(
     (planItem: { id: number }) =>
