@@ -66,50 +66,52 @@ const ChannelDashboard = () => {
       flexDirection="column"
       gap="spacing-sm"
     >
-      <Box>
-        {/* Payment success alert after redirecting from purchase plan page */}
-        {paymentDetails?.payment_status == 'SUCCESS' && (
-          <PurchasePlanAlert
-            variant="success"
-            purchasedPlan={{ planName: selectedPlan?.name! }}
-            onAction={() => {
-              window.open(`https://sepolia.etherscan.io/tx/${paymentDetails?.transaction_hash}`, '_blank');
-            }}
-          />
-        )}
+      {activeState === 'dashboard' && (
+        <Box>
+          {/* Payment success alert after redirecting from purchase plan page */}
+          {paymentDetails?.payment_status == 'SUCCESS' && (
+            <PurchasePlanAlert
+              variant="success"
+              purchasedPlan={{ planName: selectedPlan?.name! }}
+              onAction={() => {
+                window.open(`https://sepolia.etherscan.io/tx/${paymentDetails?.transaction_hash}`, '_blank');
+              }}
+            />
+          )}
 
-        {/* Expiry notice alert after plan has expired */}
-        {pricingPlanStatus && !isUserOnFreePlan && expiryDetails?.isExpired && (
-          <PurchasePlanAlert
-            variant="expired"
-            purchasedPlan={{ planName: selectedPlan?.name! }}
-            onAction={() => {
-              navigate('/pricing');
-            }}
-          />
-        )}
+          {/* Expiry notice alert after plan has expired */}
+          {pricingPlanStatus && !isUserOnFreePlan && expiryDetails?.isExpired && (
+            <PurchasePlanAlert
+              variant="expired"
+              purchasedPlan={{ planName: selectedPlan?.name! }}
+              onAction={() => {
+                navigate('/pricing');
+              }}
+            />
+          )}
 
-        {/* Expiry notice alert when expiry is less than 7 days */}
-        {pricingPlanStatus && !isUserOnFreePlan && parseInt(expiryDetails?.timeRemaining!) < 7 && (
-          <PurchasePlanAlert
-            variant="renewalReminder"
-            purchasedPlan={{ planName: selectedPlan?.name!, daysRemaining: parseInt(expiryDetails?.timeRemaining!) }}
-            onAction={() => {
-              navigate('/pricing');
-            }}
-          />
-        )}
+          {/* Expiry notice alert when expiry is less than 7 days */}
+          {pricingPlanStatus && !isUserOnFreePlan && parseInt(expiryDetails?.timeRemaining!) < 7 && (
+            <PurchasePlanAlert
+              variant="renewalReminder"
+              purchasedPlan={{ planName: selectedPlan?.name!, daysRemaining: parseInt(expiryDetails?.timeRemaining!) }}
+              onAction={() => {
+                navigate('/pricing');
+              }}
+            />
+          )}
 
-        {/* Alert when user is on free plan, and notification limit is already reached */}
-        {isUserOnFreePlan && totalQuota - totalQuotaUsed < 100 && (
-          <PurchasePlanAlert
-            variant="notificationLimit"
-            onAction={() => {
-              navigate('/pricing');
-            }}
-          />
-        )}
-      </Box>
+          {/* Alert when user is on free plan, and notification limit is already reached */}
+          {isUserOnFreePlan && totalQuota - totalQuotaUsed < 100 && (
+            <PurchasePlanAlert
+              variant="notificationLimit"
+              onAction={() => {
+                navigate('/pricing');
+              }}
+            />
+          )}
+        </Box>
+      )}
 
       {activeState === 'dashboard' && (
         <UserChannelDashboard

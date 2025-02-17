@@ -77,16 +77,14 @@ export const UpgradePlanNavigationItem = () => {
           >
             {(pricingPlanStatus && !isUserOnFreePlan && `Push ${selectedPlan?.name}`) || 'Free Plan'}
           </Text>
-          {pricingPlanStatus?.pricing_plan_id !== '3' && (
-            <Button
-              leadingIcon={<Sale />}
-              size="extraSmall"
-              variant="secondary"
-              onClick={handleGoToPricing}
-            >
-              Upgrade
-            </Button>
-          )}
+          <Button
+            leadingIcon={<Sale />}
+            size="extraSmall"
+            variant="secondary"
+            onClick={handleGoToPricing}
+          >
+            Upgrade
+          </Button>
         </Box>
 
         <Box
