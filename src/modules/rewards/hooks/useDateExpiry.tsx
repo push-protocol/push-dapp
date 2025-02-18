@@ -4,12 +4,17 @@ export const useDateExpiry = (expiryDate: string | Date) => {
   const [hasExpired, setHasExpired] = useState<boolean>(new Date(expiryDate) < new Date());
 
   useEffect(() => {
+    if (hasExpired) return;
+
     const interval = setInterval(() => {
-      setHasExpired(new Date(expiryDate) < new Date());
-    }, 10000); // Check every 10 seconds
+      if (new Date() >= new Date(expiryDate)) {
+        setHasExpired(true);
+        clearInterval(interval);
+      }
+    }, 1000);
 
     return () => clearInterval(interval);
-  }, [expiryDate]);
+  }, [hasExpired]);
 
   return hasExpired;
 };
