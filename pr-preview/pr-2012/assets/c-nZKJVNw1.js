@@ -1,0 +1,42 @@
+import { eH as f, __tla as __tla_0 } from "./index-Kvkq3-iW.js";
+import { r as s } from "./c-kgVuzdLE.js";
+let g;
+let __tla = Promise.all([
+  (() => {
+    try {
+      return __tla_0;
+    } catch {
+    }
+  })()
+]).then(async () => {
+  function i(t, n) {
+    for (var o = 0; o < n.length; o++) {
+      const e = n[o];
+      if (typeof e != "string" && !Array.isArray(e)) {
+        for (const r in e) if (r !== "default" && !(r in t)) {
+          const c = Object.getOwnPropertyDescriptor(e, r);
+          c && Object.defineProperty(t, r, c.get ? c : {
+            enumerable: true,
+            get: () => e[r]
+          });
+        }
+      }
+    }
+    return Object.freeze(Object.defineProperty(t, Symbol.toStringTag, {
+      value: "Module"
+    }));
+  }
+  var a = s();
+  let p;
+  p = f(a);
+  g = i({
+    __proto__: null,
+    default: p
+  }, [
+    a
+  ]);
+});
+export {
+  __tla,
+  g as c
+};
