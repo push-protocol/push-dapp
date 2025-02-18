@@ -5,6 +5,7 @@ import { css } from 'styled-components';
 // hooks
 import { useDailyRewards } from '../hooks/useDailyRewards';
 import { useRewardsContext } from 'contexts/RewardsContext';
+import { useDateExpiry } from '../hooks/useDateExpiry';
 
 // type
 import { ActvityType } from 'queries';
@@ -30,6 +31,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
   } = useDailyRewards();
 
   const { isLocked } = useRewardsContext();
+  const hasRewardsExpired = useDateExpiry('2025-02-28T23:59:59');
 
   const isDailyRewardClaimed = isActivityDisabled && activeDay > 1 && userDetails;
 
@@ -63,7 +65,9 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
             Check-in daily and unlock more rewards each day.
           </Text>
         </Box>
-        {isLocked && (
+
+        {/* daily checkIn button state */}
+        {!hasRewardsExpired && isLocked && (
           <Button
             variant="tertiary"
             size="small"
@@ -72,8 +76,16 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
             Locked
           </Button>
         )}
-
-        {!isLocked && (
+        {hasRewardsExpired && (
+          <Button
+            variant="tertiary"
+            size="small"
+            disabled
+          >
+            Ended
+          </Button>
+        )}
+        {!hasRewardsExpired && !isLocked && (
           <>
             {isDailyRewardClaimed && (
               <Button
