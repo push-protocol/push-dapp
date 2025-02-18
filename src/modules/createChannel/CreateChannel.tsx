@@ -67,7 +67,7 @@ const CreateChannel = () => {
     channelId: walletAddress,
   });
 
-  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus);
+  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
 
   const { data: paymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 

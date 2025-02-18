@@ -20,7 +20,10 @@ export const UpgradePlanNavigationItem = () => {
   } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
-  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan } = useGetPricingPlanDetails(pricingPlanStatus);
+  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan } = useGetPricingPlanDetails(
+    pricingPlanStatus,
+    walletAddress,
+  );
 
   useMigrateToFreePlan({
     pricingPlanStatus,

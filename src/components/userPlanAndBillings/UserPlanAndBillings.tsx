@@ -15,8 +15,10 @@ const UserPlanAndBillings = () => {
     channelId: walletAddress,
   });
 
-  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan, pricingListDescriptions } =
-    useGetPricingPlanDetails(pricingPlanStatus);
+  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan, pricingListDescriptions } = useGetPricingPlanDetails(
+    pricingPlanStatus,
+    walletAddress,
+  );
 
   const planNotifications = [
     {

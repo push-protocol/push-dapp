@@ -59,7 +59,7 @@ function UserSettings() {
     channelId: walletAddress,
   });
 
-  const { isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus);
+  const { isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
 
   const expirationDetails = calculateExpirationDetails(pricingPlanStatus ?? null);
 

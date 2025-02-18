@@ -36,7 +36,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
     channelId: walletAddress,
   });
 
-  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus);
+  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
 
   let verifiedAliasChainIds =
     channelDetails?.aliases

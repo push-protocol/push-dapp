@@ -5,6 +5,7 @@ export const addNewSubgraph = 'addNewSubgraph';
 export const aliasInfo = 'aliasInfo';
 export const allActivities = 'allActivities';
 export const allUserSubscriptions = 'allUserSubscriptions';
+export const allPaymentHistory = 'allPaymentHistory';
 export const approvingPUSHToken = 'approvingPUSHToken';
 export const approveVaultUser = 'approveVaultUser';
 export const channelSearchList = 'channelSearchList';

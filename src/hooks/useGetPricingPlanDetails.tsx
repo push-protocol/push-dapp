@@ -1,6 +1,6 @@
 import { useGetPricingInfo } from 'queries';
 
-export const useGetPricingPlanDetails = (pricingPlanStatus: any) => {
+export const useGetPricingPlanDetails = (pricingPlanStatus: any, walletAddress: string) => {
   const { data: pricingInfoList } = useGetPricingInfo();
   const pricingListDescriptions = [
     {
@@ -25,6 +25,8 @@ export const useGetPricingPlanDetails = (pricingPlanStatus: any) => {
     (planItem: { id: number }) =>
       planItem?.id == parseInt(pricingPlanStatus?.pricing_plan_id ? pricingPlanStatus?.pricing_plan_id : '1'),
   );
+
+  // console.log(pricingPlanStatus, 'cast cast');
 
   const isUserOnFreePlan = selectedPlan?.id == 1;
   const isUserOnEnterprisePlan = selectedPlan?.id == 4;

@@ -54,7 +54,8 @@ const ConfirmPurchaseModal: FC<ConfirmPurchaseModalProps> = ({ modalControl, pla
             color="text-tertiary"
             variant="bs-regular"
           >
-            Purchase Push Pro plan for {selectedPlanType === '12' ? plan?.value * 12 : plan?.value} USDC
+            Purchase Push Pro plan for {selectedPlanType === '12' ? (plan?.value * 12 * 0.85).toFixed(2) : plan?.value}{' '}
+            USDC
           </Text>
           <Text
             color="text-tertiary"

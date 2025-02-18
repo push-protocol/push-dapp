@@ -12,7 +12,7 @@ import { UserChannelDashboard } from './components/UserChannelDashboard';
 
 // Hooks
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
-import { useGetChannelCategories, useGetPaymentDetails, useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
+import { useGetChannelCategories, useGetPaymentDetails, useGetPricingPlanStatus } from 'queries';
 import { PurchasePlanAlert } from 'common';
 import { useAccount, useGetPricingPlanDetails } from 'hooks';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
@@ -34,7 +34,7 @@ const ChannelDashboard = () => {
   const { data: pricingPlanStatus } = useGetPricingPlanStatus({
     channelId: walletAddress,
   });
-  const { selectedPlan, isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus);
+  const { selectedPlan, isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
 
   const { data: paymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 

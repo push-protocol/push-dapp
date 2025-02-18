@@ -16,7 +16,6 @@ export const useMigrateToFreePlan = ({ pricingPlanStatus, isLoading, refetch }: 
   const { mutate: handleInitatePayment } = useInitiatePaymentInfo();
 
   const handleMigrateToFreePlan = () => {
-    console.log('handlemigrate');
     handleInitatePayment(
       {
         channel: walletAddress,
