@@ -22,7 +22,7 @@ export const useGetChannelslist = ({ order, pageSize, sort, chain, tag, subscrib
     return state.user;
   });
   const reactQuery = useInfiniteQuery<ChannelsListModelledResponse>({
-    queryKey: [allChannelsList, chain, tag, subscribed],
+    queryKey: [allChannelsList, userPushSDKInstance?.account, chain, tag, subscribed],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       getChannelsList({

@@ -20,7 +20,7 @@ export const useChannelSearch = ({ pageSize, query, chain, tag, subscribed }: Us
     return state.user;
   });
   const infiniteQuery = useInfiniteQuery<ChannelsSearchListModelledResponse>({
-    queryKey: [channelSearchList, query, chain, tag, subscribed],
+    queryKey: [channelSearchList, userPushSDKInstance?.account, query, chain, tag, subscribed],
     initialPageParam: 1,
     enabled: !!query,
     queryFn: ({ pageParam }) =>
