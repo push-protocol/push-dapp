@@ -11,15 +11,16 @@ export type UseChannelSearchProps = {
   pageSize: ChannelSearchParams['pageSize'];
   chain: ChannelSearchParams['chain'];
   tag: ChannelSearchParams['tag'];
+  subscribed: ChannelSearchParams['subscribed'];
 };
 
 // TODO make it a sdk call in future
-export const useChannelSearch = ({ pageSize, query, chain, tag }: UseChannelSearchProps) => {
+export const useChannelSearch = ({ pageSize, query, chain, tag, subscribed }: UseChannelSearchProps) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
   const infiniteQuery = useInfiniteQuery<ChannelsSearchListModelledResponse>({
-    queryKey: [channelSearchList, query, chain, tag],
+    queryKey: [channelSearchList, userPushSDKInstance?.account, query, chain, tag, subscribed],
     initialPageParam: 1,
     enabled: !!query,
     queryFn: ({ pageParam }) =>
@@ -30,6 +31,7 @@ export const useChannelSearch = ({ pageSize, query, chain, tag }: UseChannelSear
         query,
         chain,
         tag,
+        subscribed,
       }),
     getNextPageParam: ({}, allPages, lastPageParam) => {
       if (allPages[(lastPageParam as number) - 1].length < pageSize) {
