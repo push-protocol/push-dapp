@@ -1,0 +1,63 @@
+import { eH as g, __tla as __tla_0 } from "./index-AGa8OPve.js";
+let l;
+let __tla = Promise.all([
+  (() => {
+    try {
+      return __tla_0;
+    } catch {
+    }
+  })()
+]).then(async () => {
+  function c(e, i) {
+    for (var o = 0; o < i.length; o++) {
+      const t = i[o];
+      if (typeof t != "string" && !Array.isArray(t)) {
+        for (const r in t) if (r !== "default" && !(r in e)) {
+          const n = Object.getOwnPropertyDescriptor(t, r);
+          n && Object.defineProperty(e, r, n.get ? n : {
+            enumerable: true,
+            get: () => t[r]
+          });
+        }
+      }
+    }
+    return Object.freeze(Object.defineProperty(e, Symbol.toStringTag, {
+      value: "Module"
+    }));
+  }
+  var a, s;
+  function f() {
+    if (s) return a;
+    s = 1, a = e, e.displayName = "git", e.aliases = [];
+    function e(i) {
+      i.languages.git = {
+        comment: /^#.*/m,
+        deleted: /^[-–].*/m,
+        inserted: /^\+.*/m,
+        string: /("|')(?:\\.|(?!\1)[^\\\r\n])*\1/,
+        command: {
+          pattern: /^.*\$ git .*$/m,
+          inside: {
+            parameter: /\s--?\w+/
+          }
+        },
+        coord: /^@@.*@@$/m,
+        "commit-sha1": /^commit \w{40}$/m
+      };
+    }
+    return a;
+  }
+  var m = f();
+  let u;
+  u = g(m);
+  l = c({
+    __proto__: null,
+    default: u
+  }, [
+    m
+  ]);
+});
+export {
+  __tla,
+  l as g
+};
