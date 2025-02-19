@@ -1,22 +1,31 @@
-import { FC } from 'react';
+import { FC, useContext, useEffect } from 'react';
 import { ChannelListOrderType, ChannelListSortType } from '@pushprotocol/restapi';
 
-import { useChannelsFilters } from './hooks/useChannelsFilters';
+import { Box, Search, Text } from 'blocks';
+import { getSelectChains } from 'common';
+import { appConfig } from 'config';
+import { useAccount } from 'hooks';
 import { useChannelSearch, useGetChannelslist } from 'queries';
 
-import { Box, Search, Text } from 'blocks';
 import { ChannelSearchAndChainSelection } from './components/ChannelSearchAndChainSelection';
 import { ChannelCategories } from './components/ChannelCategories';
 import { AllChannelList } from './components/AllChannelsList';
+import { useChannelsFilters } from './hooks/useChannelsFilters';
 
-import { getSelectChains } from 'common';
-import { AllCategories, channelFilterList } from './Channels.constants';
+import { AllCategories, channelFilterList, subscribedCategory } from './Channels.constants';
 import { getSuggestedChannels } from './Channels.utils';
-import { appConfig } from 'config';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 export type ChannelsProps = {};
 
 const Channels: FC<ChannelsProps> = () => {
+  // @ts-expect-error
+  const { readOnlyWallet } = useContext(GlobalContext);
+
+  const { account } = useAccount();
+
+  const walletAddress = account !== readOnlyWallet ? account : null;
+
   const chainOptions = getSelectChains(appConfig.allowedNetworks);
 
   const { filters, setFilter } = useChannelsFilters({
@@ -26,6 +35,9 @@ const Channels: FC<ChannelsProps> = () => {
 
   const isEthereumChain = chainOptions.find((chain) => chain.value === filters.chain)?.label.includes('Ethereum');
 
+  const tag = filters.category === AllCategories || filters.category === subscribedCategory ? '' : filters.category;
+
+  const subscribed = filters.category === subscribedCategory ? `eip155:${walletAddress}` : '';
   const {
     data: channelList,
     isLoading: loadingChannels,
@@ -37,7 +49,8 @@ const Channels: FC<ChannelsProps> = () => {
     order: ChannelListOrderType.DESCENDING,
     sort: ChannelListSortType.SUBSCRIBER,
     chain: isEthereumChain ? '' : filters.chain,
-    tag: filters.category === AllCategories ? '' : filters.category,
+    tag,
+    subscribed,
   });
 
   const {
@@ -50,8 +63,15 @@ const Channels: FC<ChannelsProps> = () => {
     pageSize: 21,
     query: filters.search,
     chain: isEthereumChain ? '' : filters.chain,
-    tag: filters.category === AllCategories ? '' : filters.category,
+    tag,
+    subscribed,
   });
+
+  useEffect(() => {
+    if (account === readOnlyWallet && filters.category === subscribedCategory) {
+      setFilter({ category: AllCategories });
+    }
+  }, [account, filters]);
 
   const channels =
     loadingChannels || searchingChannels
@@ -98,6 +118,7 @@ const Channels: FC<ChannelsProps> = () => {
           <ChannelCategories
             filters={filters}
             setFilter={setFilter}
+            walletAddress={walletAddress}
           />
         </Box>
         {!channels.length && !suggestedChannels.length && !isLoading ? (

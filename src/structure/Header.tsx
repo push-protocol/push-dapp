@@ -159,7 +159,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
-          <Lozenge icon={<Star />}>NEW</Lozenge>
+          <Lozenge icon={<Star />}>ENDING SOON</Lozenge>
         </Box>
       </Link>
     </Box>

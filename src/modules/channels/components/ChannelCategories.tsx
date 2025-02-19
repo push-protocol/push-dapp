@@ -3,16 +3,17 @@ import { Box, Button, CaretLeft, CaretRight, Pill, Skeleton } from 'blocks';
 import { css } from 'styled-components';
 import { useGetChannelCategories } from 'queries';
 import { Filters } from '../hooks/useChannelsFilters';
-import { AllCategories } from '../Channels.constants';
+import { AllCategories, subscribedCategory } from '../Channels.constants';
 import { appConfig } from 'config';
 
 export type ChannelCategoriesProps = {
   filters: Filters;
   setFilter: (filter: Partial<Filters>) => void;
+  walletAddress: string | null;
 };
 const scrollAmount = 150;
 
-const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) => {
+const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter, walletAddress }) => {
   const categoryContainerRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading } = useGetChannelCategories();
@@ -60,12 +61,22 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
         padding="spacing-none spacing-xxl"
       >
         {!isLoading && (
-          <Pill
-            isActive={filters.category === AllCategories}
-            onClick={() => setFilter({ category: AllCategories })}
-          >
-            {AllCategories}
-          </Pill>
+          <>
+            <Pill
+              isActive={filters.category === AllCategories}
+              onClick={() => setFilter({ category: AllCategories })}
+            >
+              {AllCategories}
+            </Pill>
+            {walletAddress && (
+              <Pill
+                isActive={filters.category === subscribedCategory}
+                onClick={() => setFilter({ category: subscribedCategory })}
+              >
+                {subscribedCategory}
+              </Pill>
+            )}
+          </>
         )}
         {channelCategories.map((cat, index) => (
           <Skeleton

@@ -3839,8 +3839,8 @@ __metadata:
   linkType: hard
 
 "@pushprotocol/restapi@npm:^1.7.30":
-  version: 1.7.31
-  resolution: "@pushprotocol/restapi@npm:1.7.31"
+  version: 1.7.30
+  resolution: "@pushprotocol/restapi@npm:1.7.30"
   dependencies:
     "@metamask/eth-sig-util": "npm:^5.0.2"
     axios: "npm:^0.27.2"
@@ -18010,7 +18010,7 @@ __metadata:
     "@metamask/eth-sig-util": "npm:^4.0.0"
     "@mui/icons-material": "npm:^5.8.4"
     "@mui/material": "npm:^5.5.0"
-    "@pushprotocol/restapi": "npm:^1.7.30"
+    "@pushprotocol/restapi": "npm:^1.7.31"
     "@pushprotocol/socket": "npm:0.5.3"
     "@pushprotocol/uiweb": "npm:1.7.3"
     "@radix-ui/react-dialog": "npm:^1.1.1"
