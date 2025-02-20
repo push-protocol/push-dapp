@@ -32,6 +32,8 @@ const APP_PATHS = {
   UserSettings: '/user/settings',
   ChannelSettings: '/channel/settings',
   ClaimGalxe: 'claim/galxe',
+  Pricing: '/pricing',
+  PurchasePlan: '/pricing/:id',
 };
 
 export default APP_PATHS;

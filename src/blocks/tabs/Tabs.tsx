@@ -10,6 +10,8 @@ import {
   StyledLineTabs,
   StyledTabLabel,
 } from './Tabs.styled';
+import { ResponsiveProp } from 'blocks';
+import { CSSProperties } from 'styled-components';
 
 export type TabItem = {
   key: string;
@@ -24,9 +26,10 @@ export type TabsProps = {
   onChange?: (activeKey: string) => void;
   activeKey?: string;
   variant?: 'line' | 'fill';
+  alignTabs?: ResponsiveProp<CSSProperties['alignSelf']>;
 };
 
-const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKey }) => {
+const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKey, alignTabs }) => {
   const handleChange = (index: number) => {
     const activeItem = items[index];
     if (activeItem && !activeItem.disabled) {
@@ -49,7 +52,10 @@ const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKe
       role="tabpanel"
       keyboardActivation={TabsKeyboardActivation.Auto}
     >
-      <TabList role="tablist">
+      <TabList
+        alignSelf={alignTabs}
+        role="tablist"
+      >
         {items.map((item) => (
           <Tab
             aria-disabled={item.disabled}

@@ -103,6 +103,8 @@ export { default as MaximizeLeft } from './components/MaximizeLeft';
 
 export { default as MegaPhone } from './components/MegaPhone';
 
+export { default as Meteor } from './components/Meteor';
+
 export { default as Moon } from './components/Moon';
 export { default as MoonFilled } from './components/MoonFilled';
 
