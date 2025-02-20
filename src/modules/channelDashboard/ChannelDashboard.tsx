@@ -120,7 +120,7 @@ const ChannelDashboard = () => {
       {showGoProAlert && (
         <Alert
           showIcon={false}
-          heading="Go Pro for $11.99/mo and unlock access to more features"
+          heading="Go Pro for $14.99/mo and unlock access to more features"
           onAction={() => modalControl.open()}
           actionText="Upgrade Plan"
           variant="basic"

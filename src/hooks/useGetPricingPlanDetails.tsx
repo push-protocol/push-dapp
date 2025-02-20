@@ -28,7 +28,7 @@ export const useGetPricingPlanDetails = (pricingPlanStatus: any, walletAddress: 
 
   const isUserOnFreePlan = selectedPlan?.id == 1;
   const isUserOnEnterprisePlan = selectedPlan?.id == 4;
-  const isUserOnYearlyPlan = pricingPlanStatus?.pricingPlanTaken[0]?.duration == 12;
+  const isUserOnYearlyPlan = pricingPlanStatus?.pricingPlanTaken?.[0]?.duration == 12;
 
   return { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan, isUserOnYearlyPlan, pricingListDescriptions };
 };

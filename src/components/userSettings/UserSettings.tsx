@@ -213,7 +213,7 @@ function UserSettings() {
           {selectedOption === 3 && isUserOnFreePlan && (
             <Alert
               showIcon={false}
-              heading="Go Pro for $11.99/mo and unlock access to more features"
+              heading="Go Pro for $14.99/mo and unlock access to more features"
               onAction={() => navigateToPricing()}
               actionText="Upgrade Plan"
               variant="basic"

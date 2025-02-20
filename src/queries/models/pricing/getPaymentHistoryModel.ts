@@ -1,1 +1,3 @@
-export const getPaymentHistoryModel = (response: any): any => response;
+import { PricingPaymentHistory } from 'queries/types/pricing';
+
+export const getPaymentHistoryModel = (response: PricingPaymentHistory): PricingPaymentHistory => response;

@@ -7,7 +7,7 @@ export type PricingPlanType = {
   discord_quota: number;
   duration: number;
   discount: number;
-  description: string; // Description is a stringified array
+  description: string;
 };
 
 export type PricingInfoResponse = PricingPlanType[];
@@ -23,4 +23,39 @@ export type PricingPlanStatusResponse = {
   telegram_total_quota: number;
   discord_total_quota: number;
   expirationTimestamp: number;
+  pricingPlanTaken: Array<{
+    id: number;
+    channel: string;
+    created_at: string;
+    duration: number;
+    expiration: number;
+    is_active: number;
+    next_renewal: string | null;
+    pricing_plan_id: string;
+  }>;
 } | null;
+
+export type PricingPlanPaymentDetails = {
+  id: number;
+  channel: string;
+  payment_id: string;
+  pricing_plan_id: string;
+  amount: number;
+  currency: string;
+  created_at: number;
+  payment_network: string;
+  payment_status: 'SUCCESS' | 'INITIATED' | 'FAILED';
+  transaction_hash: string;
+  expires_at: number;
+  message: string;
+  durationInMonths: number;
+};
+
+export type PricingPaymentHistory = PricingPlanPaymentDetails[];
+
+export type InitiatePaymentType = {
+  success: boolean;
+  paymentId: string;
+  amount: number;
+  message: string;
+};

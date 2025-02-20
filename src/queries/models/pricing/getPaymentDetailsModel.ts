@@ -1,1 +1,3 @@
-export const getPaymentDetailsModel = (response: any): any => response;
+import { PricingPlanPaymentDetails } from 'queries/types/pricing';
+
+export const getPaymentDetailsModel = (response: PricingPlanPaymentDetails): PricingPlanPaymentDetails => response;
