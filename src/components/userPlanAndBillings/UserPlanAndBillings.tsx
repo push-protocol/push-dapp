@@ -15,10 +15,8 @@ const UserPlanAndBillings = () => {
     channelId: walletAddress,
   });
 
-  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan, pricingListDescriptions } = useGetPricingPlanDetails(
-    pricingPlanStatus,
-    walletAddress,
-  );
+  const { selectedPlan, isUserOnFreePlan, isUserOnEnterprisePlan, isUserOnYearlyPlan, pricingListDescriptions } =
+    useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
 
   const planNotifications = [
     {
@@ -77,7 +75,7 @@ const UserPlanAndBillings = () => {
               variant="h2-semibold"
               color="text-primary"
             >
-              ${selectedPlan?.value}/mo
+              ${isUserOnYearlyPlan ? (selectedPlan?.value! * 0.85).toFixed(2) : selectedPlan?.value}/mo
             </Text>
           )}
         </Box>
@@ -94,7 +92,7 @@ const UserPlanAndBillings = () => {
           >
             {pricingListDescriptions?.find((desc) => desc.id === selectedPlan?.id)?.description}
           </Text>
-          {!isUserOnFreePlan && (
+          {!isUserOnFreePlan && isUserOnYearlyPlan && (
             <Text
               variant="bm-regular"
               color="text-tertiary"
