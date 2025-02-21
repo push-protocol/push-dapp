@@ -33,7 +33,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   // To ensure intialize via [account] is not run on certain logic points
   const shouldInitializeRef = useRef(true); // Using a ref to control useEffect execution
 
-  const { connect, provider, account, wallet, connecting } = useAccount();
+  const { connect, provider, account, wallet, chainId } = useAccount();
 
   const web3onboardToast = useToast();
 
@@ -232,6 +232,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       env: appConfig.appEnv,
       account: account,
       alpha: { feature: ['SCALABILITY_V2'] },
+      chainId,
+      perChain: true,
     });
 
     // sets up stream in read mode
@@ -268,6 +270,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
           account: currentAddress,
           progressHook: onboardingProgressReformatter,
           alpha: { feature: ['SCALABILITY_V2'] },
+          chainId,
+          perChain: true,
         });
       } else {
         userInstance = await PushAPI.initialize(librarySigner!, {
@@ -275,10 +279,12 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
           account: currentAddress,
           progressHook: onboardingProgressReformatter,
           alpha: { feature: ['SCALABILITY_V2'] },
+          chainId,
+          perChain: true,
         });
       }
 
-      console.debug('src::contexts::AppContext::initializePushSDK::User Intance Initialized', userInstance);
+      console.log('src::contexts::AppContext::initializePushSDK::User Intance Initialized', userInstance);
       if (userInstance) {
         setBlockedLoading({
           enabled: false,
@@ -489,6 +495,17 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     };
     initialize();
   }, [account]);
+
+  // Reinitialize push sdk if chainID changes
+  useEffect(() => {
+    const reinitialize = async () => {
+      if (userPushSDKInstance && !userPushSDKInstance?.readmode() && wallet?.accounts?.length > 0) {
+        console.log('Push SDK is initialized and not in read mode');
+        initializePushSDK(wallet);
+      }
+    };
+    reinitialize();
+  }, [chainId]);
 
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
