@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { css } from 'styled-components';
 
 //components
-import { Box, Button, Points, Text } from 'blocks';
+import { Box, Button, Link, Points, Text } from 'blocks';
 
 export type DashboardSectionHeaderProps = {
   onGetStarted: () => void;
@@ -46,15 +46,27 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
               variant="h4-semibold"
               color="text-on-light-bg"
             >
-              Push Points S1 Ends on Feb 28!
+              Push Points S1 has Ended!
             </Text>
             <Box maxWidth={{ tb: 'auto', initial: '607px' }}>
               <Text
                 variant="bl-regular"
                 color="text-on-light-bg"
               >
-                Claim all tasks and prepare for the end of S1 of Push Reward Points. Prizes will be announced on Feb
-                25th. Leaderboards snapshot on Mar 1, 2025.
+                Push Chain Rewards S2 coming soon! Find out more at{' '}
+                <Link
+                  to="https://x.com/PushChain"
+                  target="_blank"
+                  textProps={{
+                    variant: 'bl-regular',
+                    color: 'text-on-light-bg',
+                    css: css`
+                      display: inline;
+                    `,
+                  }}
+                >
+                  Push Chain
+                </Link>
               </Text>
             </Box>
           </Box>
