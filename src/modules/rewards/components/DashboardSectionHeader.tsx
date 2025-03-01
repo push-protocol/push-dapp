@@ -76,8 +76,9 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
           variant="tertiary"
           size="medium"
           onClick={onGetStarted}
+          disabled={true}
         >
-          Get Started
+          Ended
         </Button>
       </Box>
     </Box>
