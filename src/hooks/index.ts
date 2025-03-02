@@ -4,3 +4,4 @@ export * from './useSDKSocket';
 export * from './useAsyncOperation';
 export * from './useAccount';
 export * from './useCopy';
+export * from './useGetPricingPlanDetails';

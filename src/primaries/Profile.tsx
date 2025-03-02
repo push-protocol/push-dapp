@@ -52,29 +52,29 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: () => { },
+      function: () => {},
       invertedIcon: getPublicAssetPath('copy.svg'),
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: () => { },
+      function: () => {},
       to: APP_PATHS.UserSettings,
       invertedIcon: getPublicAssetPath('svg/setting.svg'),
     },
     ...(EnvHelper.isProd
       ? []
       : [
-        {
-          id: 'prodDapp',
-          value: '',
-          function: () => { },
-          link: `https://${envUtil.prod}`,
-          title: 'Production dapp',
-          invertedIcon: getPublicAssetPath('prod.svg'),
-        },
-      ]),
+          {
+            id: 'prodDapp',
+            value: '',
+            function: () => {},
+            link: `https://${envUtil.prod}`,
+            title: 'Production dapp',
+            invertedIcon: getPublicAssetPath('prod.svg'),
+          },
+        ]),
     {
       id: 'disconnect',
       value: '',
