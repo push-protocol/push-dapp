@@ -7,19 +7,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineMore } from 'react-icons/ai';
 
-// Internal Components
-import { useAccount } from 'hooks';
-import { Button } from 'primaries/SharedStyling';
-import { ImageV2 } from 'components/reusables/SharedStylingV2';
-import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
-import UserProfileSettings from 'components/UserProfileSettings/UserProfileSettings';
-
 // Internal Configs
 import { device } from 'config/Globals';
+import { useAccount, useDeviceWidthCheck, useGetPricingPlanDetails } from 'hooks';
+import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
+
+// Internal Components
+import { Button } from 'primaries/SharedStyling';
+import { ImageV2 } from 'components/reusables/SharedStylingV2';
+import { Alert, Box, Text } from 'blocks';
+import UserProfileSettings from 'components/UserProfileSettings/UserProfileSettings';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
-import { Alert, Box } from 'blocks';
+import UserPlanAndBillings from 'components/userPlanAndBillings/UserPlanAndBillings';
 import UserProfileSocialSettings from 'components/UserProfileSettings/UserProfileSocialSettings';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { useGetPricingPlanStatus } from 'queries';
+import { calculateExpirationDetails } from './utils';
 
 interface ChannelListItem {
   channel: string;
@@ -30,7 +34,10 @@ interface ChannelListItem {
 }
 
 function UserSettings() {
+  const isMobile = useDeviceWidthCheck(800);
+
   const { account, chainId } = useAccount();
+  const walletAddress = convertAddressToAddrCaip(account, chainId);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -47,6 +54,18 @@ function UserSettings() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const { data: pricingPlanStatus } = useGetPricingPlanStatus({
+    channelId: walletAddress,
+  });
+
+  const { isUserOnFreePlan } = useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
+
+  const expirationDetails = calculateExpirationDetails(pricingPlanStatus ?? null);
+
+  const navigateToPricing = () => {
+    navigate('/pricing');
+  };
 
   const fetchChannelDetails = async (channel: string) => {
     const details = await userPushSDKInstance.channel.info(channel);
@@ -68,7 +87,7 @@ function UserSettings() {
       Object.keys(details).map(async (channel) => {
         const channelData = await fetchChannelDetails(channel);
         if (channelData) data.push(channelData);
-      })
+      }),
     );
     setChannelList(data);
   };
@@ -104,16 +123,25 @@ function UserSettings() {
       value: 0,
       label: 'My Profile',
       title: 'Your Profile',
+      section: 'top',
     },
     {
       value: 1,
       label: 'Notification Settings',
       title: 'Notification Settings',
+      section: 'top',
     },
     {
       value: 2,
       label: 'Push Snap',
       title: '',
+      section: 'top',
+    },
+    {
+      value: 3,
+      label: 'Plan & Billing',
+      title: 'Plan & Billing',
+      section: 'bottom',
     },
   ];
 
@@ -124,39 +152,88 @@ function UserSettings() {
 
       <Wrapper>
         <SelectSection>
-          {selectOptions.map((selectOptions) => (
-            <SelectListOption
-              onClick={() => setSelectedOption(selectOptions.value)}
-              key={selectOptions.value}
-              isSelected={selectOptions.value === selectedOption}
-            >
-              {selectOptions.label}
-            </SelectListOption>
-          ))}
+          {selectOptions
+            .filter((option) => option.section === 'top')
+            .map((option) => (
+              <SelectListOption
+                onClick={() => setSelectedOption(option.value)}
+                key={option.value}
+                isSelected={option.value === selectedOption}
+              >
+                {option.label}
+              </SelectListOption>
+            ))}
+
+          {!isMobile && (
+            <Box margin="spacing-lg spacing-none spacing-none spacing-none">
+              <Text
+                variant="os-regular"
+                color="text-tertiary"
+              >
+                Developers
+              </Text>
+            </Box>
+          )}
+
+          {selectOptions
+            .filter((option) => option.section === 'bottom')
+            .map((option) => (
+              <SelectListOption
+                onClick={() => setSelectedOption(option.value)}
+                key={option.value}
+                isSelected={option.value === selectedOption}
+              >
+                {option.label}
+              </SelectListOption>
+            ))}
         </SelectSection>
 
         <ChannelBlock>
-          {successMessage && (
-            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
-              <Alert
-                variant="success"
-                heading={successMessage}
-              />
-            </Box>
+          {selectedOption === 0 && (
+            <>
+              {successMessage && (
+                <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+                  <Alert
+                    variant="success"
+                    heading={successMessage}
+                  />
+                </Box>
+              )}
+              {errorMessage && (
+                <Box margin="spacing-sm spacing-none spacing-none spacing-none">
+                  <Alert
+                    variant="error"
+                    heading={errorMessage}
+                  />
+                </Box>
+              )}
+            </>
           )}
 
-          {errorMessage && (
-            <Box margin="spacing-sm spacing-none spacing-none spacing-none">
-              <Alert
-                variant="error"
-                heading={errorMessage}
-              />
-            </Box>
+          {selectedOption === 3 && isUserOnFreePlan && (
+            <Alert
+              showIcon={false}
+              heading="Go Pro for $14.99/mo and unlock access to more features"
+              onAction={() => navigateToPricing()}
+              actionText="Upgrade Plan"
+              variant="basic"
+            />
           )}
+
+          {selectedOption === 3 && !isUserOnFreePlan && !expirationDetails?.isExpired && (
+            <Alert
+              showIcon={true}
+              heading={`Your Pro plan is active until ${expirationDetails?.expirationDate}`}
+              variant="basic"
+            />
+          )}
+
           <ChannelWrapper>
             <ChannelContainer selectedOption={selectedOption}>
               {selectOptions[selectedOption]?.title && (
-                <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
+                <SectionTitle bottomSpacing={selectedOption == 2 ? false : true}>
+                  {selectOptions[selectedOption]?.title}
+                </SectionTitle>
               )}
 
               {selectedOption === 0 && (
@@ -169,6 +246,7 @@ function UserSettings() {
               )}
               {selectedOption === 1 && <ChannelListSettings />}
               {selectedOption === 2 && <PushSnapSettings />}
+              {selectedOption === 3 && <UserPlanAndBillings />}
             </ChannelContainer>
           </ChannelWrapper>
 
@@ -291,14 +369,16 @@ const ChannelWrapper = styled.div`
 `;
 
 const ChannelBlock = styled.div`
+  overflow: hidden;
   display: flex;
+  overflow-y: auto;
   flex-direction: column;
+  height: auto;
   flex-grow: 1;
   min-height: 0;
   gap: 16px;
   padding-right: 12px;
   overflow-y: auto;
-
   &::-webkit-scrollbar-track {
     background-color: transparent;
     position: absolute;
@@ -327,8 +407,9 @@ const ChannelBlock = styled.div`
 `;
 
 const ChannelContainer = styled.div<{ selectedOption: number }>`
-  overflow-y: auto;
-  height: ${(props) => (props.selectedOption === 0 ? 'auto' : '55vh')};
+  overflow-y: ${(props) => (props.selectedOption === 3 ? 'none' : 'auto')};
+  height: ${(props) => (props.selectedOption === 0 || props.selectedOption === 3 ? 'auto' : '55vh')};
+
   padding: 12px;
 
   &::-webkit-scrollbar-track {
@@ -358,13 +439,13 @@ const ChannelContainer = styled.div<{ selectedOption: number }>`
   }
 `;
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.div<{ bottomSpacing: boolean }>`
   font-size: 22px;
   font-weight: 500;
   line-height: 33px;
   letter-spacing: normal;
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) => (props.bottomSpacing ? '20px' : '0px')};
   color: ${(props) => props.theme.default.color};
 
   @media ${device.tablet} {

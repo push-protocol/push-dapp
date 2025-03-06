@@ -132,6 +132,10 @@ export const addresses = {
   yieldFarmLP: '0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b',
 
   alphaAccessNft: '0x8D71C28831074DfAAfBa98AD0F5DE86E2DE594cc',
+
+  // for monetization section
+  usdcTokenAddress: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+  usdcRecipient: '0x986a07797a27f51e3276b51C8E32b803a5d80d21',
 };
 
 export const CHAIN_DETAILS = {
