@@ -124,9 +124,9 @@ const NewYieldFarming = ({ setActiveTab }) => {
     <>
       <YieldAnnouncementSection
         logo={'announcement'}
-        title={'New V2 Pools are now Live! Stake or migrate now.'}
+        title={'Staking Program has now ended.'}
         body={
-          'Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click'
+          'Note: While UNI-V2 LP staking pool has ended, the Push Fee Staking Pool is designed to continue its staking mechanism. However, rewards for stakers will solely come from Core smart contract fee earnings.'
         }
         setActiveTab={setActiveTab}
       />

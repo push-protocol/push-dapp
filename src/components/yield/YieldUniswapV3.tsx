@@ -268,7 +268,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
         {lpPoolStats ? (
           <>
             <Heading>Uniswap V2 LP Staking Pool</Heading>
-            <SecondaryText>
+            {/* <SecondaryText>
               Current APR{' '}
               <SpanV2
                 color="#D53A94"
@@ -276,7 +276,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
               >
                 &gt;{numberWithCommas(lpPoolStats?.stakingAPR)}%
               </SpanV2>
-            </SecondaryText>
+            </SecondaryText> */}
           </>
         ) : (
           <SkeletonContainer padding="5px 15px 0 15px">
@@ -310,7 +310,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   color="#D53A94"
                   letterSpacing="normal"
                 >
-                  {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
+                  {/* {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH */}0 PUSH
                 </H2V2>
               </>
             ) : (
@@ -556,6 +556,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
               <Button
                 variant="primary"
                 size="medium"
+                disabled
                 block
                 onClick={() => {
                   handleStakingModal();
