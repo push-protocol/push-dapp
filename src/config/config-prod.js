@@ -125,6 +125,10 @@ export const addresses = {
   pushCoreV2: '0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE', //not upgraded
 
   alphaAccessNft: '0x87d34d40EFaF2d594A7eD9B1126F15Cb3fc721ef',
+
+  // for monetization section
+  usdcTokenAddress: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  usdcRecipient: '0x986a07797a27f51e3276b51C8E32b803a5d80d21',
 };
 
 export const CHAIN_DETAILS = {

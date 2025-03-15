@@ -67,6 +67,38 @@ export type UserSocialStatusResponse = {
   discord_username: string | null;
 };
 
+export type UserProfileInfoResponse = {
+  name: string | null;
+  desc: string | null;
+  picture: string | null;
+  profileVerificationProof?: string | null;
+};
+
+export type UpdateProfileInfoResponse = {
+  name: string | null;
+  desc: string | null;
+  picture: string | null;
+  profileVerificationProof?: string | null;
+  blockedUserList?: [];
+};
+
+export type SendHandlesVerificationResponse = {
+  email: string | null;
+  success: boolean;
+  VerificationCode?: string | null;
+};
+
+export type VerifyHandlesVerificationResponse = {
+  message: string;
+  success: boolean;
+};
+
+export type UserSocialStatusResponse = {
+  email: string | null;
+  telegram_username: string | null;
+  discord_username: string | null;
+ };
+
 export type UserProfileDetailsResponse = {
   blockedUsersList: Array<string>;
   desc: string | null;
@@ -74,3 +106,4 @@ export type UserProfileDetailsResponse = {
   picture: string;
   profileVerificationProof: string | null;
 };
+
