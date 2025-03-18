@@ -16,7 +16,7 @@ const NotificationContainer = styled.div`
   align-items: stretch;
   height: 115px;
   width: 412px;
-  cursor: pointer;
+  cursor: default;
   box-sizing: border-box;
   border: var(--border-sm) solid var(--components-in-app-notification-stroke-bg);
   overflow: hidden;
