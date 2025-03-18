@@ -19,14 +19,14 @@ export const useRewardsNotification = () => {
       description: 'Explore Push Chain Devnet, complete quests, bang out multipliers, and earn airdrops.',
       image: <RewardPointsS2 />,
       position: 'bottom-left',
-      // onClick: () => {
-      //   window.open('https://x.com/PushChain', '_blank');
-      //   localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
-      //   notification.hide();
-      // },
-      // onClose: () => {
-      //   localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
-      // },
+      onClick: () => {
+        window.open('https://x.com/PushChain', '_blank');
+        localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
+        notification.hide();
+      },
+      onClose: () => {
+        localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
+      },
     });
 
   const showNotificationFn = () => {
