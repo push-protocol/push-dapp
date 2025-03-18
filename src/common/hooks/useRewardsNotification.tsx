@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 // components
-import { notification, RewardPoints } from 'blocks';
+import { notification, RewardPointsS2 } from 'blocks';
 import { CommonLocalStorageKeys } from 'common';
 
 export const useRewardsNotification = () => {
@@ -15,9 +15,9 @@ export const useRewardsNotification = () => {
 
   const showNotification = () =>
     notification.show({
-      title: 'Push Points S1 has Ended!',
-      description: 'Push Chain Rewards S2 coming soon! Find out more at Push Chain',
-      image: <RewardPoints />,
+      title: 'Push Chain Devnet Drop S2 coming 20 Mar, 2025',
+      description: 'Explore Push Chain Devnet, complete quests, bang out multipliers, and earn airdrops.',
+      image: <RewardPointsS2 />,
       position: 'bottom-left',
       onClick: () => {
         window.open('https://x.com/PushChain', '_blank');

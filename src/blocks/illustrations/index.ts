@@ -73,6 +73,8 @@ export { default as RewardsBell } from './components/RewardsBell';
 
 export { default as RewardPoints } from './components/RewardPoints';
 
+export { default as RewardPointsS2 } from './components/RewardPointsS2';
+
 export { default as RockstarNFT } from './components/RockstarNFT';
 
 export { default as Referral } from './components/Referral';
