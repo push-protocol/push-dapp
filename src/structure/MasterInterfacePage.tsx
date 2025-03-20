@@ -99,6 +99,12 @@ function MasterInterfacePage() {
     }
   }, [location]);
 
+  useEffect(() => {
+    if (location.pathname.startsWith('/points') || location.pathname.startsWith('/points/')) {
+      window.location.href = 'https://portal.push.org/rewards';
+    }
+  }, [location.pathname]);
+
   const blockedLoadingToast = useToast();
 
   return (
