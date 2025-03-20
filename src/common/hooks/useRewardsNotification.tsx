@@ -15,7 +15,7 @@ export const useRewardsNotification = () => {
 
   const showNotification = () =>
     notification.show({
-      title: 'Push Chain Devnet Drop S2 is Live!',
+      title: 'Devnet Drop S2 is Live!',
       description: 'Explore Push Chain Devnet, complete quests, bang out multipliers, and earn airdrops.',
       image: <RewardPointsS2 />,
       position: 'bottom-left',
