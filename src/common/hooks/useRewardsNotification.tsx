@@ -15,12 +15,12 @@ export const useRewardsNotification = () => {
 
   const showNotification = () =>
     notification.show({
-      title: 'Push Chain Devnet Drop S2 coming 20 Mar, 2025',
+      title: 'Push Chain Devnet Drop S2 is Live!',
       description: 'Explore Push Chain Devnet, complete quests, bang out multipliers, and earn airdrops.',
       image: <RewardPointsS2 />,
       position: 'bottom-left',
       onClick: () => {
-        window.open('https://x.com/PushChain', '_blank');
+        window.open('https://portal.push.org/rewards', '_blank');
         localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
         notification.hide();
       },
