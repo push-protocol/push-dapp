@@ -1,4 +1,4 @@
-export { Alert, type AlertProps } from './alert';
+export { Alert, type AlertProps, type AlertVariant } from './alert';
 export { Box, type BoxProps } from './box';
 export { Button, type ButtonProps } from './button';
 export { Dropdown, type DropdownProps } from './dropdown';
