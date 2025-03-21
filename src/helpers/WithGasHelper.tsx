@@ -22,6 +22,8 @@ export const executeDelegateTx = async ({
   console.debug('delegateeAddress', delegateeAddress);
   let sendWithTxPromise: any;
   sendWithTxPromise = epnsToken.delegate(delegateeAddress);
+  // console.log('tx tx', sendWithTxPromise);
+
   sendWithTxPromise
     .then(async (tx: any) => {
       let txToast = toast.dark(
@@ -37,7 +39,7 @@ export const executeDelegateTx = async ({
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        }
+        },
       );
 
       try {
