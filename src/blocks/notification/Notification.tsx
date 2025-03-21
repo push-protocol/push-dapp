@@ -15,7 +15,7 @@ const NotificationContainer = styled.div`
   flex-direction: row;
   align-items: stretch;
   height: 115px;
-  width: 412px;
+  width: 398px;
   cursor: pointer;
   box-sizing: border-box;
   border: var(--border-sm) solid var(--components-in-app-notification-stroke-bg);
