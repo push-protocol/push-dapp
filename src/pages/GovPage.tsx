@@ -1,3 +1,4 @@
+import { ContentLayout } from 'common';
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import GovModule from 'modules/gov/GovModule';
 import styled from 'styled-components';
@@ -6,9 +7,9 @@ import styled from 'styled-components';
 const GovPage = () => {
   // RENDER
   return (
-    <Container>
+    <ContentLayout>
       <GovModule />
-    </Container>
+    </ContentLayout>
   );
 };
 export default GovPage;

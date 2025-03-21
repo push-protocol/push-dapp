@@ -129,6 +129,9 @@ export const addresses = {
   pushToken: '0x37c779a1564DCc0e3914aB130e0e787d93e21804',
 
   alphaAccessNft: '0x8D71C28831074DfAAfBa98AD0F5DE86E2DE594cc',
+
+  delegateAddress: '0xf418588522d5dd018b425e472991e52ebbeeeeee',
+  delegateABI: ['function delegate(address delegatee) external'],
 };
 
 export const CHAIN_DETAILS = {

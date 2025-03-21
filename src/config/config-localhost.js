@@ -98,6 +98,9 @@ export const addresses = {
   USDTAddress: '0x13512979ade267ab5100878e2e0f485b568328a4', // mainnet address //n
   rockstarV2: '0xA2b885e7065EA59a3251489715ca80DE5Ff642f8', //mainnet address
   NFTRewardsV2: '0xdc66567a990B7fa10730459537620857c9e03287', //mainnet address
+
+  delegateAddress: '0xf418588522d5dd018b425e472991e52ebbeeeeee',
+  delegateABI: ['function delegate(address delegatee) external'],
 };
 
 export const CHAIN_DETAILS = {
