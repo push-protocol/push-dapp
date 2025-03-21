@@ -68,7 +68,7 @@ const GovModule = () => {
   const [newDelegateeVotingPower, setNewDelegateeVotingPower] = useState(null);
   const [signerObject, setSignerObject] = useState(null);
   const [gaslessInfo, setGaslessInfo] = useState(null);
-  const [transactionMode, setTransactionMode] = useState('gasless');
+  const [transactionMode, setTransactionMode] = useState('withgas');
 
   // Resolving web3 names
   useResolveWeb3Name(account);
@@ -311,6 +311,8 @@ const GovModule = () => {
     </Toaster>
   );
 
+  console.log(transactionMode, 'transactionMode');
+
   return (
     <Container>
       <ItemVV2 alignItems="stretch">
@@ -440,8 +442,7 @@ const GovModule = () => {
                         </ItemH>
                       )}
 
-                      {gaslessInfo ? (
-                        // <Item align="flex-start" self="stretch" padding="10px" size="16px">
+                      {/* {gaslessInfo ? (
                         <>
                           <ItemH
                             flex="initial"
@@ -486,7 +487,7 @@ const GovModule = () => {
                         </>
                       ) : (
                         <p>No recent Gasless Delegation </p>
-                      )}
+                      )} */}
                     </Item>
                   </ItemH>
 
@@ -535,7 +536,7 @@ const GovModule = () => {
                     align="flex-end"
                   >
                     <ItemH>
-                      <RadioGroup>
+                      {/* <RadioGroup>
                         <div style={{ marginRight: '0px' }}>
                           <input
                             type="radio"
@@ -586,7 +587,7 @@ const GovModule = () => {
                           </Label>
                           <br />
                         </div>
-                      </RadioGroup>
+                      </RadioGroup> */}
                       <Box
                         gap="s2"
                         display="flex"
@@ -666,13 +667,13 @@ const GovModule = () => {
                     </ItemH>
                   </Item>
                 </StatsContent>
-                <StatsPreview color="#e20880">MY INFO</StatsPreview>
+                {/* <StatsPreview color="#e20880">MY INFO</StatsPreview> */}
               </StatsCard>
             </Item>
           )}
         </Item>
 
-        <Item
+        {/* <Item
           align="stretch"
           justify="flex-start"
           margin="15px 15px 0px 15px"
@@ -708,10 +709,10 @@ const GovModule = () => {
               )}
             </NomineeContainer>
           </StatsCard>
-        </Item>
+        </Item> */}
       </ItemVV2>
 
-      <ItemVV2
+      {/* <ItemVV2
         alignItems="stretch"
         padding="40px 0 20px 0"
       >
@@ -799,10 +800,10 @@ const GovModule = () => {
             </ItemH>
           )}
         </Item>
-      </ItemVV2>
+      </ItemVV2> */}
 
       {/* FAQs */}
-      <ItemVV2
+      {/* <ItemVV2
         alignItems="stretch"
         padding="20px 0 35px 0"
       >
@@ -811,7 +812,6 @@ const GovModule = () => {
           justify="flex-start"
           margin="-10px 20px 0px 20px"
         >
-          {/* Question */}
           <Item
             align="stretch"
             margin="0px 0px 0px 0px"
@@ -1079,7 +1079,7 @@ const GovModule = () => {
             </QnAItem>
           </Item>
         </Item>
-      </ItemVV2>
+      </ItemVV2> */}
     </Container>
   );
 };
