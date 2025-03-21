@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
@@ -8,22 +8,22 @@ import { toast } from 'react-toastify';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Components
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import Blockies from 'primaries/BlockiesIdenticon';
-import { A, B, Button as ButtonSS, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
 import { Box, Button } from 'blocks';
 import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import { createTransactionObject } from 'helpers/GaslessHelper';
 import { executeDelegateTx } from 'helpers/WithGasHelper';
-import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
-import { AppContext } from 'contexts/AppContext';
-import { AppContextType } from 'types/context';
 import { useAccount } from 'hooks';
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import Blockies from 'primaries/BlockiesIdenticon';
+import { A, B, Button as ButtonSS, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { abis, addresses, appConfig } from 'config/index.js';
 import { shortenText } from 'helpers/UtilityHelper';
 const delegateesJSON = require('config/delegatees.json');
 
@@ -162,34 +162,7 @@ const GovModule = () => {
       return;
     }
 
-    if (transactionMode === 'withgas') {
-      executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, provider, LoaderToast });
-      return;
-    }
-    if (tokenBalance < PUSH_BALANCE_TRESHOLD) {
-      toast.dark('Atleast ' + PUSH_BALANCE_TRESHOLD + ' PUSH required for gasless delegation!', {
-        position: 'bottom-right',
-        type: toast.TYPE.ERROR,
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setTxInProgress(false);
-      return;
-    }
-    console.debug(newDelegatee, 'lets see');
-    await createTransactionObject({
-      delegateeAddress,
-      account,
-      epnsToken,
-      addresses,
-      signerObject,
-      provider,
-      setTxLoading: setTxInProgress,
-    });
+    executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, provider, LoaderToast });
   };
 
   // toast customize
