@@ -22,7 +22,6 @@ export const executeDelegateTx = async ({
   console.debug('delegateeAddress', delegateeAddress);
   let sendWithTxPromise: any;
   sendWithTxPromise = epnsToken.delegate(delegateeAddress);
-  // console.log('tx tx', sendWithTxPromise);
 
   sendWithTxPromise
     .then(async (tx: any) => {

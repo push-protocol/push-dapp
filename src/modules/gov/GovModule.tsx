@@ -13,7 +13,6 @@ import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import { createTransactionObject } from 'helpers/GaslessHelper';
 import { executeDelegateTx } from 'helpers/WithGasHelper';
 import { useAccount } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
@@ -57,7 +56,6 @@ const GovModule = () => {
   const [selfVotingPower, setSelfVotingPower] = useState(null);
   const [newDelegateeAddress, setNewDelegateeAddress] = useState('0x');
   const [newDelegateeVotingPower, setNewDelegateeVotingPower] = useState(null);
-  const [signerObject, setSignerObject] = useState(null);
   const transactionMode = 'withgas';
 
   // Resolving web3 names
@@ -75,7 +73,7 @@ const GovModule = () => {
     console.debug(account);
     if (!!(provider && account)) {
       let signer = provider.getSigner(account);
-      setSignerObject(signer);
+
       const epnsTokenContract = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
       setEpnsToken(epnsTokenContract);
     }
@@ -134,44 +132,83 @@ const GovModule = () => {
   };
 
   //execute delegate tx wth gas when tokenbalance < PUSH_BALANCE_TRESHOLD
+  // const delegateAction = async (newDelegatee) => {
+  //   setTxInProgress(true);
+
+  //   const isAddress = isValidAddress(newDelegatee);
+  //   let signer = provider.getSigner(account);
+
+  //   const epnsTokenContract = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
+  //   console.log(addresses.epnsToken, abis.epnsToken, signer, 'ji ji');
+  //   const delegateeAddress = await newDelegatee;
+  //   console.debug(isAddress);
+  //   if (!isAddress) {
+  //     setTxInProgress(false);
+  //     return;
+  //   }
+  //   console.debug('balance', tokenBalance);
+  //   console.debug('transaction mode', transactionMode);
+
+  //   if (tokenBalance == 0) {
+  //     toast.dark('No PUSH to Delegate!', {
+  //       position: 'bottom-right',
+  //       type: toast.TYPE.ERROR,
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //     });
+  //     setTxInProgress(false);
+  //     return;
+  //   }
+
+  //   executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, provider, LoaderToast });
+  // };
+  //
   const delegateAction = async (newDelegatee) => {
-    setTxInProgress(true);
+    try {
+      setTxInProgress(true);
 
-    const isAddress = isValidAddress(newDelegatee);
-    const delegateeAddress = await newDelegatee;
-    console.debug(isAddress);
-    if (!isAddress) {
-      setTxInProgress(false);
-      return;
-    }
-    console.debug('balance', tokenBalance);
-    console.debug('transaction mode', transactionMode);
+      if (!ethers.utils.isAddress(newDelegatee)) {
+        toast.dark('Invalid address!', { type: toast.TYPE.ERROR });
+        setTxInProgress(false);
+        return;
+      }
 
-    if (tokenBalance == 0) {
-      toast.dark('No PUSH to Delegate!', {
-        position: 'bottom-right',
-        type: toast.TYPE.ERROR,
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      if (!provider) {
+        toast.dark('No provider found!', { type: toast.TYPE.ERROR });
+        setTxInProgress(false);
+        return;
+      }
+
+      // PUSH Token contract address
+      const pushTokenAddress = '0xf418588522d5dd018b425e472991e52ebbeeeeee';
+      const pushTokenABI = ['function delegate(address delegatee) external'];
+
+      const signer = provider.getSigner(account);
+
+      // Create contract instance
+      const pushTokenContract = new ethers.Contract(pushTokenAddress, pushTokenABI, signer);
+
+      // Send delegate transaction
+      const tx = await pushTokenContract.delegate(newDelegatee);
+
+      // Wait for confirmation
+      await tx.wait();
+      console.log('✅ Transaction Mined:', tx.hash);
+
+      toast.dark('Transaction Completed!', {
+        type: toast.TYPE.SUCCESS,
       });
+    } catch (error) {
+      console.error('Error in delegateAction:', error);
+      toast.dark(`Error: ${error.message || 'Transaction failed'}`, { type: toast.TYPE.ERROR });
+    } finally {
       setTxInProgress(false);
-      return;
     }
-
-    executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, provider, LoaderToast });
   };
-
-  // toast customize
-  const LoaderToast = ({ msg, color }) => (
-    <Toaster>
-      <LoaderSpinner />
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
-  );
 
   return (
     <Container>
