@@ -46,11 +46,7 @@ const GovModule = () => {
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [dashboardLoading, setDashboardLoading] = useState(true);
-  const [delegateesLoading, setDelegateesLoading] = useState(true);
   const [txInProgress, setTxInProgress] = useState(false);
-  const [delegateesObject, setDelegateesObject] = useState({});
-  const [pushDelegatees, setPushDelegatees] = useState([]);
-  const [pushNominees, setPushNominees] = useState([]);
   const [epnsToken, setEpnsToken] = useState(null);
   const [tokenBalance, setTokenBalance] = useState(null);
   const [prettyTokenBalance, setPrettyTokenBalance] = useState(null);
@@ -62,7 +58,7 @@ const GovModule = () => {
   const [newDelegateeAddress, setNewDelegateeAddress] = useState('0x');
   const [newDelegateeVotingPower, setNewDelegateeVotingPower] = useState(null);
   const [signerObject, setSignerObject] = useState(null);
-  const [transactionMode, setTransactionMode] = useState('withgas');
+  const transactionMode = 'withgas';
 
   // Resolving web3 names
   useResolveWeb3Name(account);
@@ -95,48 +91,6 @@ const GovModule = () => {
     setDashboardLoading(false);
   }, [account]);
 
-  useEffect(() => {
-    if (!epnsToken) return;
-    const delegateesList = Object.values(delegateesJSON);
-    // write helper function to sort by voting power
-    const votingPowerSorter = (a, b) => {
-      return b.votingPower - a.votingPower;
-    };
-
-    // go through all the delegates json and get their voting power
-    const allDelegateesPromise = delegateesList.map(async (oneDelegate: any) => {
-      const { wallet } = oneDelegate;
-      const votingPower = await EPNSCoreHelper.getVotingPower(wallet, epnsToken);
-      return { ...oneDelegate, votingPower: Number(votingPower) };
-    });
-
-    Promise.all(allDelegateesPromise).then((allDelegatees) => {
-      // filter for delegates (i.e) Those who have above 75000 power,
-      // use the parameter votingPowerSimulate parameter to simulate voting power above the treshold
-      const delegateesAbove75k = allDelegatees.filter(({ votingPower, votingPowerSimulate }) => {
-        return votingPower >= VOTING_TRESHOLD;
-      });
-
-      // sort by voting power
-      const sortedDelegatees = [...delegateesAbove75k].sort(votingPowerSorter);
-      setPushDelegatees(sortedDelegatees);
-
-      // calculate for  the nominees (i.e peoplw who have voting power less than 75k)
-      const delegateesBelow75k = allDelegatees.filter(({ votingPower }) => {
-        return votingPower < VOTING_TRESHOLD;
-      });
-
-      const sortedNominees = [...delegateesBelow75k].sort(votingPowerSorter);
-
-      // sort by voting power
-      setPushNominees(sortedNominees);
-
-      setDelegateesLoading(false);
-    });
-    setDelegateesObject(delegateesJSON);
-    // in order to
-  }, [epnsToken]);
-
   const isValidAddress = (address) => {
     if (ethers.utils.isAddress(address)) {
       return true;
@@ -165,12 +119,12 @@ const GovModule = () => {
   };
 
   const getMyInfo = async () => {
-    let bal = await epnsToken.balanceOf(account);
-    let decimals = await epnsToken.decimals();
+    let bal = await epnsToken?.balanceOf(account);
+    let decimals = await epnsToken?.decimals();
     let tokenBalance = await Number(bal / Math.pow(10, decimals));
     let newBal = tokenBalance.toString();
-    let delegatee = await epnsToken.delegates(account);
-    let votes = await epnsToken.getCurrentVotes(account);
+    let delegatee = await epnsToken?.delegates(account);
+    let votes = await epnsToken?.getCurrentVotes(account);
     let votingPower = await Number(votes / Math.pow(10, decimals));
     let prettyVotingPower = votingPower.toLocaleString();
     setTokenBalance(tokenBalance);
@@ -183,7 +137,7 @@ const GovModule = () => {
   const delegateAction = async (newDelegatee) => {
     setTxInProgress(true);
 
-    const isAddress = await isValidAddress(newDelegatee);
+    const isAddress = isValidAddress(newDelegatee);
     const delegateeAddress = await newDelegatee;
     console.debug(isAddress);
     if (!isAddress) {
@@ -245,8 +199,6 @@ const GovModule = () => {
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
-
-  console.log(transactionMode, 'transactionMode');
 
   return (
     <Container>
