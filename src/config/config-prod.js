@@ -125,6 +125,9 @@ export const addresses = {
   pushCoreV2: '0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE', //not upgraded
 
   alphaAccessNft: '0x87d34d40EFaF2d594A7eD9B1126F15Cb3fc721ef',
+
+  delegateAddress: '0xf418588522d5dd018b425e472991e52ebbeeeeee',
+  delegateABI: ['function delegate(address delegatee) external'],
 };
 
 export const CHAIN_DETAILS = {

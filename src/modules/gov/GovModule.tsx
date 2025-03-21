@@ -131,42 +131,6 @@ const GovModule = () => {
     setSelfVotingPower(prettyVotingPower);
   };
 
-  //execute delegate tx wth gas when tokenbalance < PUSH_BALANCE_TRESHOLD
-  // const delegateAction = async (newDelegatee) => {
-  //   setTxInProgress(true);
-
-  //   const isAddress = isValidAddress(newDelegatee);
-  //   let signer = provider.getSigner(account);
-
-  //   const epnsTokenContract = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
-  //   console.log(addresses.epnsToken, abis.epnsToken, signer, 'ji ji');
-  //   const delegateeAddress = await newDelegatee;
-  //   console.debug(isAddress);
-  //   if (!isAddress) {
-  //     setTxInProgress(false);
-  //     return;
-  //   }
-  //   console.debug('balance', tokenBalance);
-  //   console.debug('transaction mode', transactionMode);
-
-  //   if (tokenBalance == 0) {
-  //     toast.dark('No PUSH to Delegate!', {
-  //       position: 'bottom-right',
-  //       type: toast.TYPE.ERROR,
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //     setTxInProgress(false);
-  //     return;
-  //   }
-
-  //   executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, provider, LoaderToast });
-  // };
-  //
   const delegateAction = async (newDelegatee) => {
     try {
       setTxInProgress(true);
@@ -183,16 +147,10 @@ const GovModule = () => {
         return;
       }
 
-      // PUSH Token contract address
-      const pushTokenAddress = '0xf418588522d5dd018b425e472991e52ebbeeeeee';
-      const pushTokenABI = ['function delegate(address delegatee) external'];
-
       const signer = provider.getSigner(account);
 
       // Create contract instance
-      const pushTokenContract = new ethers.Contract(pushTokenAddress, pushTokenABI, signer);
-
-      // Send delegate transaction
+      const pushTokenContract = new ethers.Contract(addresses.delegateAddress, addresses.delegateABI, signer);
       const tx = await pushTokenContract.delegate(newDelegatee);
 
       // Wait for confirmation

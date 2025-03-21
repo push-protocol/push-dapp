@@ -132,6 +132,9 @@ export const addresses = {
   yieldFarmLP: '0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b',
 
   alphaAccessNft: '0x8D71C28831074DfAAfBa98AD0F5DE86E2DE594cc',
+
+  delegateAddress: '0xf418588522d5dd018b425e472991e52ebbeeeeee',
+  delegateABI: ['function delegate(address delegatee) external'],
 };
 
 export const CHAIN_DETAILS = {

@@ -122,6 +122,9 @@ export const addresses = {
   yieldFarmLP: '0x9af118D9fA1eFEa5b5a792847554960217DEdb04', //mainnet address
   uniV2LPToken: '0xaf31fd9c3b0350424bf96e551d2d1264d8466205', //same as epnsLPToken
   pushCoreV2: '0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE', //not upgraded
+
+  delegateAddress: '0xf418588522d5dd018b425e472991e52ebbeeeeee',
+  delegateABI: ['function delegate(address delegatee) external'],
 };
 
 export const CHAIN_DETAILS = {
