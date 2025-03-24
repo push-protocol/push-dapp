@@ -16,6 +16,18 @@ export const walletToCAIP10 = ({ account }: { account: string }): string => {
   return 'eip155:' + account;
 };
 
+export const walletToFullCAIP10 = ({ account, chainId }: { account: string; chainId: any }): string => {
+  if (account.includes('eip155:')) {
+    return account;
+  }
+
+  if (!chainId) {
+    return 'eip155:' + account;
+  }
+
+  return 'eip155:' + `${chainId}:` + account;
+};
+
 export const caip10ToWallet = (wallet: string): string => {
   wallet = wallet?.replace('eip155:', '');
   return wallet;
@@ -138,7 +150,7 @@ export const decryptMessages = async ({
           signatureValidationPubliKey = member ? member.publicKey : '';
         } else {
           const latestUserInfo = inbox.find(
-            (x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat?.wallets?.split(':')[1]?.toLowerCase()
+            (x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat?.wallets?.split(':')[1]?.toLowerCase(),
           );
 
           if (latestUserInfo) {

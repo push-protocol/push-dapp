@@ -35,20 +35,15 @@ const Rewards: FC<RewardsProps> = () => {
   // Used to set the discord session after discord redirects back to the Dapp.
   useDiscordSession();
 
-  const { activeTab, handleSetActiveTab } = useRewardsTabs();
+  const { activeTab } = useRewardsTabs();
 
   const { isAuthModalVisible } = useRewardsContext();
 
-  const { connectUserWallet, hideAuthModal } = useRewardsAuth();
+  const { hideAuthModal } = useRewardsAuth();
 
   useCreateRewardsUser();
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
-
-  // retry unlock profile
-  const handleUnlockProfile = () => {
-    connectUserWallet();
-  };
 
   return (
     <Box
@@ -73,11 +68,7 @@ const Rewards: FC<RewardsProps> = () => {
         {heading}
       </Text>
 
-      <RewardsTabsContainer
-        activeTab={activeTab}
-        handleSetActiveTab={handleSetActiveTab}
-        handleUnlockProfile={handleUnlockProfile}
-      />
+      <RewardsTabsContainer />
 
       {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
         <Box

@@ -6,7 +6,7 @@ import { useAccount } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
 
 //helpers
-import { walletToCAIP10 } from 'helpers/w2w';
+import { walletToFullCAIP10 } from 'helpers/w2w';
 
 //components
 import { Box, Text } from 'blocks';
@@ -14,18 +14,20 @@ import { DashboardSectionHeader } from './DashboardSectionHeader';
 import { DashboardSectionPoints } from './DashboardSectionPoints';
 
 export type DashboardSectionProps = {
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
 };
 
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
-  const { account } = useAccount();
-  const caip10WalletAddress = walletToCAIP10({ account });
+  const { account, chainId } = useAccount();
+  const caip10WalletAddress = walletToFullCAIP10({ account, chainId });
   const {
     data: userDetails,
     refetch,
     isLoading: isUserLoading,
     isFetching,
   } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress });
+
+  console.log(account, 'acc acc', chainId, caip10WalletAddress);
 
   const isLoading = isUserLoading;
 
