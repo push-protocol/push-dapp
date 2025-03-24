@@ -2,30 +2,22 @@
 import { FC } from 'react';
 
 // third party libraries
-import { useSelector } from 'react-redux';
-import { css } from 'styled-components';
 import { useSearchParams } from 'react-router-dom';
 
 //Hooks
 import { useRewardsTabs } from './hooks/useRewardsTabs';
 import { useDiscordSession } from './hooks/useDiscordSession';
-import { useRewardsAuth } from './hooks/useRewardsAuth';
 import { useCreateRewardsUser } from './hooks/useCreateRewardsUser';
 
 //Types
-import { UserStoreType } from 'types';
 
 //Components
 import { Box, Text } from 'blocks';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
-import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
-import { useRewardsContext } from 'contexts/RewardsContext';
 
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
-  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-
   //fetch ref from url
   const [searchParams] = useSearchParams();
 
@@ -36,10 +28,6 @@ const Rewards: FC<RewardsProps> = () => {
   useDiscordSession();
 
   const { activeTab } = useRewardsTabs();
-
-  const { isAuthModalVisible } = useRewardsContext();
-
-  const { hideAuthModal } = useRewardsAuth();
 
   useCreateRewardsUser();
 
@@ -69,25 +57,6 @@ const Rewards: FC<RewardsProps> = () => {
       </Text>
 
       <RewardsTabsContainer />
-
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          width="-webkit-fill-available"
-          alignItems="center"
-          css={css`
-            z-index: 99999;
-          `}
-        >
-          <UnlockProfileWrapper
-            type={UNLOCK_PROFILE_TYPE.MODAL}
-            showConnectModal={isAuthModalVisible}
-            onClose={() => hideAuthModal()}
-            description="Unlock your profile to proceed."
-          />
-        </Box>
-      )}
     </Box>
   );
 };
