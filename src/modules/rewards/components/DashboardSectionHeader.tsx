@@ -8,10 +8,13 @@ import { css } from 'styled-components';
 import { Box, Button, Link, Points, Text } from 'blocks';
 
 export type DashboardSectionHeaderProps = {
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
 };
 
-const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted }) => {
+const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({}) => {
+  const handleGoToNewSeason = () => {
+    window.open('http://portal.push.org/rewards');
+  };
   return (
     <Box
       borderRadius="radius-md"
@@ -46,16 +49,16 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
               variant="h4-semibold"
               color="text-on-light-bg"
             >
-              Push Points S1 has Ended!
+              Push Points S2 is Live
             </Text>
             <Box maxWidth={{ tb: 'auto', initial: '607px' }}>
               <Text
                 variant="bl-regular"
                 color="text-on-light-bg"
               >
-                Push Chain Rewards S2 coming soon! Find out more at{' '}
+                Season 1 has ended and your points have been snapshot. Participate in Season 2 at{' '}
                 <Link
-                  to="https://x.com/PushChain"
+                  to="https://portal.push.org/rewards"
                   target="_blank"
                   textProps={{
                     variant: 'bl-regular',
@@ -65,7 +68,7 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
                     `,
                   }}
                 >
-                  Push Chain
+                  Push Portal
                 </Link>
               </Text>
             </Box>
@@ -75,10 +78,9 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
         <Button
           variant="tertiary"
           size="medium"
-          onClick={onGetStarted}
-          disabled={true}
+          onClick={handleGoToNewSeason}
         >
-          Ended
+          Go To Season 2
         </Button>
       </Box>
     </Box>

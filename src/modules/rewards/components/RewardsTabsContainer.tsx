@@ -1,43 +1,12 @@
 import { FC } from 'react';
 
 //Components
-import { Box, TabItem, Tabs } from 'blocks';
+import { Box } from 'blocks';
 import { DashboardSection } from './DashboardSection';
-import { LeaderBoardSection } from './LeaderBoardSection';
-import { RewardsTabs } from '../Rewards.types';
-import { ReferralSection } from './ReferralSection';
-import { RewardsActivitiesBottomSection } from './RewardsActivitiesBottomSection';
-import { DailyRewardsSection } from './DailyRewardsSection';
 
-export type RewardsTabsContainerProps = {
-  activeTab: RewardsTabs;
-  handleSetActiveTab: (tab: RewardsTabs) => void;
-  handleUnlockProfile: () => void;
-};
+export type RewardsTabsContainerProps = {};
 
-const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
-  activeTab,
-  handleSetActiveTab,
-  handleUnlockProfile,
-}) => {
-  const rewardsTabs: TabItem[] = [
-    {
-      key: 'dashboard',
-      label: 'Dashboard',
-      children: <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />,
-    },
-    {
-      key: 'activity',
-      label: 'Reward Activities',
-      children: <DailyRewardsSection />,
-    },
-    {
-      key: 'leaderboard',
-      label: 'Leaderboard',
-      children: <LeaderBoardSection />,
-    },
-  ];
-
+const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({}) => {
   return (
     <>
       <Box
@@ -47,16 +16,10 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
         flexDirection="column"
         padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
       >
-        <Tabs
-          items={rewardsTabs}
-          activeKey={activeTab}
-          onChange={(activeKey) => handleSetActiveTab(activeKey as RewardsTabs)}
-        />
+        <DashboardSection />
       </Box>
 
       {/* bottom sections */}
-      {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
-      {activeTab === 'activity' && <RewardsActivitiesBottomSection />}
     </>
   );
 };
