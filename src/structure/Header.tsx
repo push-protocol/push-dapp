@@ -97,7 +97,8 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
       gap={{ ml: 'spacing-xxxs', dp: 'spacing-xs' }}
     >
       <Link
-        to="/points"
+        to="https://portal.push.org/rewards"
+        target="_blank"
         isText={false}
       >
         <Box
