@@ -121,6 +121,10 @@ export { default as RewardsCoin } from './components/RewardsCoin';
 
 export { default as PushLogo } from './components/PushLogo';
 
+export { default as PushLogoWithNameLight } from './components/PushLogoWithNameLight';
+
+export { default as PushLogoWithNameDark } from './components/PushLogoWithNameDark';
+
 export { default as Polygon } from './components/Polygon';
 
 export { default as PolygonZK } from './components/PolygonZK';

@@ -130,6 +130,9 @@ export const addresses = {
 
   alphaAccessNft: '0x8D71C28831074DfAAfBa98AD0F5DE86E2DE594cc',
 
+  // for monetization section
+  usdcTokenAddress: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+  usdcRecipient: '0x986a07797a27f51e3276b51C8E32b803a5d80d21',
   delegateAddress: '0xf418588522d5dd018b425e472991e52ebbeeeeee',
   delegateABI: ['function delegate(address delegatee) external'],
 };
