@@ -1,14 +1,13 @@
 // React and other libraries
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 // components
-import { notification, RewardPoints } from 'blocks';
+import { notification, RewardPointsS2 } from 'blocks';
 import { CommonLocalStorageKeys } from 'common';
 
 export const useRewardsNotification = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [hasMounted, setHasMounted] = useState(false);
 
   const notificationAlreadyShown = localStorage.getItem('notificationShown') === 'true';
@@ -16,13 +15,12 @@ export const useRewardsNotification = () => {
 
   const showNotification = () =>
     notification.show({
-      title: 'Points S1 Ends on Feb 28!',
-      description:
-        'Claim all tasks and prepare for the end of S1 of Push Reward Points. Leaderboards snapshot on Mar 1, 2025.',
-      image: <RewardPoints />,
+      title: 'Devnet Drop S2 is Live!',
+      description: 'Explore Push Chain Devnet, complete quests, bang out multipliers, and earn airdrops.',
+      image: <RewardPointsS2 />,
       position: 'bottom-left',
       onClick: () => {
-        navigate('/points');
+        window.open('https://portal.push.org/rewards', '_blank');
         localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
         notification.hide();
       },

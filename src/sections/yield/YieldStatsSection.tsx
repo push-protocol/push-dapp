@@ -121,7 +121,7 @@ const YieldStatsSection = ({ getLpPoolStats, poolStats, setPoolStats }) => {
       </StatsContainer>
 
       {/* Time Left */}
-      <StatsContainer
+      {/* <StatsContainer
         alignItems="baseline"
         justifyContent="center"
         background="#A17DEF"
@@ -147,7 +147,7 @@ const YieldStatsSection = ({ getLpPoolStats, poolStats, setPoolStats }) => {
         ) : (
           <SkeletonLoader />
         )}
-      </StatsContainer>
+      </StatsContainer> */}
     </ItemHV2Modified>
   );
 };

@@ -14,7 +14,7 @@ import { DashboardSectionHeader } from './DashboardSectionHeader';
 import { DashboardSectionPoints } from './DashboardSectionPoints';
 
 export type DashboardSectionProps = {
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
 };
 
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {

@@ -14,8 +14,8 @@ const NotificationContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  height: 111px;
-  width: 397px;
+  height: 115px;
+  width: 398px;
   cursor: pointer;
   box-sizing: border-box;
   border: var(--border-sm) solid var(--components-in-app-notification-stroke-bg);
@@ -25,7 +25,7 @@ const NotificationContainer = styled.div`
   }
 `;
 const StyledToaster = styled(Toaster)`
-  width: 397px;
+  width: 412px;
   @media${deviceMediaQ.mobileL} {
     width: 100%;
   }
@@ -55,9 +55,11 @@ const NotificationDescription = styled.span`
 `;
 
 const IconContainer = styled.div`
-  padding: var(--spacing-sm) var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-xxs) var(--radius-none) var(--radius-none) var(--radius-xxs);
-  background: radial-gradient(79.55% 79.55% at 50% 50%, #344efd 0%, #171717 100%);
+  background: radial-gradient(79.55% 79.55% at 50% 50%, #7e3bb9 0%, #171717 100%);
 `;
 
 const CloseButton = styled.div`

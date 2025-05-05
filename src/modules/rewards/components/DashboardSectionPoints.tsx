@@ -104,7 +104,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
             variant="h1-bold"
             color="text-primary"
           >
-            0
+            -
           </Text>
         )}
 

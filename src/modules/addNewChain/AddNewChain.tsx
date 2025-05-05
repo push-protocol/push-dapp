@@ -63,9 +63,10 @@ const AddNewChain: FC = () => {
         },
         onError: (error: any) => {
           if (error) {
+            const isTransactionRejectedByUser = /user rejected transaction/i.test(error.message);
             toast.showMessageToast({
               toastTitle: 'Error',
-              toastMessage: error.message,
+              toastMessage: isTransactionRejectedByUser ? 'Transaction rejected by user.' : error.message,
               toastType: 'ERROR',
               getToastIcon: (size) => (
                 <MdError

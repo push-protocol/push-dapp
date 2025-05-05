@@ -138,7 +138,7 @@ export const decryptMessages = async ({
           signatureValidationPubliKey = member ? member.publicKey : '';
         } else {
           const latestUserInfo = inbox.find(
-            (x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat?.wallets?.split(':')[1]?.toLowerCase()
+            (x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat?.wallets?.split(':')[1]?.toLowerCase(),
           );
 
           if (latestUserInfo) {

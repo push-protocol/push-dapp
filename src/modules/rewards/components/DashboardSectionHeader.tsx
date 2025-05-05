@@ -5,13 +5,16 @@ import { FC } from 'react';
 import { css } from 'styled-components';
 
 //components
-import { Box, Button, Points, Text } from 'blocks';
+import { Box, Button, Link, Points, Text } from 'blocks';
 
 export type DashboardSectionHeaderProps = {
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
 };
 
-const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted }) => {
+const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({}) => {
+  const handleGoToNewSeason = () => {
+    window.open('http://portal.push.org/rewards');
+  };
   return (
     <Box
       borderRadius="radius-md"
@@ -46,15 +49,27 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
               variant="h4-semibold"
               color="text-on-light-bg"
             >
-              Push Points S1 Ends on Feb 28!
+              Push Points S2 is Live
             </Text>
             <Box maxWidth={{ tb: 'auto', initial: '607px' }}>
               <Text
                 variant="bl-regular"
                 color="text-on-light-bg"
               >
-                Claim all tasks and prepare for the end of S1 of Push Reward Points. Prizes will be announced on Feb
-                25th. Leaderboards snapshot on Mar 1, 2025.
+                Season 1 has ended and your points have been snapshot. Participate in Season 2 at{' '}
+                <Link
+                  to="https://portal.push.org/rewards"
+                  target="_blank"
+                  textProps={{
+                    variant: 'bl-regular',
+                    color: 'text-on-light-bg',
+                    css: css`
+                      display: inline;
+                    `,
+                  }}
+                >
+                  Push Portal
+                </Link>
               </Text>
             </Box>
           </Box>
@@ -63,9 +78,9 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
         <Button
           variant="tertiary"
           size="medium"
-          onClick={onGetStarted}
+          onClick={handleGoToNewSeason}
         >
-          Get Started
+          Go To Season 2
         </Button>
       </Box>
     </Box>

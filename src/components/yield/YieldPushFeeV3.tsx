@@ -415,7 +415,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
         {PUSHPoolstats ? (
           <>
             <Heading>PUSH Fee Staking Pool</Heading>
-            <APRText>
+            {/* <APRText>
               Current APR
               <SpanV2
                 color="#D53A94"
@@ -425,7 +425,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                 &gt;{numberWithCommas(PUSHPoolstats?.stakingAPR)}% + Fee
               </SpanV2>
               <ToolTipAPR />
-            </APRText>
+            </APRText> */}
           </>
         ) : (
           <SkeletonContainer padding="5px 15px 0 15px">
