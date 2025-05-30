@@ -35,7 +35,6 @@ const ChannelDetailSubscribe: FC<ChannelDetailSubscribeProps> = ({
     refetchUserSubscription();
   };
 
-  console.log(userSubscription, 'userSubscription', channel);
   return (
     <Skeleton isLoading={isSubscriptionLoading}>
       {channel && !isSubscribed && (
