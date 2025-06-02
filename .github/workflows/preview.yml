@@ -11,7 +11,7 @@ on:
 concurrency: preview-${{ github.ref }}
 jobs:
   deploy-preview:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Set up environment variables
         run: |
