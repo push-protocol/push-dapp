@@ -10,6 +10,7 @@ import { Box, Text, Back, Tag, Skeleton, Tooltip, TickDecoratedCircleFilled } fr
 import {
   CopyButton,
   LOGO_ALIAS_CHAIN,
+  ProfileModalVisibilityType,
   VerifiedChannelTooltipContent,
   channelCategoriesMap,
   formatSubscriberCount,
@@ -24,8 +25,18 @@ import { appConfig } from 'config';
 
 // import { getChannelTutorialDetails } from '../ChannelDetails.utils';
 
-export type ChannelDetailProps = { channel: ChannelDetails; isLoading: boolean };
-const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
+export type ChannelDetailProps = {
+  channel: ChannelDetails;
+  isLoading: boolean;
+  onChangeProfileModalVisibility: (value: ProfileModalVisibilityType) => void;
+  profileModalVisibility: ProfileModalVisibilityType;
+};
+const ChannelDetail: FC<ChannelDetailProps> = ({
+  channel,
+  isLoading,
+  onChangeProfileModalVisibility,
+  profileModalVisibility,
+}) => {
   const [showMore, setShowMore] = useState<boolean>(false);
   const navigate = useNavigate();
   const isInfoMore = (channel?.info || '').length > 250;
@@ -232,7 +243,11 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
               </Box>
             </Box>
             <Box display={{ initial: 'inline', ml: 'none' }}>
-              <ChannelDetailSubscribe channel={channel} />
+              <ChannelDetailSubscribe
+                channel={channel}
+                onChangeProfileModalVisibility={onChangeProfileModalVisibility}
+                profileModalVisibility={profileModalVisibility}
+              />
             </Box>
           </Box>
         </Box>

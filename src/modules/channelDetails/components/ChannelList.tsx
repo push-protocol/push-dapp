@@ -17,7 +17,7 @@ export type ChannelListProps = {
   isLoading: boolean;
   setSelectedChannelId: React.Dispatch<React.SetStateAction<string>>;
   fetchNextPage: (
-    options?: FetchNextPageOptions | undefined
+    options?: FetchNextPageOptions | undefined,
   ) => Promise<InfiniteQueryObserverResult<InfiniteData<ChannelsListModelledResponse, unknown>, Error>>;
 };
 const ChannelList: FC<ChannelListProps> = ({
