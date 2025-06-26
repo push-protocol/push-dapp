@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Alert, Box } from 'blocks';
 import { appConfig } from 'config';
 import APP_PATHS from 'config/AppPaths';
-import { Stepper } from 'common';
-import { useAccount } from 'hooks';
+import { PurchasePlanAlert, Stepper } from 'common';
+import { useAccount, useGetPricingPlanDetails } from 'hooks';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import { useApprovePUSHToken, useCreateChannel } from 'queries';
+import { useApprovePUSHToken, useCreateChannel, useGetPaymentDetails, useGetPricingPlanStatus } from 'queries';
 
 import { ChannelInfo } from './components/ChannelInfo';
 import {
@@ -32,13 +32,17 @@ import {
   ChannelInfoFormValues,
   CreateChannelProgressType,
 } from './CreateChannel.types';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
 
 const CreateChannel = () => {
   const { account, provider, isWalletConnected, chainId, connect } = useAccount();
+  const walletAddress = convertAddressToAddrCaip(account, chainId);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const paymentId = searchParams.get('paymentId');
 
   const onCoreNetwork = appConfig.coreContractChain === chainId;
 
@@ -58,6 +62,14 @@ const CreateChannel = () => {
   const [progressState, setProgressState] = useState<CreateChannelProgressType>(progressInitialState);
 
   const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
+
+  const { data: pricingPlanStatus } = useGetPricingPlanStatus({
+    channelId: walletAddress,
+  });
+
+  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
+
+  const { data: paymentDetails } = useGetPaymentDetails({ paymentId: paymentId! });
 
   const handleProgressBar = (progress: number, progressInfo: string, processingInfo: string) => {
     setProgressState((prevState) => ({
@@ -102,7 +114,7 @@ const CreateChannel = () => {
           setProgressState(progressInitialState);
           return false;
         },
-      }
+      },
     );
   };
 
@@ -134,7 +146,7 @@ const CreateChannel = () => {
               handleProgressBar(
                 90,
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
-                'Redirecting... Please do not refresh'
+                'Redirecting... Please do not refresh',
               );
             }, 2000);
 
@@ -142,7 +154,7 @@ const CreateChannel = () => {
               handleProgressBar(
                 100,
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
-                'Redirecting... Please do not refresh'
+                'Redirecting... Please do not refresh',
               );
               navigate(`${APP_PATHS.ChannelDashboard(account)}`);
             }, 3000);
@@ -162,11 +174,11 @@ const CreateChannel = () => {
             handleProgressBar(
               0,
               'There was an error in creating the Channel',
-              'Kindly Contact support@epns.io to resolve the issue.'
+              'Kindly Contact support@epns.io to resolve the issue.',
             );
           }
         },
-      }
+      },
     );
   };
 
@@ -211,19 +223,34 @@ const CreateChannel = () => {
     }
   };
 
+  console.log(paymentId);
+
   return (
     <CreateChannelFormProvider onSubmit={(values: ChannelInfoFormValues) => handleCreateNewChannel(values)}>
+      {/* Payment success alert after redirecting from purchase plan page */}
+      {paymentDetails?.payment_status == 'SUCCESS' && (
+        <Box width={{ initial: '712px', ml: '389px' }}>
+          <PurchasePlanAlert
+            variant="success"
+            purchasedPlan={{ planName: selectedPlan?.name! }}
+            onAction={() => {
+              window.open(`https://sepolia.etherscan.io/tx/${paymentDetails?.transaction_hash}`, '_blank');
+            }}
+          />
+        </Box>
+      )}
+
       <Box
-        padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
+        padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
         display="flex"
         flexDirection="column"
         gap="spacing-xl"
         alignSelf="center"
-        width={{ dp: '648px', ml: '357px' }}
+        width={{ initial: '648px', ml: '357px' }}
         borderRadius="radius-md"
         alignItems="center"
         backgroundColor="surface-primary"
-        margin={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
+        margin={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
       >
         <CreateChannelHeader />
 

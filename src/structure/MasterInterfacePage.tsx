@@ -50,6 +50,8 @@ const AddNewChainPage = lazy(() => import('pages/AddNewChain'));
 const DiscordVerificationPage = lazy(() => import('pages/DiscordVerificationPage'));
 
 const SendNotificationPage = lazy(() => import('pages/SendNotificationPage'));
+const PricingPage = lazy(() => import('pages/PricingPage'));
+const PurchasePlanPage = lazy(() => import('pages/PurchasePlanPage'));
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 // import ChannelsPage from 'pages/ChannelsPage';
@@ -291,6 +293,14 @@ function MasterInterfacePage() {
             <Route
               path="*"
               element={<NotFoundPage />}
+            />
+            <Route
+              path={APP_PATHS.Pricing}
+              element={<PricingPage />}
+            />
+            <Route
+              path={APP_PATHS.PurchasePlan}
+              element={<PurchasePlanPage />}
             />
           </Routes>
         </Suspense>

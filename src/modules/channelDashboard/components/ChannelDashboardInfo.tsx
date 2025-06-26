@@ -9,9 +9,11 @@ import { LOGO_ALIAS_CHAIN } from 'common';
 
 import { shortenText } from 'helpers/UtilityHelper';
 
-import { ChannelDetails } from 'queries';
+import { ChannelDetails, useGetPricingInfo, useGetPricingPlanStatus } from 'queries';
 
 import APP_PATHS from 'config/AppPaths';
+import { useAccount, useGetPricingPlanDetails } from 'hooks';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetails;
@@ -27,6 +29,14 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
   isAliasVerified,
 }) => {
   const navigate = useNavigate();
+  const { account, chainId } = useAccount();
+  const walletAddress = convertAddressToAddrCaip(account, chainId);
+
+  const { data: pricingPlanStatus, isLoading: isPricingPlanStatusLoading } = useGetPricingPlanStatus({
+    channelId: walletAddress,
+  });
+
+  const { selectedPlan } = useGetPricingPlanDetails(pricingPlanStatus, walletAddress);
 
   let verifiedAliasChainIds =
     channelDetails?.aliases
@@ -223,6 +233,10 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                   variant="info"
                 />
               ) : null}
+            </Skeleton>
+
+            <Skeleton isLoading={isPricingPlanStatusLoading}>
+              {selectedPlan && selectedPlan?.id !== 1 ? <Tag label={`${selectedPlan?.name} Plan`} /> : null}
             </Skeleton>
           </Box>
         </Box>

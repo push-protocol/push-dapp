@@ -1,7 +1,12 @@
 import { Tabs as ReachTabs, TabList, Tab } from '@reach/tabs';
 import { textVariants } from '../text';
-import styled from 'styled-components';
-import { deviceMediaQ } from '../theme';
+import styled, { CSSProperties } from 'styled-components';
+import { ResponsiveProp } from 'blocks';
+
+export type TabListProps = {
+  /* Used to align tabs */
+  alignSelf?: ResponsiveProp<CSSProperties['alignSelf']>;
+};
 
 export const StyledFillTabs = styled(ReachTabs)`
   display: flex;
@@ -9,17 +14,14 @@ export const StyledFillTabs = styled(ReachTabs)`
   gap: var(--spacing-sm);
 `;
 
-export const StyledFillTabList = styled(TabList)`
+export const StyledFillTabList = styled(TabList)<TabListProps>`
   overflow: auto hidden;
   display: flex;
-  width: fit-content;
-  @media${deviceMediaQ.mobileL} {
-    width: -webkit-fill-available;
-  }
   padding: var(--spacing-xxxs);
-  background-color: var(--surface-secondary);
+  background-color: var(--surface-tertiary);
   border-radius: var(--radius-sm);
   gap: var(--spacing-xxs);
+  align-self: ${(props) => props.alignSelf ?? 'flex-start'};
 `;
 
 export const StyledFillTab = styled(Tab)`
@@ -34,7 +36,9 @@ export const StyledFillTab = styled(Tab)`
   color: var(--text-secondary);
   background-color: var(--surface-transparent);
   border-radius: var(--radius-xs);
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   border-bottom: none;
 
   &[data-selected] {
@@ -72,13 +76,15 @@ export const StyledLineTabs = styled(ReachTabs)`
   gap: var(--spacing-sm);
 `;
 
-export const StyledLineTabList = styled(TabList)`
+export const StyledLineTabList = styled(TabList)<TabListProps>`
   overflow: auto hidden;
   display: flex;
   background-color: var(--surface-transparent);
   gap: var(--spacing-xs);
   justify-content: flex-start;
   border-bottom: var(--border-sm) solid var(--stroke-secondary);
+  align-self: ${(props) => props.alignSelf ?? 'flex-start'};
+  width: 100%;
 `;
 
 export const StyledLineTab = styled(Tab)`
@@ -92,7 +98,9 @@ export const StyledLineTab = styled(Tab)`
   margin-bottom: -1px;
   background-color: var(--surface-transparent);
   color: var(--text-secondary);
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   border-bottom: var(--border-md) solid var(--surface-transparent);
 
   &[data-selected] {
